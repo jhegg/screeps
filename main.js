@@ -10,6 +10,14 @@ module.exports.loop = function() {
   const spawnRoom = spawn.room;
   const constructionSites = spawnRoom.find(FIND_CONSTRUCTION_SITES);
   const droppedResources = spawnRoom.find(FIND_DROPPED_RESOURCES);
+  const energyStorageStructures = spawnRoom.find(FIND_STRUCTURES, {
+    filter: (structure) => {
+      return (structure.structureType == STRUCTURE_EXTENSION ||
+          structure.structureType == STRUCTURE_SPAWN ||
+          structure.structureType == STRUCTURE_TOWER) &&
+        structure.energy < structure.energyCapacity;
+    }
+  });
 
   for (var name in Game.creeps) {
     var creep = Game.creeps[name];
@@ -20,7 +28,11 @@ module.exports.loop = function() {
       console.log('Setting sourceId to '+desiredSource.id+' for creep: '+creep);
     }
     if (creep.memory.role == 'harvester') {
-      roleHarvester.run(creep);
+      if (energyStorageStructures.length) {
+        roleHarvester.run(creep, energyStorageStructures);
+      } else {
+        roleUpgrader.run(creep);
+      }
     }
     if (creep.memory.role == 'upgrader') {
       roleUpgrader.run(creep);
