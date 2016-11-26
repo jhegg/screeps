@@ -1,5 +1,5 @@
 var roleBuilder = {
-  run: function(creep, constructionSites) {
+  run: function(creep, constructionSites, droppedResources, sources) {
 
     if (creep.memory.building && creep.carry.energy === 0) {
       creep.memory.building = false;
@@ -18,7 +18,6 @@ var roleBuilder = {
         creep.moveTo(constructionSiteWithMostProgress);
       }
     } else {
-      var droppedResources = creep.room.find(FIND_DROPPED_RESOURCES);
       if (droppedResources.length > 0) {
         if (creep.pickup(droppedResources[0]) == ERR_NOT_IN_RANGE) {
           creep.moveTo(droppedResources[0]);
@@ -26,7 +25,6 @@ var roleBuilder = {
         return;
       }
 
-      var sources = creep.room.find(FIND_SOURCES);
       if (sources.length > 0) {
         if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
           creep.moveTo(sources[0]);
