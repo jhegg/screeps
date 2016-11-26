@@ -10,12 +10,12 @@ module.exports.loop = function() {
   const spawnRoom = spawn.room;
   const constructionSites = spawnRoom.find(FIND_CONSTRUCTION_SITES);
   const droppedResources = spawnRoom.find(FIND_DROPPED_RESOURCES);
-  const sources = spawnRoom.find(FIND_SOURCES);
 
   for (var name in Game.creeps) {
     var creep = Game.creeps[name];
-    const desiredSource = sources[Math.floor(Math.random()*sources.length)];
     if (!creep.memory.sourceId) {
+      const sources = creep.room.find(FIND_SOURCES);
+      const desiredSource = sources[Math.floor(Math.random()*sources.length)];
       creep.memory.sourceId = desiredSource.id;
       console.log('Setting sourceId to '+desiredSource.id+' for creep: '+creep);
     }
