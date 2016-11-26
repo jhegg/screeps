@@ -9,8 +9,8 @@ var creepsMaintainer = {
 
     // Note: check cost against max available energy of:
     // Game.spawns.Spawn1.room.energyCapacityAvailable
-    // Current cost: 100 + 100 + 50 + 50 + 50 + 50 + 50 + 50 = 500
-    var standardBody = [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE];
+    // Current cost: 100 + 100 + 100 + 50 + 50 + 50 + 50 + 50 + 50 + 50 = 650
+    var standardBody = [WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE];
 
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
     if (harvesters.length < 4 && Game.spawns.Spawn1.canCreateCreep(standardBody) == OK) {
