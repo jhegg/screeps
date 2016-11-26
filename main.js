@@ -30,6 +30,8 @@ module.exports.loop = function() {
     if (creep.memory.role == 'harvester') {
       if (energyStorageStructures.length) {
         roleHarvester.run(creep, energyStorageStructures);
+      } else if (constructionSites.length) {
+        roleBuilder.run(creep, constructionSites, droppedResources);
       } else {
         roleUpgrader.run(creep);
       }
