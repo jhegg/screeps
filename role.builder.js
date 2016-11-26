@@ -1,5 +1,5 @@
 var roleBuilder = {
-  run: function(creep, constructionSites, droppedResources, sources) {
+  run: function(creep, constructionSites, droppedResources, desiredSource) {
 
     if (creep.memory.building && creep.carry.energy === 0) {
       creep.memory.building = false;
@@ -26,8 +26,8 @@ var roleBuilder = {
       }
 
       if (sources.length > 0) {
-        if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(sources[0]);
+        if (creep.harvest(desiredSource) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(desiredSource);
         }
       }
     }

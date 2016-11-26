@@ -14,17 +14,18 @@ module.exports.loop = function() {
 
   for (var name in Game.creeps) {
     var creep = Game.creeps[name];
+    const desiredSource = sources[Math.floor(Math.random()*sources.length)];
     if (creep.memory.role == 'harvester') {
-      roleHarvester.run(creep, sources);
+      roleHarvester.run(creep, desiredSource);
     }
     if (creep.memory.role == 'upgrader') {
-      roleUpgrader.run(creep, sources);
+      roleUpgrader.run(creep, desiredSource);
     }
     if (creep.memory.role == 'builder') {
       if (constructionSites.length) {
-        roleBuilder.run(creep, constructionSites, droppedResources, sources);
+        roleBuilder.run(creep, constructionSites, droppedResources, desiredSource);
       } else {
-        roleUpgrader.run(creep, sources);
+        roleUpgrader.run(creep, desiredSource);
       }
     }
   }
