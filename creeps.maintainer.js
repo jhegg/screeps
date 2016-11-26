@@ -9,30 +9,45 @@ var creepsMaintainer = {
 
     // Note: check cost against max available energy of:
     // Game.spawns.Spawn1.room.energyCapacityAvailable
-    // Current cost: 100 + 100 + 100 + 50 + 50 + 50 + 50 + 50 + 50 + 50 = 650
-    var standardBody = [WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE];
+    const harvesterBody = [
+      WORK, WORK,
+      CARRY,
+      MOVE, MOVE, MOVE
+    ]; // cost: 400
 
-    var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
-    if (harvesters.length < 4 && Game.spawns.Spawn1.canCreateCreep(standardBody) == OK) {
-      var spawnedCreep = Game.spawns.Spawn1.createCreep(standardBody, undefined, {
+    const builderBody = [
+      WORK, WORK, WORK, WORK,
+      CARRY, CARRY,
+      MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
+    ]; // cost: 800
+
+    const upgraderBody = [
+      WORK, WORK, WORK,
+      CARRY, CARRY, CARRY,
+      MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
+    ]; // cost: 750
+
+    const harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
+    if (harvesters.length < 4 && Game.spawns.Spawn1.canCreateCreep(harvesterBody) == OK) {
+      const spawnedCreep = Game.spawns.Spawn1.createCreep(harvesterBody, undefined, {
         role: 'harvester'
       });
       console.log('Spawning new harvester: ' + spawnedCreep);
       return;
     }
 
-    var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
-    if (builders.length < 4 && Game.spawns.Spawn1.canCreateCreep(standardBody) == OK) {
-      var builderCreep = Game.spawns.Spawn1.createCreep(standardBody, undefined, {
+    const builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
+    if (builders.length < 4 && Game.spawns.Spawn1.canCreateCreep(builderBody) == OK) {
+      const builderCreep = Game.spawns.Spawn1.createCreep(builderBody, undefined, {
         role: 'builder'
       });
       console.log('Spawning new builder: ' + builderCreep);
       return;
     }
 
-    var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
-    if (upgraders.length < 4 && Game.spawns.Spawn1.canCreateCreep(standardBody) == OK) {
-      var upgraderCreep = Game.spawns.Spawn1.createCreep(standardBody, undefined, {
+    const upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
+    if (upgraders.length < 4 && Game.spawns.Spawn1.canCreateCreep(upgraderBody) == OK) {
+      const upgraderCreep = Game.spawns.Spawn1.createCreep(upgraderBody, undefined, {
         role: 'upgrader'
       });
       console.log('Spawning new upgrader: ' + upgraderCreep);
