@@ -2,15 +2,16 @@ var creepsMaintainer = require('creeps.maintainer');
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
+var roomFinders = require('room.finders');
 
 module.exports.loop = function() {
   creepsMaintainer.run();
 
   const room = Game.spawns.Spawn1.room;
-  const constructionSites = findConstructionSites(room);
-  const droppedResources = findDroppedResources(room);
-  const energyStorageStructures = findEnergyStorageStructures(room);
-  const roadsToRepair = findRoadsToRepair(room);
+  const constructionSites = roomFinders.findConstructionSites(room);
+  const droppedResources = roomFinders.findDroppedResources(room);
+  const energyStorageStructures = roomFinders.findEnergyStorageStructures(room);
+  const roadsToRepair = roomFinders.findRoadsToRepair(room);
 
   for (var name in Game.creeps) {
     var creep = Game.creeps[name];
@@ -36,34 +37,6 @@ module.exports.loop = function() {
     }
   }
 };
-
-function findConstructionSites(room) {
-  return room.find(FIND_CONSTRUCTION_SITES);
-}
-
-function findDroppedResources(room) {
-  return room.find(FIND_DROPPED_RESOURCES);
-}
-
-function findEnergyStorageStructures(room) {
-  return room.find(FIND_STRUCTURES, {
-    filter: (structure) => {
-      return (structure.structureType == STRUCTURE_EXTENSION ||
-          structure.structureType == STRUCTURE_SPAWN ||
-          structure.structureType == STRUCTURE_TOWER) &&
-        structure.energy < structure.energyCapacity;
-    }
-  });
-}
-
-function findRoadsToRepair(room) {
-  return room.find(FIND_STRUCTURES, {
-    filter: (structure) => {
-      return structure.structureType === STRUCTURE_ROAD &&
-        (structure.hits < structure.hitsMax / 3);
-    }
-  });
-}
 
 function assignSourceToCreep(creep) {
   if (!creep.memory.sourceId) {
