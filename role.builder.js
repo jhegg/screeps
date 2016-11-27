@@ -19,8 +19,8 @@ var roleBuilder = {
           creep.moveTo(constructionSiteWithMostProgress);
         }
       } else if (roadsToRepair.length) {
-        const roadToRepairWithMostProgress = roadsToRepair.sort(function(a, b) {
-          return b.progress - a.progress;
+        const roadToRepairWithLeastHits = roadsToRepair.sort(function(a, b) {
+          return b.hits - a.hits;
         })[0];
         if (creep.repair(roadToRepairWithMostProgress) === ERR_NOT_IN_RANGE) {
           creep.moveTo(roadToRepairWithMostProgress);
