@@ -27,12 +27,7 @@ module.exports.loop = function() {
 
   for (var name in Game.creeps) {
     var creep = Game.creeps[name];
-    if (!creep.memory.sourceId) {
-      const sources = creep.room.find(FIND_SOURCES);
-      const desiredSource = sources[Math.floor(Math.random()*sources.length)];
-      creep.memory.sourceId = desiredSource.id;
-      console.log('Setting sourceId to '+desiredSource.id+' for creep: '+creep);
-    }
+    assignSourceToCreep(creep);
     if (creep.memory.role == 'harvester') {
       if (energyStorageStructures.length) {
         roleHarvester.run(creep, energyStorageStructures);
@@ -54,3 +49,12 @@ module.exports.loop = function() {
     }
   }
 };
+
+function assignSourceToCreep(creep) {
+  if (!creep.memory.sourceId) {
+    const sources = creep.room.find(FIND_SOURCES);
+    const desiredSource = sources[Math.floor(Math.random() * sources.length)];
+    creep.memory.sourceId = desiredSource.id;
+    console.log('Setting sourceId to ' + desiredSource.id + ' for creep: ' + creep);
+  }
+}
