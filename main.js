@@ -18,6 +18,12 @@ module.exports.loop = function() {
         structure.energy < structure.energyCapacity;
     }
   });
+  const roadsToRepair = spawnRoom.find(FIND_STRUCTURES, {
+    filter: (structure) => {
+      return structure.structureType === STRUCTURE_ROAD &&
+        (structure.hits < structure.hitsMax / 3);
+    }
+  });
 
   for (var name in Game.creeps) {
     var creep = Game.creeps[name];
@@ -40,8 +46,8 @@ module.exports.loop = function() {
       roleUpgrader.run(creep);
     }
     if (creep.memory.role == 'builder') {
-      if (constructionSites.length) {
-        roleBuilder.run(creep, constructionSites, droppedResources);
+      if (constructionSites.length || roadsToRepair.length) {
+        roleBuilder.run(creep, constructionSites, droppedResources, roadsToRepair);
       } else {
         roleUpgrader.run(creep);
       }
