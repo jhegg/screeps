@@ -16,6 +16,17 @@ module.exports.loop = function() {
   for (var name in Game.creeps) {
     var creep = Game.creeps[name];
     assignSourceToCreep(creep);
+
+    if (shouldRetire(creep)) {
+      creep.memory.role = 'retired';
+      creep.say('retiring');
+      for (var resourceType in creep.carry) {
+        creep.drop(resourceType);
+      }
+      console.log(creep + ' is now retired');
+      creep.suicide();
+    }
+
     if (creep.memory.role == 'harvester') {
       if (energyStorageStructures.length) {
         roleHarvester.run(creep, energyStorageStructures);
@@ -25,9 +36,11 @@ module.exports.loop = function() {
         roleUpgrader.run(creep);
       }
     }
+
     if (creep.memory.role == 'upgrader') {
       roleUpgrader.run(creep);
     }
+
     if (creep.memory.role == 'builder') {
       if (constructionSites.length || roadsToRepair.length) {
         roleBuilder.run(creep, constructionSites, droppedResources, roadsToRepair);
@@ -45,4 +58,9 @@ function assignSourceToCreep(creep) {
     creep.memory.sourceId = desiredSource.id;
     console.log('Setting sourceId to ' + desiredSource.id + ' for creep: ' + creep);
   }
+}
+
+function shouldRetire(creep) {
+  return creep.memory.role !== 'retired' &&
+    creep.ticksToLive < 5;
 }
