@@ -15,7 +15,7 @@ module.exports.loop = function() {
   const roadsToRepair = roomFinders.findRoadsToRepair(room);
   const hostileCreeps = roomFinders.findHostiles(room);
 
-  towerController.run(room, hostileCreeps);
+  towerController.run(room, hostileCreeps, roadsToRepair);
 
   for (var name in Game.creeps) {
     var creep = Game.creeps[name];
@@ -46,8 +46,8 @@ module.exports.loop = function() {
     }
 
     if (creep.memory.role == 'builder') {
-      if (constructionSites.length || roadsToRepair.length) {
-        roleBuilder.run(creep, constructionSites, droppedResources, roadsToRepair);
+      if (constructionSites.length) {
+        roleBuilder.run(creep, constructionSites, droppedResources);
       } else {
         roleUpgrader.run(creep);
       }

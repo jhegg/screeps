@@ -1,5 +1,5 @@
 var roleBuilder = {
-  run: function(creep, constructionSites, droppedResources, roadsToRepair) {
+  run: function(creep, constructionSites, droppedResources) {
 
     if (creep.memory.building && creep.carry.energy === 0) {
       creep.memory.building = false;
@@ -17,13 +17,6 @@ var roleBuilder = {
         })[0];
         if (creep.build(constructionSiteWithMostProgress) === ERR_NOT_IN_RANGE) {
           creep.moveTo(constructionSiteWithMostProgress);
-        }
-      } else if (roadsToRepair.length) {
-        const roadToRepairWithLeastHits = roadsToRepair.sort(function(a, b) {
-          return b.hits - a.hits;
-        })[0];
-        if (creep.repair(roadToRepairWithMostProgress) === ERR_NOT_IN_RANGE) {
-          creep.moveTo(roadToRepairWithMostProgress);
         }
       } else {
         console.log('Builder '+creep+' has no construction site or road to repair; error?');

@@ -26,17 +26,23 @@ var roomFinders = {
     return room.find(FIND_STRUCTURES, {
       filter: (structure) => {
         return structure.structureType === STRUCTURE_ROAD &&
-          (structure.hits < structure.hitsMax / 3);
+          (structure.hits < structure.hitsMax / 2);
       }
     });
   },
   findHostiles: function(room) {
     return room.find(FIND_HOSTILE_CREEPS);
   },
+  findStructuresToRepair: function(room) {
+    return _.filter(Game.structures, (structure) =>
+      (structure.hits < structure.hitsMax) &&
+      structure.room.name === room.name
+    );
+  },
   findTowers: function(room) {
     return _.filter(Game.structures, (structure) =>
       structure.structureType === STRUCTURE_TOWER &&
-      structure.roomName === room.roomName
+      structure.room.name === room.name
     );
   },
 };
