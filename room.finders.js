@@ -24,6 +24,9 @@ var roomFinders = {
       }
     });
   },
+  findHostiles: function(room) {
+    return room.find(FIND_HOSTILE_CREEPS);
+  },
 };
 
 module.exports = roomFinders;

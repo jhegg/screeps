@@ -3,6 +3,7 @@ var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 var roomFinders = require('room.finders');
+var towerController = require('tower.controller');
 
 module.exports.loop = function() {
   creepsMaintainer.run();
@@ -12,6 +13,9 @@ module.exports.loop = function() {
   const droppedResources = roomFinders.findDroppedResources(room);
   const energyStorageStructures = roomFinders.findEnergyStorageStructures(room);
   const roadsToRepair = roomFinders.findRoadsToRepair(room);
+  const hostileCreeps = roomFinders.findHostiles(room);
+
+  towerController.run(room, hostileCreeps);
 
   for (var name in Game.creeps) {
     var creep = Game.creeps[name];
