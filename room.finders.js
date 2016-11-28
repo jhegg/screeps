@@ -4,7 +4,7 @@ var roomFinders = {
   },
   findCreepsNeedingHealing: function(room) {
     return _.filter(Game.creeps, (creep) =>
-      creep.roomName === room.roomName &&
+      creep.room.name === room.name &&
       creep.hits < creep.hitsMax
     );
   },
