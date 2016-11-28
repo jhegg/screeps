@@ -2,6 +2,12 @@ var roomFinders = {
   findConstructionSites: function(room) {
     return room.find(FIND_CONSTRUCTION_SITES);
   },
+  findCreepsNeedingHealing: function(room) {
+    return _.filter(Game.creeps, (creep) =>
+      creep.roomName === room.roomName &&
+      creep.hits < creep.hitsMax
+    );
+  },
   findDroppedResources: function(room) {
     return room.find(FIND_DROPPED_RESOURCES);
   },
@@ -26,6 +32,12 @@ var roomFinders = {
   },
   findHostiles: function(room) {
     return room.find(FIND_HOSTILE_CREEPS);
+  },
+  findTowers: function(room) {
+    return _.filter(Game.structures, (structure) =>
+      structure.structureType === STRUCTURE_TOWER &&
+      structure.roomName === room.roomName
+    );
   },
 };
 
