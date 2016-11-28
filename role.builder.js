@@ -19,7 +19,7 @@ var roleBuilder = {
           creep.moveTo(constructionSiteWithMostProgress);
         }
       } else {
-        console.log('Builder '+creep+' has no construction site or road to repair; error?');
+        console.log('Builder '+creep+' has no construction site; error?');
       }
     } else {
       if (droppedResources.length > 0) {
