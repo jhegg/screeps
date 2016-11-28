@@ -16,7 +16,6 @@ var towerController = {
       }
 
       const structuresToRepair = roomFinders.findStructuresToRepair(room);
-      //console.log('Structures to repair: '+structuresToRepair.length);
       if (structuresToRepair.length > 0) {
         repairStructure(tower, structuresToRepair[0]);
         return;
