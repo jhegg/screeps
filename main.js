@@ -9,9 +9,6 @@ module.exports.loop = function() {
   creepsMaintainer.run();
 
   const room = Game.spawns.Spawn1.room;
-  const constructionSites = roomFinders.findConstructionSites(room);
-  const droppedResources = roomFinders.findDroppedResources(room);
-  const energyStorageStructures = roomFinders.findEnergyStorageStructures(room);
   const roadsToRepair = roomFinders.findRoadsToRepair(room);
   const hostileCreeps = roomFinders.findHostiles(room);
 
@@ -20,38 +17,10 @@ module.exports.loop = function() {
   for (var name in Game.creeps) {
     var creep = Game.creeps[name];
     assignSourceToCreep(creep);
-
     if (shouldRetire(creep)) {
-      creep.memory.role = 'retired';
-      creep.say('retiring');
-      for (var resourceType in creep.carry) {
-        creep.drop(resourceType);
-      }
-      console.log(creep + ' is now retired');
-      creep.suicide();
+      creepsMaintainer.retireOldCreep(creep);
     }
-
-    if (creep.memory.role == 'harvester') {
-      if (energyStorageStructures.length) {
-        roleHarvester.run(creep, energyStorageStructures);
-      } else if (constructionSites.length) {
-        roleBuilder.run(creep, constructionSites, droppedResources);
-      } else {
-        roleUpgrader.run(creep);
-      }
-    }
-
-    if (creep.memory.role == 'upgrader') {
-      roleUpgrader.run(creep);
-    }
-
-    if (creep.memory.role == 'builder') {
-      if (constructionSites.length) {
-        roleBuilder.run(creep, constructionSites, droppedResources);
-      } else {
-        roleUpgrader.run(creep);
-      }
-    }
+    putCreepToWork(creep, room);
   }
 };
 
@@ -67,4 +36,32 @@ function assignSourceToCreep(creep) {
 function shouldRetire(creep) {
   return creep.memory.role !== 'retired' &&
     creep.ticksToLive < 5;
+}
+
+function putCreepToWork(creep, room) {
+  const constructionSites = roomFinders.findConstructionSites(room);
+  const droppedResources = roomFinders.findDroppedResources(room);
+  const energyStorageStructures = roomFinders.findEnergyStorageStructures(room);
+
+  if (creep.memory.role == 'harvester') {
+    if (energyStorageStructures.length) {
+      roleHarvester.run(creep, energyStorageStructures);
+    } else if (constructionSites.length) {
+      roleBuilder.run(creep, constructionSites, droppedResources);
+    } else {
+      roleUpgrader.run(creep);
+    }
+  }
+
+  if (creep.memory.role == 'upgrader') {
+    roleUpgrader.run(creep);
+  }
+
+  if (creep.memory.role == 'builder') {
+    if (constructionSites.length) {
+      roleBuilder.run(creep, constructionSites, droppedResources);
+    } else {
+      roleUpgrader.run(creep);
+    }
+  }
 }
