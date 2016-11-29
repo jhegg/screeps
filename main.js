@@ -26,7 +26,11 @@ module.exports.loop = function() {
 
 function assignSourceToCreep(creep) {
   if (!creep.memory.sourceId) {
-    const sources = creep.room.find(FIND_SOURCES);
+    const sources = creep.room.find(FIND_SOURCES, {
+      filter: (source) => {
+        return !_.includes(source.room.memory.blacklistedSources, source.id);
+      }
+    });
     const desiredSource = sources[Math.floor(Math.random() * sources.length)];
     creep.memory.sourceId = desiredSource.id;
     console.log('Setting sourceId to ' + desiredSource.id + ' for creep: ' + creep);
