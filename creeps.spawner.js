@@ -6,17 +6,17 @@ const upgraderRole = 'upgrader';
 
 var creepsSpawner = {
   spawnSmallCreeps: function() {
-    const startingBody = [WORK, CARRY, MOVE]; // cost: 200
+    const startingBody = [WORK, CARRY, MOVE, MOVE]; // cost: 250
     const creepTemplates = [
       { role: harvesterRole,
         body: startingBody,
-        maxCreepsOfType: 2},
+        maxCreepsOfType: 4},
       { role: builderRole,
         body: startingBody,
-        maxCreepsOfType: 2},
+        maxCreepsOfType: 4},
       { role: upgraderRole,
         body: startingBody,
-        maxCreepsOfType: 2},
+        maxCreepsOfType: 4},
     ];
     spawnCreepFromTemplate(creepTemplates);
   },

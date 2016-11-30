@@ -11,6 +11,14 @@ module.exports.loop = function() {
   const room = Game.spawns.Spawn1.room;
   const roadsToRepair = roomFinders.findRoadsToRepair(room);
   const hostileCreeps = roomFinders.findHostiles(room);
+  const constructionSites = roomFinders.findConstructionSites(room);
+  const droppedResources = roomFinders.findDroppedResources(room);
+  const energyStorageStructures = roomFinders.findEnergyStorageStructures(room);
+  const creepWorkData = {
+    constructionSites: constructionSites,
+    droppedResources: droppedResources,
+    energyStorageStructures: energyStorageStructures,
+  };
 
   towerController.run(room, hostileCreeps, roadsToRepair);
 
@@ -20,7 +28,7 @@ module.exports.loop = function() {
     if (shouldRetire(creep)) {
       creepsMaintainer.retireOldCreep(creep);
     }
-    putCreepToWork(creep, room);
+    putCreepToWork(creep, creepWorkData);
   }
 };
 
@@ -42,16 +50,14 @@ function shouldRetire(creep) {
     creep.ticksToLive < 5;
 }
 
-function putCreepToWork(creep, room) {
-  const constructionSites = roomFinders.findConstructionSites(room);
-  const droppedResources = roomFinders.findDroppedResources(room);
-  const energyStorageStructures = roomFinders.findEnergyStorageStructures(room);
-
+function putCreepToWork(creep, creepWorkData) {
   if (creep.memory.role == 'harvester') {
-    if (energyStorageStructures.length) {
-      roleHarvester.run(creep, energyStorageStructures);
-    } else if (constructionSites.length) {
-      roleBuilder.run(creep, constructionSites, droppedResources);
+    if (creepWorkData.energyStorageStructures.length) {
+      roleHarvester.run(creep, creepWorkData.energyStorageStructures);
+    } else if (creepWorkData.constructionSites.length) {
+      roleBuilder.run(creep,
+        creepWorkData.constructionSites,
+        creepWorkData.droppedResources);
     } else {
       roleUpgrader.run(creep);
     }
@@ -63,7 +69,9 @@ function putCreepToWork(creep, room) {
 
   if (creep.memory.role == 'builder') {
     if (constructionSites.length) {
-      roleBuilder.run(creep, constructionSites, droppedResources);
+      roleBuilder.run(creep,
+        creepWorkData.constructionSites,
+        creepWorkData.droppedResources);
     } else {
       roleUpgrader.run(creep);
     }
