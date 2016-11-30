@@ -15,6 +15,14 @@ var towerController = {
         return;
       }
 
+      const containersToRepair = roomFinders.findContainersToRepair(room);
+      if (containersToRepair.length > 0) {
+        const containersToRepairSortedByHits = containersToRepair.sort(function(a,b) {
+          return a.hits - b.hits;
+        });
+        repairStructure(tower, containersToRepairSortedByHits[0]);
+      }
+
       const structuresToRepair = roomFinders.findStructuresToRepair(room);
       if (structuresToRepair.length > 0) {
         repairStructure(tower, structuresToRepair[0]);
