@@ -68,7 +68,7 @@ function putCreepToWork(creep, creepWorkData) {
   }
 
   if (creep.memory.role == 'builder') {
-    if (constructionSites.length) {
+    if (creepWorkData.constructionSites.length) {
       roleBuilder.run(creep,
         creepWorkData.constructionSites,
         creepWorkData.droppedResources);
