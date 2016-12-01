@@ -21,6 +21,7 @@ var towerController = {
           return a.hits - b.hits;
         });
         repairStructure(tower, containersToRepairSortedByHits[0]);
+        return;
       }
 
       const structuresToRepair = roomFinders.findStructuresToRepair(room);
