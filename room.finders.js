@@ -44,7 +44,7 @@ var roomFinders = {
   findStructuresToRepair: function(room) {
     return _.filter(Game.structures, (structure) =>
       ((structure.structureType === STRUCTURE_RAMPART &&
-          structure.hits < 10000) ||
+          structure.hits < 1000) ||
           (structure.structureType !== STRUCTURE_RAMPART &&
             structure.hits < structure.hitsMax)
       ) && structure.room.name === room.name
@@ -55,6 +55,13 @@ var roomFinders = {
       structure.structureType === STRUCTURE_TOWER &&
       structure.room.name === room.name
     );
+  },
+  findWallsToRepair: function(room) {
+    return room.find(FIND_STRUCTURES, {
+      filter: (structure) => {
+        return structure.structureType === STRUCTURE_WALL && structure.hits < 1000;
+      }
+    });
   },
 };
 

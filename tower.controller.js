@@ -38,6 +38,12 @@ var towerController = {
         repairStructure(tower, roadsToRepair[0]);
         return;
       }
+
+      const wallsToRepair = roomFinders.findWallsToRepair(room);
+      if (wallsToRepair.length > 0) {
+        repairStructure(tower, wallsToRepair[0]);
+        return;
+      }
     });
   },
 };
