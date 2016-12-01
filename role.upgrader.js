@@ -18,6 +18,14 @@ var roleUpgrader = {
         creep.moveTo(creep.room.controller);
       }
     } else {
+      const controllerContainer = Game.getObjectById(creep.room.memory.ControllerContainer);
+      if (controllerContainer && controllerContainer.store[RESOURCE_ENERGY] > 50) {
+        if (creep.withdraw(controllerContainer, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(controllerContainer);
+        }
+        return;
+      }
+
       const containersWithEnergy =
         roleUtility.containersWithEnergy(creepWorkData.energyStorageStructures);
       if (containersWithEnergy.length) {
