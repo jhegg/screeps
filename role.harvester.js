@@ -8,8 +8,13 @@ var roleHarvester = {
       }
     } else {
       if (energyStorageStructures.length > 0) {
-        if (creep.transfer(energyStorageStructures[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(energyStorageStructures[0]);
+        // prioritize Tower -> Spawn -> Extension -> Container
+        var sortedEnergyStructures = _.sortBy(energyStorageStructures,
+          [function(structure) { return structure.structureType;}],
+          ['desc']
+        );
+        if (creep.transfer(sortedEnergyStructures[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(sortedEnergyStructures[0]);
         }
       }
     }
