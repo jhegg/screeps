@@ -39,6 +39,25 @@ var roleBuilder = {
         return;
       }
 
+      const controllerContainer = Game.getObjectById(creep.room.memory.ControllerContainer);
+      const source1Container = Game.getObjectById(creep.room.memory.Source1Container);
+      const source2Container = Game.getObjectById(creep.room.memory.Source2Container);
+      const containers = [
+        controllerContainer,
+        source1Container,
+        source2Container,
+      ];
+
+      for (var container of containers) {
+        if (container && container.store[RESOURCE_ENERGY] > 50) {
+          if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(container);
+          }
+          return;
+        }
+      }
+
+      // todo why doesn't this work? a container with 2k energy sat idle.
       const containersWithEnergy =
         roleUtility.containersWithEnergy(creepWorkData.energyStorageStructures);
       if (containersWithEnergy.length) {
