@@ -49,7 +49,6 @@ var towerController = {
 };
 
 function attackHostile(tower, room, hostileCreep) {
-  console.log('Attacking hostile ' + hostileCreep + ' in room ' + room);
   const attackResult = tower.attack(hostileCreep);
   switch (attackResult) {
     case OK:
@@ -74,7 +73,6 @@ function attackHostile(tower, room, hostileCreep) {
 }
 
 function repairStructure(tower, structureToRepair) {
-  console.log(tower + ' repairing ' + structureToRepair);
   const result = tower.repair(structureToRepair);
   switch (result) {
     case OK:
@@ -97,7 +95,6 @@ function repairStructure(tower, structureToRepair) {
 }
 
 function healCreep(tower, creep) {
-  console.log(tower + ' healing ' + creep);
   const result = tower.heal(creep);
   switch (result) {
     case OK:
