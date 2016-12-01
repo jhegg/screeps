@@ -55,9 +55,7 @@ function putCreepToWork(creep, creepWorkData) {
     if (creepWorkData.energyStorageStructures.length) {
       roleHarvester.run(creep, creepWorkData.energyStorageStructures);
     } else if (creepWorkData.constructionSites.length) {
-      roleBuilder.run(creep,
-        creepWorkData.constructionSites,
-        creepWorkData.droppedResources);
+      roleBuilder.run(creep, creepWorkData);
     } else {
       roleUpgrader.run(creep);
     }
@@ -69,9 +67,7 @@ function putCreepToWork(creep, creepWorkData) {
 
   if (creep.memory.role == 'builder') {
     if (creepWorkData.constructionSites.length) {
-      roleBuilder.run(creep,
-        creepWorkData.constructionSites,
-        creepWorkData.droppedResources);
+      roleBuilder.run(creep, creepWorkData);
     } else {
       roleUpgrader.run(creep);
     }
