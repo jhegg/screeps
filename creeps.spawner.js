@@ -60,13 +60,13 @@ var creepsSpawner = {
     const creepTemplates = [
       { role: harvesterRole,
         body: harvesterBody,
-        maxCreepsOfType: 6},
+        maxCreepsOfType: 4},
       { role: builderRole,
         body: builderBody,
-        maxCreepsOfType: 6},
+        maxCreepsOfType: 4},
       { role: upgraderRole,
         body: upgraderBody,
-        maxCreepsOfType: 6},
+        maxCreepsOfType: 4},
     ];
     spawnCreepFromTemplate(creepTemplates);
   },
