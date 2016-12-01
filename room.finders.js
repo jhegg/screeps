@@ -22,12 +22,12 @@ var roomFinders = {
   findEnergyStorageStructures: function(room) {
     return room.find(FIND_STRUCTURES, {
       filter: (structure) => {
-        return (structure.structureType == STRUCTURE_EXTENSION ||
+        return ((structure.structureType == STRUCTURE_EXTENSION ||
             structure.structureType == STRUCTURE_SPAWN ||
-            structure.structureType == STRUCTURE_TOWER &&
+            structure.structureType == STRUCTURE_TOWER) &&
             structure.energy < structure.energyCapacity) ||
             (structure.structureType == STRUCTURE_CONTAINER &&
-            structure.store[RESOURCE_ENERGY] > 50);
+            _.sum(structure.store) < 2000);
       }
     });
   },
