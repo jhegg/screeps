@@ -57,19 +57,19 @@ function putCreepToWork(creep, creepWorkData) {
     } else if (creepWorkData.constructionSites.length) {
       roleBuilder.run(creep, creepWorkData);
     } else {
-      roleUpgrader.run(creep);
+      roleUpgrader.run(creep, creepWorkData);
     }
   }
 
   if (creep.memory.role == 'upgrader') {
-    roleUpgrader.run(creep);
+    roleUpgrader.run(creep, creepWorkData);
   }
 
   if (creep.memory.role == 'builder') {
     if (creepWorkData.constructionSites.length) {
       roleBuilder.run(creep, creepWorkData);
     } else {
-      roleUpgrader.run(creep);
+      roleUpgrader.run(creep, creepWorkData);
     }
   }
 }
