@@ -9,6 +9,10 @@ var towerController = {
         return;
       }
 
+      if (tower.energy <= 100) {
+        return;
+      }
+
       const creepsNeedingHealing = roomFinders.findCreepsNeedingHealing(room);
       if (creepsNeedingHealing.length > 0) {
         healCreep(tower, creepsNeedingHealing[0]);

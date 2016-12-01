@@ -43,8 +43,11 @@ var roomFinders = {
   },
   findStructuresToRepair: function(room) {
     return _.filter(Game.structures, (structure) =>
-      (structure.hits < structure.hitsMax) &&
-      structure.room.name === room.name
+      ((structure.structureType === STRUCTURE_RAMPART &&
+          structure.hits < 10000) ||
+          (structure.structureType !== STRUCTURE_RAMPART &&
+            structure.hits < structure.hitsMax)
+      ) && structure.room.name === room.name
     );
   },
   findTowers: function(room) {
