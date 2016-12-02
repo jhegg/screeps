@@ -7,33 +7,37 @@ var roomUtility = require('room.utility');
 var towerController = require('tower.controller');
 
 module.exports.loop = function() {
-  creepsMaintainer.run();
+  creepsMaintainer.cleanOldCreepMemory();
 
-  const room = Game.spawns.Spawn1.room;
-  const roadsToRepair = roomFinders.findRoadsToRepair(room);
-  const hostileCreeps = roomFinders.findHostiles(room);
-  const constructionSites = roomFinders.findConstructionSites(room);
-  const droppedResources = roomFinders.findDroppedResources(room);
-  const energyStorageStructures = roomFinders.findEnergyStorageStructures(room);
-  const creepWorkData = {
-    constructionSites: constructionSites,
-    droppedResources: droppedResources,
-    energyStorageStructures: energyStorageStructures,
-  };
+  for (var spawnName in Game.spawns) {
+    const room = Game.spawns[spawnName].room;
+    const roadsToRepair = roomFinders.findRoadsToRepair(room);
+    const hostileCreeps = roomFinders.findHostiles(room);
+    const constructionSites = roomFinders.findConstructionSites(room);
+    const droppedResources = roomFinders.findDroppedResources(room);
+    const energyStorageStructures = roomFinders.findEnergyStorageStructures(room);
+    const creepWorkData = {
+      constructionSites: constructionSites,
+      droppedResources: droppedResources,
+      energyStorageStructures: energyStorageStructures,
+    };
 
-  if (hostileCreeps.length > 0) {
-    roomUtility.activateSafeMode(room, hostileCreeps);
-  }
+    creepsMaintainer.spawnNewCreeps(Game.spawns[spawnName]);
 
-  towerController.run(room, hostileCreeps, roadsToRepair);
-
-  for (var name in Game.creeps) {
-    var creep = Game.creeps[name];
-    assignSourceToCreep(creep);
-    if (shouldRetire(creep)) {
-      creepsMaintainer.retireOldCreep(creep);
+    if (hostileCreeps.length > 0) {
+      roomUtility.activateSafeMode(room, hostileCreeps);
     }
-    putCreepToWork(creep, creepWorkData);
+
+    towerController.run(room, hostileCreeps, roadsToRepair);
+
+    for (var name in Game.creeps) {
+      var creep = Game.creeps[name];
+      assignSourceToCreep(creep);
+      if (shouldRetire(creep)) {
+        creepsMaintainer.retireOldCreep(creep);
+      }
+      putCreepToWork(creep, creepWorkData);
+    }
   }
 };
 

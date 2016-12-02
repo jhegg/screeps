@@ -1,11 +1,14 @@
 var creepsSpawner = require('creeps.spawner');
 
 var creepsMaintainer = {
-  run: function() {
-    cleanOldCreepMemory();
-    spawnNewCreeps();
+  cleanOldCreepMemory: function() {
+    for (var name in Memory.creeps) {
+      if (!Game.creeps[name]) {
+        delete Memory.creeps[name];
+        console.log('Cleaning old creep memory from:', name);
+      }
+    }
   },
-
   retireOldCreep(creep) {
     creep.memory.role = 'retired';
     creep.say('retiring');
@@ -15,29 +18,19 @@ var creepsMaintainer = {
     console.log(creep + ' is now retired');
     creep.suicide();
   },
-};
+  spawnNewCreeps: function(spawn) {
+    const energyCapacity = spawn.room.energyCapacityAvailable;
+    const mediumEnergyCapacity = 550;
+    const largeEnergyCapacity = 800;
 
-function cleanOldCreepMemory() {
-  for (var name in Memory.creeps) {
-    if (!Game.creeps[name]) {
-      delete Memory.creeps[name];
-      console.log('Cleaning old creep memory from:', name);
+    if (energyCapacity < mediumEnergyCapacity) {
+      creepsSpawner.spawnSmallCreeps(spawn);
+    } else if (energyCapacity < largeEnergyCapacity) {
+      creepsSpawner.spawnMediumCreeps(spawn);
+    } else {
+      creepsSpawner.spawnLargeCreeps(spawn);
     }
-  }
-}
-
-function spawnNewCreeps() {
-  const energyCapacity = Game.spawns.Spawn1.room.energyCapacityAvailable;
-  const mediumEnergyCapacity = 550;
-  const largeEnergyCapacity = 800;
-
-  if (energyCapacity < mediumEnergyCapacity) {
-    creepsSpawner.spawnSmallCreeps();
-  } else if (energyCapacity < largeEnergyCapacity) {
-    creepsSpawner.spawnMediumCreeps();
-  } else {
-    creepsSpawner.spawnLargeCreeps();
-  }
-}
+  },
+};
 
 module.exports = creepsMaintainer;

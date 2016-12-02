@@ -5,7 +5,7 @@ const builderRole = 'builder';
 const upgraderRole = 'upgrader';
 
 var creepsSpawner = {
-  spawnSmallCreeps: function() {
+  spawnSmallCreeps: function(spawn) {
     const startingBody = [WORK, CARRY, MOVE, MOVE]; // cost: 250
     const creepTemplates = [
       { role: harvesterRole,
@@ -18,10 +18,10 @@ var creepsSpawner = {
         body: startingBody,
         maxCreepsOfType: 4},
     ];
-    spawnCreepFromTemplate(creepTemplates);
+    spawnCreepFromTemplate(spawn, creepTemplates);
   },
 
-  spawnMediumCreeps: function() {
+  spawnMediumCreeps: function(spawn) {
     const mediumBody = [
       WORK, WORK,
       CARRY, CARRY,
@@ -38,10 +38,10 @@ var creepsSpawner = {
         body: mediumBody,
         maxCreepsOfType: 4},
     ];
-    spawnCreepFromTemplate(creepTemplates);
+    spawnCreepFromTemplate(spawn, creepTemplates);
   },
 
-  spawnLargeCreeps: function() {
+  spawnLargeCreeps: function(spawn) {
     const harvesterBody = [
       WORK, WORK,
       CARRY,
@@ -68,37 +68,38 @@ var creepsSpawner = {
         body: upgraderBody,
         maxCreepsOfType: 6},
     ];
-    spawnCreepFromTemplate(creepTemplates);
+    spawnCreepFromTemplate(spawn, creepTemplates);
   },
 };
 
-function spawnCreepFromTemplate(creepTemplates) {
+function spawnCreepFromTemplate(spawn, creepTemplates) {
   for (var template of creepTemplates) {
-    const numCreeps = findCreepsHavingRole(template.role);
-    if (shouldCreateCreep(numCreeps.length, template)) {
-      createCreep(template);
+    const numCreeps = findCreepsHavingRole(spawn.room, template.role);
+    if (shouldCreateCreep(spawn, numCreeps.length, template)) {
+      createCreep(spawn, template);
       break;
     }
   }
 }
 
-function findCreepsHavingRole(role) {
+function findCreepsHavingRole(room, role) {
   return _.filter(Game.creeps, (creep) =>
-    creep.memory.role == role
+    creep.memory.role === role &&
+    creep.room.name === room.name
   );
 }
 
-function shouldCreateCreep(numCurrentCreepsOfType, creepTemplate) {
+function shouldCreateCreep(spawn, numCurrentCreepsOfType, creepTemplate) {
   return numCurrentCreepsOfType < creepTemplate.maxCreepsOfType &&
-      canCreateCreep(creepTemplate.body);
+      canCreateCreep(spawn, creepTemplate.body);
 }
 
-function canCreateCreep(body) {
-  return Game.spawns.Spawn1.canCreateCreep(body) == OK;
+function canCreateCreep(spawn, body) {
+  return spawn.canCreateCreep(body) == OK;
 }
 
-function createCreep(creepTemplate) {
-  const spawnedCreep = Game.spawns.Spawn1.createCreep(creepTemplate.body,
+function createCreep(spawn, creepTemplate) {
+  const spawnedCreep = spawn.createCreep(creepTemplate.body,
     undefined,
     { role: creepTemplate.role }
   );
