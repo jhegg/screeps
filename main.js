@@ -3,6 +3,7 @@ var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 var roomFinders = require('room.finders');
+var roomUtility = require('room.utility');
 var towerController = require('tower.controller');
 
 module.exports.loop = function() {
@@ -19,6 +20,10 @@ module.exports.loop = function() {
     droppedResources: droppedResources,
     energyStorageStructures: energyStorageStructures,
   };
+
+  if (hostileCreeps.length > 0) {
+    roomUtility.activateSafeMode(room, hostileCreeps);
+  }
 
   towerController.run(room, hostileCreeps, roadsToRepair);
 
