@@ -24,13 +24,42 @@ var creepsMaintainer = {
     const largeEnergyCapacity = 800;
 
     if (energyCapacity < mediumEnergyCapacity) {
-      creepsSpawner.spawnSmallCreeps(spawn);
+      lowEnergyCapacitySpawning(spawn);
     } else if (energyCapacity < largeEnergyCapacity) {
-      creepsSpawner.spawnMediumCreeps(spawn);
+      mediumEnergyCapacitySpawning(spawn);
     } else {
-      creepsSpawner.spawnLargeCreeps(spawn);
+      largeEnergyCapacitySpawning(spawn);
     }
   },
 };
+
+function lowEnergyCapacitySpawning(spawn) {
+  if (roomHasSourceContainers(spawn)) {
+    creepsSpawner.spawnSmallCreepsWithTrucks(spawn);
+  } else {
+    creepsSpawner.spawnSmallCreeps(spawn);
+  }
+}
+
+function roomHasSourceContainers(room) {
+  return room.memory.sourceContainers &&
+    room.memory.sourceContainers.length > 0;
+}
+
+function mediumEnergyCapacitySpawning(spawn) {
+  if (roomHasSourceContainers(spawn)) {
+    creepsSpawner.spawnMediumCreepsWithTrucks(spawn);
+  } else {
+    creepsSpawner.spawnMediumCreeps(spawn);
+  }
+}
+
+function largeEnergyCapacitySpawning(spawn) {
+  if (roomHasSourceContainers(spawn)) {
+    creepsSpawner.spawnLargeCreepsWithTrucks(spawn);
+  } else {
+    creepsSpawner.spawnLargeCreeps(spawn);
+  }
+}
 
 module.exports = creepsMaintainer;

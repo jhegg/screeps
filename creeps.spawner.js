@@ -1,74 +1,35 @@
+var creepsTemplates = require('creeps.templates');
 var roomFinders = require('room.finders');
-
-const harvesterRole = 'harvester';
-const builderRole = 'builder';
-const upgraderRole = 'upgrader';
 
 var creepsSpawner = {
   spawnSmallCreeps: function(spawn) {
-    const startingBody = [WORK, CARRY, MOVE, MOVE]; // cost: 250
-    const creepTemplates = [
-      { role: harvesterRole,
-        body: startingBody,
-        maxCreepsOfType: 4},
-      { role: builderRole,
-        body: startingBody,
-        maxCreepsOfType: 4},
-      { role: upgraderRole,
-        body: startingBody,
-        maxCreepsOfType: 4},
-    ];
-    spawnCreepFromTemplate(spawn, creepTemplates);
+    const template = creepsTemplates.startingBodyTemplate();
+    spawnCreepFromTemplate(spawn, template);
+  },
+  spawnSmallCreepsWithTrucks: function(spawn) {
+    // TODO add trucks
+    const template = creepsTemplates.startingBodyTemplate();
+    spawnCreepFromTemplate(spawn, template);
   },
 
   spawnMediumCreeps: function(spawn) {
-    const mediumBody = [
-      WORK, WORK,
-      CARRY, CARRY,
-      MOVE, MOVE, MOVE, MOVE
-    ]; // cost: 500
-    const creepTemplates = [
-      { role: harvesterRole,
-        body: mediumBody,
-        maxCreepsOfType: 4},
-      { role: builderRole,
-        body: mediumBody,
-        maxCreepsOfType: 4},
-      { role: upgraderRole,
-        body: mediumBody,
-        maxCreepsOfType: 4},
-    ];
-    spawnCreepFromTemplate(spawn, creepTemplates);
+    const template = creepsTemplates.mediumBodyTemplate();
+    spawnCreepFromTemplate(spawn, template);
+  },
+  spawnMediumCreepsWithTrucks: function(spawn) {
+    // TODO add trucks
+    const template = creepsTemplates.mediumBodyTemplate();
+    spawnCreepFromTemplate(spawn, template);
   },
 
   spawnLargeCreeps: function(spawn) {
-    const harvesterBody = [
-      WORK, WORK,
-      CARRY,
-      MOVE, MOVE, MOVE
-    ]; // cost: 400
-    const builderBody = [
-      WORK, WORK, WORK, WORK,
-      CARRY, CARRY,
-      MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
-    ]; // cost: 800
-    const upgraderBody = [
-      WORK, WORK, WORK,
-      CARRY, CARRY, CARRY,
-      MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
-    ]; // cost: 750
-    const creepTemplates = [
-      { role: harvesterRole,
-        body: harvesterBody,
-        maxCreepsOfType: 6},
-      { role: builderRole,
-        body: builderBody,
-        maxCreepsOfType: 4},
-      { role: upgraderRole,
-        body: upgraderBody,
-        maxCreepsOfType: 6},
-    ];
-    spawnCreepFromTemplate(spawn, creepTemplates);
+    const template = creepsTemplates.largeBodyTemplate();
+    spawnCreepFromTemplate(spawn, template);
+  },
+  spawnLargeCreepsWithTrucks: function(spawn) {
+    // TODO add trucks
+    const template = creepsTemplates.largeBodyTemplate();
+    spawnCreepFromTemplate(spawn, template);
   },
 };
 
