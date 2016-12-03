@@ -2,6 +2,7 @@ var creepsMaintainer = require('creeps.maintainer');
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
+var roleTruck = require('role.truck');
 var roomFinders = require('room.finders');
 var roomUtility = require('room.utility');
 var towerController = require('tower.controller');
@@ -68,6 +69,10 @@ function putCreepToWork(creep, creepWorkData) {
     } else {
       roleUpgrader.run(creep, creepWorkData);
     }
+  }
+
+  if (creep.memory.role == 'truck') {
+    roleTruck.run(creep, creepWorkData.energyStorageStructures);
   }
 
   if (creep.memory.role == 'upgrader') {

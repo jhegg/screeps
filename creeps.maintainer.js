@@ -1,4 +1,5 @@
 var creepsSpawner = require('creeps.spawner');
+var roomUtility = require('room.utility');
 
 var creepsMaintainer = {
   cleanOldCreepMemory: function() {
@@ -34,20 +35,15 @@ var creepsMaintainer = {
 };
 
 function lowEnergyCapacitySpawning(spawn) {
-  if (roomHasSourceContainers(spawn)) {
+  if (roomUtility.hasSourceContainers(spawn.room)) {
     creepsSpawner.spawnSmallCreepsWithTrucks(spawn);
   } else {
     creepsSpawner.spawnSmallCreeps(spawn);
   }
 }
 
-function roomHasSourceContainers(room) {
-  return room.memory.sourceContainers &&
-    room.memory.sourceContainers.length > 0;
-}
-
 function mediumEnergyCapacitySpawning(spawn) {
-  if (roomHasSourceContainers(spawn)) {
+  if (roomUtility.hasSourceContainers(spawn.room)) {
     creepsSpawner.spawnMediumCreepsWithTrucks(spawn);
   } else {
     creepsSpawner.spawnMediumCreeps(spawn);
@@ -55,7 +51,7 @@ function mediumEnergyCapacitySpawning(spawn) {
 }
 
 function largeEnergyCapacitySpawning(spawn) {
-  if (roomHasSourceContainers(spawn)) {
+  if (roomUtility.hasSourceContainers(spawn.room)) {
     creepsSpawner.spawnLargeCreepsWithTrucks(spawn);
   } else {
     creepsSpawner.spawnLargeCreeps(spawn);

@@ -24,6 +24,9 @@ function updateCreepContainerAssignments(creep, structures) {
         creep.memory.containerId = sourceContainer.id;
         creep.memory.sourceId = sourceContainer.sourceId;
         sourceContainer.creep = creep.id;
+        if (sourceContainers[sourceContainerIndex].creep === undefined) {
+          console.log(`Error: creep ${creep.id} was not assigned to sourceContainer ${sourceContainerIndex}`);
+        }
       }
     }
   }

@@ -7,8 +7,7 @@ var creepsSpawner = {
     spawnCreepFromTemplate(spawn, template);
   },
   spawnSmallCreepsWithTrucks: function(spawn) {
-    // TODO add trucks
-    const template = creepsTemplates.startingBodyTemplate();
+    const template = creepsTemplates.smallBodyWithTrucksTemplate();
     spawnCreepFromTemplate(spawn, template);
   },
 
@@ -17,8 +16,7 @@ var creepsSpawner = {
     spawnCreepFromTemplate(spawn, template);
   },
   spawnMediumCreepsWithTrucks: function(spawn) {
-    // TODO add trucks
-    const template = creepsTemplates.mediumBodyTemplate();
+    const template = creepsTemplates.mediumBodyWithTrucksTemplate();
     spawnCreepFromTemplate(spawn, template);
   },
 
@@ -27,8 +25,7 @@ var creepsSpawner = {
     spawnCreepFromTemplate(spawn, template);
   },
   spawnLargeCreepsWithTrucks: function(spawn) {
-    // TODO add trucks
-    const template = creepsTemplates.largeBodyTemplate();
+    const template = creepsTemplates.largeBodyWithTrucksTemplate();
     spawnCreepFromTemplate(spawn, template);
   },
 };
