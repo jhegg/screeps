@@ -28,6 +28,14 @@ function updateCreepContainerAssignments(creep, structures) {
           console.log(`Error: creep ${creep.id} was not assigned to sourceContainer ${sourceContainerIndex}`);
         }
       }
+
+      if (creep.memory.containerId) {
+        const container = Game.getObjectById(creep.memory.containerId);
+        if (container !== null && sourceContainer.creep === undefined) {
+          console.log(`Fix: creep ${creep.id} was not originally assigned to sourceContainer ${sourceContainerIndex}, but is now`);
+          creep.room.memory.sourceContainers[sourceContainerIndex].creep = creep.id;
+        }
+      }
     }
   }
 }
