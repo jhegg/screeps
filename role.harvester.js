@@ -10,7 +10,7 @@ var roleHarvester = {
 };
 
 function updateCreepContainerAssignments(creep, structures) {
-  if (structures.length > 0) {
+  if (structures.length > 0 && !creep.spawning) {
     // Assign one harvester per source/container combo.
     // sourceContainers = [{id: '1234', sourceId: '5678', creep: undefined}]
     const sourceContainers = creep.room.memory.sourceContainers;
