@@ -25,8 +25,14 @@ module.exports.loop = function() {
 
     creepsMaintainer.spawnNewCreeps(Game.spawns[spawnName]);
 
-    if (hostileCreeps.length > 0) {
-      roomUtility.activateSafeMode(room, hostileCreeps);
+    for (var hostileCreep of hostileCreeps) {
+      // if any hostile creep is beyond 5 spaces of 50x50 room edges, activate
+      if (hostileCreep.pos.x > 5 ||
+        hostileCreep.pos.x < 45 ||
+        hostileCreep.pos.y > 5 ||
+        hostileCreep.pos.y < 45) {
+          roomUtility.activateSafeMode(room, hostileCreep);
+      }
     }
 
     towerController.run(room, hostileCreeps, roadsToRepair);

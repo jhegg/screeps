@@ -1,12 +1,12 @@
 var roomUtility = {
-  activateSafeMode: function(room, hostileCreeps) {
+  activateSafeMode: function(room, hostileCreep) {
     if (room.controller.safeMode === undefined &&
         room.controller.safeModeAvailable > 0 &&
         room.controller.safeModeCooldown === undefined) {
       const safeModeResult = room.controller.activateSafeMode();
       switch (safeModeResult) {
         case OK:
-          const message = `Safe mode activated due to ${JSON.stringify(hostileCreeps)}`;
+          const message = `Safe mode activated due to ${JSON.stringify(hostileCreep)}`;
           console.log(message);
           Game.notify(message);
           break;
