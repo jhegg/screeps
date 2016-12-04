@@ -2,7 +2,31 @@ var roomUtility = require('room.utility');
 
 var roleTruck = {
   run: function(creep, energyStorageStructures) {
-    if (creepNeedsEnergyToCarry(creep)) {
+    if (creep.memory.delivering &&
+      creep.carry.energy === 0) {
+      creep.memory.delivering = false;
+      creep.memory.deliveryId = undefined;
+      creep.say('pickup');
+    } else if (creep.memory.delivering) {
+      const deliveryTarget = Game.getObjectById(creep.memory.deliveryId);
+      if (deliveryTarget === null ||
+        (deliveryTarget.structureType !== STRUCTURE_CONTAINER &&
+        deliveryTarget.energy === deliveryTarget.energyCapacity) ||
+        (deliveryTarget.structureType === STRUCTURE_CONTAINER &&
+        _.sum(deliveryTarget.store) === deliveryTarget.storeCapacity)) {
+        creep.memory.delivering = false;
+        creep.memory.deliveryId = undefined;
+      }
+    }
+
+    if (!creep.memory.delivering &&
+      creep.carry.energy === creep.carryCapacity) {
+      creep.memory.delivering = true;
+      creep.memory.deliveryId = undefined;
+      creep.say('delivering');
+    }
+
+    if (!creep.memory.delivering) {
       retrieveEnergy(creep, energyStorageStructures);
     } else {
       updateDedicatedControllerContainerTruck(creep);
@@ -10,13 +34,31 @@ var roleTruck = {
         deliverEnergyToControllerContainer(creep);
         return;
       }
-      deliverEnergyToStructures(creep, energyStorageStructures);
+      const deliveryTarget = getDeliveryTarget(creep, energyStorageStructures);
+      deliverEnergyToTarget(creep, deliveryTarget);
     }
   },
 };
 
-function creepNeedsEnergyToCarry(creep) {
-  return creep.carry.energy < creep.carryCapacity;
+function getDeliveryTarget(creep, energyStorageStructures) {
+  const deliveryTarget = Game.getObjectById(creep.memory.deliveryId);
+  if (deliveryTarget !== null) {
+    return deliveryTarget;
+  } else {
+    return pickTargetDestination(creep, energyStorageStructures);
+  }
+}
+
+function pickTargetDestination(creep, structures) {
+  const sortedStructures = prioritizeStructures(creep.room, structures);
+  creep.memory.deliveryId = sortedStructures[0].id;
+  return sortedStructures[0];
+}
+
+function deliverEnergyToTarget(creep, deliveryTarget) {
+  if (creep.transfer(deliveryTarget, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+    creep.moveTo(deliveryTarget);
+  }
 }
 
 function retrieveEnergy(creep, energyStorageStructures) {
@@ -54,13 +96,6 @@ function filterContainersWhichHaveEnergy(structures) {
     return structure.structureType === STRUCTURE_CONTAINER &&
       structure.store[RESOURCE_ENERGY] > 0;
   });
-}
-
-function deliverEnergyToStructures(creep, structures) {
-  const sortedStructures = prioritizeStructures(creep.room, structures);
-  if (creep.transfer(sortedStructures[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-    creep.moveTo(sortedStructures[0]);
-  }
 }
 
 function prioritizeStructures(room, structures) {
