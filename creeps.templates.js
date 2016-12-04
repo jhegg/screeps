@@ -138,7 +138,7 @@ var creepsTemplates = {
         maxCreepsOfType: 4},
       { role: builderRole,
         body: builderBody,
-        maxCreepsOfType: 4},
+        maxCreepsOfType: 2},
     ];
   },
   extraLargeBodyWithTrucksTemplate: function() {
@@ -154,7 +154,7 @@ var creepsTemplates = {
         maxCreepsOfType: 4},
       { role: builderRole,
         body: builderBody,
-        maxCreepsOfType: 4},
+        maxCreepsOfType: 2},
     ];
   },
 };
