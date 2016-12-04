@@ -17,7 +17,14 @@ var roomFinders = {
     );
   },
   findDroppedResources: function(room) {
-    return room.find(FIND_DROPPED_RESOURCES);
+    return room.find(FIND_DROPPED_RESOURCES, {
+      filter: (resource) => {
+        return resource.pos.x > 5 &&
+          resource.pos.x < 45 &&
+          resource.pos.y > 5 &&
+          resource.pos.y < 45;
+      }
+    });
   },
   findEnergyStorageStructures: function(room) {
     return room.find(FIND_STRUCTURES, {
