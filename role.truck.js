@@ -6,6 +6,7 @@ var roleTruck = {
       creep.carry.energy === 0) {
       creep.memory.delivering = false;
       creep.memory.deliveryId = undefined;
+      creep.memory.pickupId = undefined;
       creep.say('pickup');
     } else if (creep.memory.delivering &&
       creep.memory.dedicatedControllerContainer === undefined) {
@@ -17,6 +18,7 @@ var roleTruck = {
         _.sum(deliveryTarget.store) === deliveryTarget.storeCapacity)) {
         creep.memory.delivering = false;
         creep.memory.deliveryId = undefined;
+        creep.memory.pickupId = undefined;
       }
     }
 
@@ -24,6 +26,7 @@ var roleTruck = {
       creep.carry.energy === creep.carryCapacity) {
       creep.memory.delivering = true;
       creep.memory.deliveryId = undefined;
+      creep.memory.pickupId = undefined;
       creep.say('delivering');
     }
 
@@ -63,10 +66,23 @@ function deliverEnergyToTarget(creep, deliveryTarget) {
 }
 
 function retrieveEnergy(creep, energyStorageStructures) {
-  const containers = filterContainersWhichHaveEnergy(
-    roomUtility.getSourceContainers(creep.room));
-  if (creep.withdraw(containers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-    creep.moveTo(containers[0]);
+  const sourceContainer = getPickupContainer(creep);
+  if (creep.withdraw(sourceContainer, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+    creep.moveTo(sourceContainer);
+  }
+}
+
+function getPickupContainer(creep) {
+  const container = Game.getObjectById(creep.memory.pickupId);
+  if (container) {
+    return container;
+  } else {
+    const newContainer = filterContainersWhichHaveEnergy(
+      roomUtility.getSourceContainers(creep.room))[0];
+    if (newContainer) {
+      creep.memory.pickupId = newContainer.id;
+      return newContainer;
+    }
   }
 }
 
@@ -93,10 +109,13 @@ function deliverEnergyToControllerContainer(creep) {
 }
 
 function filterContainersWhichHaveEnergy(structures) {
-  return _.filter(structures, function(structure) {
+  const containersWithEnergy = _.filter(structures, function(structure) {
     return structure.structureType === STRUCTURE_CONTAINER &&
       structure.store[RESOURCE_ENERGY] > 0;
   });
+  return _.sortByOrder(containersWithEnergy, function(container) {
+    return container.store[RESOURCE_ENERGY];
+  }, ['desc']);
 }
 
 function prioritizeStructures(room, structures) {
