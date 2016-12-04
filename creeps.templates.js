@@ -71,7 +71,7 @@ var creepsTemplates = {
     return [
       { role: harvesterRole,
         body: startingBody,
-        maxCreepsOfType: 2},
+        maxCreepsOfType: 3},
       { role: truckRole,
         body: smallTruckBody,
         maxCreepsOfType: 2},
@@ -100,7 +100,7 @@ var creepsTemplates = {
     return [
       { role: harvesterRole,
         body: mediumHarvesterBody,
-        maxCreepsOfType: 2},
+        maxCreepsOfType: 3},
       { role: truckRole,
         body: mediumTruckBody,
         maxCreepsOfType: 4},
