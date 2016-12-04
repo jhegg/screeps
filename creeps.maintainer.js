@@ -30,9 +30,17 @@ var creepsMaintainer = {
     } else if (energyCapacity < largeEnergyCapacity) {
       mediumEnergyCapacitySpawning(spawn);
     } else if (energyCapacity < extraLargeEnergyCapacity) {
-      largeEnergyCapacitySpawning(spawn);
+      if (Object.keys(Game.creeps).length < 4) {
+        lowEnergyCapacitySpawning(spawn);
+      } else {
+        largeEnergyCapacitySpawning(spawn);
+      }
     } else {
-      extraLargeEnergyCapacitySpawning(spawn);
+      if (Object.keys(Game.creeps).length < 5) {
+        lowEnergyCapacitySpawning(spawn);
+      } else {
+        extraLargeEnergyCapacitySpawning(spawn);
+      }
     }
   },
 };

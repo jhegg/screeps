@@ -47,9 +47,6 @@ function spawnCreepFromTemplate(spawn, creepTemplates) {
         console.log('Emergency harvester spawn! Zero other harvesters present.');
         createCreep(spawn, { role: 'harvester', body: [WORK, CARRY, MOVE] });
         break;
-    } else if (template.role === 'harvester' &&
-      numCreeps.length < template.maxCreepsOfType) {
-      break;
     }
   }
 }
