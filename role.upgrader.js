@@ -42,6 +42,7 @@ var roleUpgrader = {
 
       for (var container of containers) {
         if (container && container.store[RESOURCE_ENERGY] > 250) {
+          creep.memory.containerId = container.id;
           if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(container);
           }
