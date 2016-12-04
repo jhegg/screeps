@@ -75,9 +75,9 @@ function filterContainersWhichHaveEnergy(structures) {
 }
 
 function deliverEnergyToStructures(creep, structures) {
-  if (structures.length > 0 && Object.keys(Game.creeps).length > 4) {
+  if (structures.length > 0) {
     const container = Game.getObjectById(creep.memory.containerId);
-    if (container !== null) {
+    if (container !== null && Object.keys(Game.creeps).length > 4) {
       if (creep.transfer(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
         creep.moveTo(container);
       }
