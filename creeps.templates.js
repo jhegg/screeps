@@ -42,6 +42,17 @@ const upgraderBody = [
   MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
 ]; // cost: 750
 
+const extraLargeHarvesterBody = [
+  WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
+  CARRY,
+  MOVE
+]; // cost: 1100
+const extraLargeBuilderBody = [
+  WORK, WORK, WORK, WORK, WORK,
+  CARRY, CARRY, CARRY, CARRY,
+  MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
+]; // cost: 1150
+
 var creepsTemplates = {
   startingBodyTemplate: function() {
     return [
@@ -128,6 +139,22 @@ var creepsTemplates = {
       { role: upgraderRole,
         body: upgraderBody,
         maxCreepsOfType: 4},
+    ];
+  },
+  extraLargeBodyWithTrucksTemplate: function() {
+    return [
+      { role: harvesterRole,
+        body: extraLargeHarvesterBody,
+        maxCreepsOfType: 2},
+      { role: truckRole,
+        body: mediumTruckBody,
+        maxCreepsOfType: 4},
+      { role: builderRole,
+        body: extraLargeBuilderBody,
+        maxCreepsOfType: 4},
+      { role: upgraderRole,
+        body: extraLargeHarvesterBody,
+        maxCreepsOfType: 3},
     ];
   },
 };

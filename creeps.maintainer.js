@@ -23,13 +23,16 @@ var creepsMaintainer = {
     const energyCapacity = spawn.room.energyCapacityAvailable;
     const mediumEnergyCapacity = 550;
     const largeEnergyCapacity = 800;
+    const extraLargeEnergyCapacity = 1300;
 
     if (energyCapacity < mediumEnergyCapacity) {
       lowEnergyCapacitySpawning(spawn);
     } else if (energyCapacity < largeEnergyCapacity) {
       mediumEnergyCapacitySpawning(spawn);
-    } else {
+    } else if (energyCapacity < extraLargeEnergyCapacity) {
       largeEnergyCapacitySpawning(spawn);
+    } else {
+      extraLargeEnergyCapacitySpawning(spawn);
     }
   },
 };
@@ -53,6 +56,14 @@ function mediumEnergyCapacitySpawning(spawn) {
 function largeEnergyCapacitySpawning(spawn) {
   if (roomUtility.hasSourceContainers(spawn.room)) {
     creepsSpawner.spawnLargeCreepsWithTrucks(spawn);
+  } else {
+    creepsSpawner.spawnLargeCreeps(spawn);
+  }
+}
+
+function extraLargeEnergyCapacitySpawning(spawn) {
+  if (roomUtility.hasSourceContainers(spawn.room)) {
+    creepsSpawner.spawnExtraLargeCreepsWithTrucks(spawn);
   } else {
     creepsSpawner.spawnLargeCreeps(spawn);
   }
