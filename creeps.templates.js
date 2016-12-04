@@ -150,11 +150,11 @@ var creepsTemplates = {
         body: mediumTruckBody,
         maxCreepsOfType: 4},
       { role: builderRole,
-        body: extraLargeBuilderBody,
+        body: builderBody,
         maxCreepsOfType: 4},
       { role: upgraderRole,
         body: upgraderBody,
-        maxCreepsOfType: 3},
+        maxCreepsOfType: 4},
     ];
   },
 };

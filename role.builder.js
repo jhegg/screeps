@@ -71,10 +71,10 @@ var roleBuilder = {
         }
       }
 
-      // todo why doesn't this work? a container with 2k energy sat idle.
       const containersWithEnergy =
         roleUtility.containersWithEnergy(creepWorkData.energyStorageStructures);
       if (containersWithEnergy.length) {
+        creep.memory.containerId = containersWithEnergy[0];
         if (creep.withdraw(containersWithEnergy[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveTo(containersWithEnergy[0]);
         }
