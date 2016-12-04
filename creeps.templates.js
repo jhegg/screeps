@@ -153,7 +153,7 @@ var creepsTemplates = {
         body: extraLargeBuilderBody,
         maxCreepsOfType: 4},
       { role: upgraderRole,
-        body: extraLargeHarvesterBody,
+        body: upgraderBody,
         maxCreepsOfType: 3},
     ];
   },
