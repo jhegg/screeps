@@ -43,10 +43,10 @@ const upgraderBody = [
 ]; // cost: 750
 
 const extraLargeHarvesterBody = [
-  WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
+  WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
   CARRY,
   MOVE
-]; // cost: 1000
+]; // cost: 900
 const extraLargeBuilderBody = [
   WORK, WORK, WORK, WORK, WORK,
   CARRY, CARRY, CARRY, CARRY,
