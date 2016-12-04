@@ -76,7 +76,6 @@ function repairStructure(tower, structureToRepair) {
   const result = tower.repair(structureToRepair);
   switch (result) {
     case OK:
-      console.log('Successful repair on ' + structureToRepair + ' by tower ' + tower);
       break;
     case ERR_NOT_ENOUGH_RESOURCES:
       console.log('Warning! Tower ' + tower + ' does not have enough ' +
