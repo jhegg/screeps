@@ -16,7 +16,7 @@ var roleTruck = {
         deliveryTarget.energy === deliveryTarget.energyCapacity) ||
         (deliveryTarget.structureType === STRUCTURE_CONTAINER &&
         _.sum(deliveryTarget.store) === deliveryTarget.storeCapacity)) {
-        creep.memory.delivering = false;
+        creep.memory.delivering = true; // need new target, but still delivering
         creep.memory.deliveryId = undefined;
         creep.memory.pickupId = undefined;
       }
