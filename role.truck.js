@@ -5,6 +5,11 @@ var roleTruck = {
     if (creepNeedsEnergyToCarry(creep)) {
       retrieveEnergy(creep, energyStorageStructures);
     } else {
+      updateDedicatedControllerContainerTruck(creep);
+      if (shouldDeliverToControllerContainer(creep)) {
+        deliverEnergyToControllerContainer(creep);
+        return;
+      }
       deliverEnergyToStructures(creep, energyStorageStructures);
     }
   },
@@ -19,6 +24,28 @@ function retrieveEnergy(creep, energyStorageStructures) {
     roomUtility.getSourceContainers(creep.room));
   if (creep.withdraw(containers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
     creep.moveTo(containers[0]);
+  }
+}
+
+function updateDedicatedControllerContainerTruck(creep) {
+  const dedicatedTruck = _.filter(Game.creeps, function(creep) {
+    return creep.memory.dedicatedControllerContainer !== undefined;
+  });
+  if (!dedicatedTruck || dedicatedTruck.length === 0) {
+    console.log(`New dedicated controller container truck: ${creep}`);
+    creep.memory.dedicatedControllerContainer = true;
+  }
+}
+
+function shouldDeliverToControllerContainer(creep) {
+  return creep.memory.dedicatedControllerContainer &&
+    Game.getObjectById(creep.room.memory.ControllerContainer) !== null;
+}
+
+function deliverEnergyToControllerContainer(creep) {
+  const container = Game.getObjectById(creep.room.memory.ControllerContainer);
+  if (creep.transfer(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+    creep.moveTo(container);
   }
 }
 
