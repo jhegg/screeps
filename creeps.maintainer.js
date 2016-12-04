@@ -22,8 +22,8 @@ var creepsMaintainer = {
   spawnNewCreeps: function(spawn) {
     const energyCapacity = spawn.room.energyCapacityAvailable;
     const mediumEnergyCapacity = 550;
-    const largeEnergyCapacity = 800;
-    const extraLargeEnergyCapacity = 1300;
+    const largeEnergyCapacity = 1000;
+    const extraLargeEnergyCapacity = 1500;
 
     if (!spawn.room.memory.emergencyMode &&
       energyCapacity >= largeEnergyCapacity &&
