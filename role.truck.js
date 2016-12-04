@@ -7,7 +7,8 @@ var roleTruck = {
       creep.memory.delivering = false;
       creep.memory.deliveryId = undefined;
       creep.say('pickup');
-    } else if (creep.memory.delivering) {
+    } else if (creep.memory.delivering &&
+      creep.memory.dedicatedControllerContainer === undefined) {
       const deliveryTarget = Game.getObjectById(creep.memory.deliveryId);
       if (deliveryTarget === null ||
         (deliveryTarget.structureType !== STRUCTURE_CONTAINER &&
