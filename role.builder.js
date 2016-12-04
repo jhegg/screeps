@@ -8,6 +8,7 @@ var roleBuilder = {
     }
     if (!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
       creep.memory.building = true;
+      creep.memory.containerId = undefined;
       creep.say('building');
     }
 
@@ -39,6 +40,14 @@ var roleBuilder = {
         return;
       }
 
+      if (creep.memory.containerId !== undefined) {
+        const container = Game.getObjectById(creep.memory.containerId);
+        if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(container);
+        }
+        return;
+      }
+
       const spawnContainer = Game.getObjectById(creep.room.memory.SpawnContainer);
       const towerContainer = Game.getObjectById(creep.room.memory.TowerContainer);
       const controllerContainer = Game.getObjectById(creep.room.memory.ControllerContainer);
@@ -54,6 +63,7 @@ var roleBuilder = {
 
       for (var container of containers) {
         if (container && container.store[RESOURCE_ENERGY] > 250) {
+          creep.memory.containerId = container.id;
           if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(container);
           }
