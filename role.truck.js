@@ -41,7 +41,9 @@ var roleTruck = {
         return;
       }
       const deliveryTarget = getDeliveryTarget(creep, energyStorageStructures);
-      deliverEnergyToTarget(creep, deliveryTarget);
+      if (deliveryTarget) {
+        deliverEnergyToTarget(creep, deliveryTarget);
+      }
     }
   },
 };
@@ -57,8 +59,12 @@ function getDeliveryTarget(creep, energyStorageStructures) {
 
 function pickTargetDestination(creep, structures) {
   const sortedStructures = prioritizeStructures(creep.room, structures);
-  creep.memory.deliveryId = sortedStructures[0].id;
-  return sortedStructures[0];
+  if (sortedStructures[0]) {
+    creep.memory.deliveryId = sortedStructures[0].id;
+    return sortedStructures[0];
+  } else {
+    return sortedStructures[0];
+  }
 }
 
 function deliverEnergyToTarget(creep, deliveryTarget) {
