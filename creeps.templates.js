@@ -77,10 +77,10 @@ var creepsTemplates = {
         maxCreepsOfType: 2},
       { role: upgraderRole,
         body: startingBody,
-        maxCreepsOfType: 4},
+        maxCreepsOfType: 2},
       { role: builderRole,
         body: startingBody,
-        maxCreepsOfType: 4},
+        maxCreepsOfType: 2},
     ];
   },
   mediumBodyTemplate: function() {
@@ -93,7 +93,7 @@ var creepsTemplates = {
         maxCreepsOfType: 4},
       { role: builderRole,
         body: mediumBody,
-        maxCreepsOfType: 4},
+        maxCreepsOfType: 2},
     ];
   },
   mediumBodyWithTrucksTemplate: function() {
@@ -122,7 +122,7 @@ var creepsTemplates = {
         maxCreepsOfType: 2},
       { role: builderRole,
         body: builderBody,
-        maxCreepsOfType: 4},
+        maxCreepsOfType: 2},
     ];
   },
   largeBodyWithTrucksTemplate: function() {
@@ -138,7 +138,7 @@ var creepsTemplates = {
         maxCreepsOfType: 2},
       { role: builderRole,
         body: builderBody,
-        maxCreepsOfType: 4},
+        maxCreepsOfType: 2},
     ];
   },
   extraLargeBodyWithTrucksTemplate: function() {
@@ -154,7 +154,7 @@ var creepsTemplates = {
         maxCreepsOfType: 2},
       { role: builderRole,
         body: builderBody,
-        maxCreepsOfType: 4},
+        maxCreepsOfType: 2},
     ];
   },
 };

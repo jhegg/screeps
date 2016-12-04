@@ -27,14 +27,14 @@ var creepsMaintainer = {
 
     if (!spawn.room.memory.emergencyMode &&
       energyCapacity >= largeEnergyCapacity &&
-      Object.keys(Game.creeps).length < 6) {
+      Object.keys(Game.creeps).length <= 5) {
       console.log(`Creep numbers too low! Engaging emergency mode.`);
       Game.notify(`Creep numbers too low! Engaging emergency mode.`);
       spawn.room.memory.emergencyMode = true;
     }
 
     if (spawn.room.memory.emergencyMode === true) {
-      if (Object.keys(Game.creeps).length > 10) {
+      if (Object.keys(Game.creeps).length >= 10) {
         console.log(`Exiting emergency mode.`);
         Game.notify(`Exiting emergency mode.`);
         spawn.room.memory.emergencyMode = undefined;
