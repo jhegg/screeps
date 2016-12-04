@@ -75,7 +75,7 @@ var roleBuilder = {
       const containersWithEnergy =
         roleUtility.containersWithEnergy(creepWorkData.energyStorageStructures);
       if (containersWithEnergy.length) {
-        creep.memory.containerId = containersWithEnergy[0];
+        creep.memory.containerId = containersWithEnergy[0].id;
         if (creep.withdraw(containersWithEnergy[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveTo(containersWithEnergy[0]);
         }
