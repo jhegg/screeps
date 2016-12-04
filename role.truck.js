@@ -23,10 +23,12 @@ var roleTruck = {
     }
 
     if (!creep.memory.delivering &&
-      creep.carry.energy === creep.carryCapacity) {
+      (creep.carry.energy === creep.carryCapacity ||
+        (creep.memory.pickupWasEmptyCounter > 4 && creep.carry.energy > 49))) {
       creep.memory.delivering = true;
       creep.memory.deliveryId = undefined;
       creep.memory.pickupId = undefined;
+      creep.memory.pickupWasEmptyCounter = undefined;
       creep.say('delivering');
     }
 
@@ -67,8 +69,47 @@ function deliverEnergyToTarget(creep, deliveryTarget) {
 
 function retrieveEnergy(creep, energyStorageStructures) {
   const sourceContainer = getPickupContainer(creep);
-  if (creep.withdraw(sourceContainer, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-    creep.moveTo(sourceContainer);
+  if (!sourceContainer) {
+    // no sources available :(
+    return;
+  }
+  const withdrawResult = creep.withdraw(sourceContainer, RESOURCE_ENERGY);
+  switch (withdrawResult) {
+    case OK:
+      creep.memory.pickupWasEmptyCounter = undefined;
+      break;
+    case ERR_NOT_OWNER:
+      console.log(`Error: truck unable to transfer from ${sourceContainer}
+        due to ownership/rampart`);
+      break;
+    case ERR_BUSY:
+      // still spawning
+      break;
+    case ERR_NOT_ENOUGH_RESOURCES:
+      if (!creep.memory.pickupWasEmptyCounter) {
+        creep.memory.pickupWasEmptyCounter = 1;
+      } else {
+        creep.memory.pickupWasEmptyCounter += 1;
+      }
+      break;
+    case ERR_INVALID_TARGET:
+      console.log(`Error: truck ${creep} tried to harvest from
+        ${sourceContainer} which is invalid`);
+      break;
+    case ERR_FULL:
+      console.log(`Warning: truck ${creep} was full but tried to harvest
+        anyway`);
+      break;
+    case ERR_NOT_IN_RANGE:
+      creep.moveTo(sourceContainer);
+      break;
+    case ERR_INVALID_ARGS:
+      console.log(`Error: truck ${creep} tried to withdraw from
+         ${sourceContainer} but resource amount or type was incorrect`);
+      break;
+    default:
+      console.log(`Warning: unknown result ${withdrawResult} from truck
+         withdraw`);
   }
 }
 
