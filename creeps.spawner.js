@@ -41,6 +41,12 @@ function spawnCreepFromTemplate(spawn, creepTemplates) {
     if (shouldCreateCreep(spawn, numCreeps.length, template)) {
       createCreep(spawn, template);
       break;
+    } else if (template.role === 'harvester' &&
+      numCreeps.length === 0 &&
+      spawn.room.energyAvailable >= 200) {
+        console.log('Emergency harvester spawn! Zero other harvesters present.');
+        createCreep(spawn, { role: 'harvester', body: [WORK, CARRY, MOVE] });
+        break;
     }
   }
 }
@@ -53,7 +59,7 @@ function findCreepsHavingRole(room, role) {
 }
 
 function shouldCreateCreep(spawn, numCurrentCreepsOfType, creepTemplate) {
-  return numCurrentCreepsOfType < creepTemplate.maxCreepsOfType &&
+  return (numCurrentCreepsOfType < creepTemplate.maxCreepsOfType) &&
       canCreateCreep(spawn, creepTemplate.body);
 }
 
