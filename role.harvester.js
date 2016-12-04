@@ -45,25 +45,9 @@ function creepNeedsEnergyToCarry(creep) {
 }
 
 function harvestEnergy(creep, energyStorageStructures) {
-  if (creep.room.memory.sourceContainers === undefined ||
-      !creep.room.memory.sourceContainers.length) {
-        // sourceContainers not defined: do legacy harvesting
-        const source = Game.getObjectById(creep.memory.sourceId);
-        if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(source);
-        }
-  } else if (creep.memory.containerId) {
-    // creep is assigned to fill a container
-    const source = Game.getObjectById(creep.memory.sourceId);
-    if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-      creep.moveTo(source);
-    }
-  } else {
-    // creep is not assigned to fill a container
-    const containers = filterContainersWhichHaveEnergy(energyStorageStructures);
-    if (creep.withdraw(containers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-      creep.moveTo(containers[0]);
-    }
+  const source = Game.getObjectById(creep.memory.sourceId);
+  if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
+    creep.moveTo(source);
   }
 }
 
