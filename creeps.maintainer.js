@@ -11,12 +11,12 @@ var creepsMaintainer = {
     }
   },
   retireOldCreep(creep) {
-    creep.memory.role = 'retired';
     creep.say('retiring');
+    console.log(`Creep ${creep.name} (${creep.memory.role}) is now retired`);
+    creep.memory.role = 'retired';
     for (var resourceType in creep.carry) {
       creep.drop(resourceType);
     }
-    console.log(creep + ' is now retired');
     creep.suicide();
   },
   spawnNewCreeps: function(spawn) {
