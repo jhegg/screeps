@@ -16,19 +16,22 @@ var roleBuilder = {
 
     if (creep.memory.building) {
       if (creepWorkData.constructionSites.length) {
-        const constructionSitesSortedByMostProgress = creepWorkData.constructionSites.sort(function(a, b) {
-          return b.progress - a.progress;
+        const creepPosition = creep.pos;
+        const constructionSitesSortedByDistance = creepWorkData.constructionSites.sort(function(a, b) {
+          const distanceA = Math.hypot(creepPosition.x - a.pos.x, creepPosition.y - a.pos.y);
+          const distanceB = Math.hypot(creepPosition.x - b.pos.x, creepPosition.y - b.pos.y);
+          return distanceA - distanceB;
         });
-        const extensionSites = _.filter(constructionSitesSortedByMostProgress, (site) =>
+        const extensionSites = _.filter(constructionSitesSortedByDistance, (site) =>
           site.structureType === STRUCTURE_EXTENSION
         );
         if (extensionSites.length) {
-          if (creep.build(extensionSites[0]) === ERR_NOT_IN_RANGE) {
-            creep.moveTo(extensionSites[0]);
+          if (creep.build(extensionSite[0]) === ERR_NOT_IN_RANGE) {
+            creep.moveTo(extensionSite[0]);
           }
         } else {
-          if (creep.build(constructionSitesSortedByMostProgress[0]) === ERR_NOT_IN_RANGE) {
-            creep.moveTo(constructionSitesSortedByMostProgress[0]);
+          if (creep.build(constructionSitesSortedByDistance[0]) === ERR_NOT_IN_RANGE) {
+            creep.moveTo(constructionSitesSortedByDistance[0]);
           }
         }
       } else {
