@@ -26,8 +26,8 @@ var roleBuilder = {
           site.structureType === STRUCTURE_EXTENSION
         );
         if (extensionSites.length) {
-          if (creep.build(extensionSite[0]) === ERR_NOT_IN_RANGE) {
-            creep.moveTo(extensionSite[0]);
+          if (creep.build(extensionSites[0]) === ERR_NOT_IN_RANGE) {
+            creep.moveTo(extensionSites[0]);
           }
         } else {
           if (creep.build(constructionSitesSortedByDistance[0]) === ERR_NOT_IN_RANGE) {
