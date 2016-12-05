@@ -80,4 +80,30 @@ calls		time		avg		function
 Avg: 4.62	Total: 230.85	Ticks: 50
 
 
+Attempted to optimize structure finders in room prototype:
+
+calls		time		avg		function
+158		51.9		0.329		Creep.moveTo
+190		42.6		0.224		Creep.upgradeController
+158		34.1		0.216		Creep.move
+124		27.8		0.224		Creep.moveByPath
+83		19.2		0.232		Creep.harvest
+50		14.2		0.285		Room.getEnergyStorageStructures
+34		10.3		0.304		RoomPosition.findPathTo
+100		10.1		0.101		Room.getStructuresNeedingRepair
+34		9.8		0.288		Room.findPath
+50		8.4		0.168		Room.getRoadsNeedingRepair
+125		7.3		0.058		Creep.withdraw
+100		7.1		0.071		Room.getRampartsAndWallsNeedingRepair
+102		7.0		0.068		Creep.transfer
+100		3.7		0.037		Room.getContainersNeedingRepair
+50		3.5		0.070		Room.getTowers
+589		2.0		0.003		Creep.getActiveBodyparts
+300		1.1		0.004		Room.getAllStructures
+100		1.1		0.011		Room.getCreepsNeedingHealing
+300		0.9		0.003		Room.find
+344		0.8		0.002		RoomPosition.isNearTo
+Avg: 4.23	Total: 211.40	Ticks: 50
+
+
 -------------------------------------------

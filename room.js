@@ -37,29 +37,37 @@ Room.prototype.activateSafeModeIfNecessary = function() {
   }
 };
 
+Room.prototype.getAllStructures = function() {
+  if (!this._allStructures) {
+    this._allStructures = this.find(FIND_STRUCTURES);
+  }
+  return this._allStructures;
+};
+
 Room.prototype.getConstructionSites = function() {
   return this.find(FIND_CONSTRUCTION_SITES);
 };
 
 Room.prototype.getContainersNeedingRepair = function() {
   if (!this._containersNeedingRepair) {
-    this._containersNeedingRepair = this.find(FIND_STRUCTURES, {
-      filter: (structure) => {
-        return structure.structureType === STRUCTURE_CONTAINER &&
-          (structure.hits < structure.hitsMax / 1.25);
-      }
-    });
+    this._containersNeedingRepair = _.filter(this.getAllStructures(),
+      (structure) => structure.structureType === STRUCTURE_CONTAINER &&
+      (structure.hits < structure.hitsMax / 1.25));
   }
   return this._containersNeedingRepair;
 };
 
+Room.prototype.getCreeps = function() {
+  if (!this._creeps) {
+    this._creeps = this.find(FIND_MY_CREEPS);
+  }
+  return this._creeps;
+};
+
 Room.prototype.getCreepsNeedingHealing = function() {
   if (!this._creepsNeedingHealing) {
-    this._creepsNeedingHealing = this.find(FIND_MY_CREEPS, {
-      filter: (creep) => {
-        return creep.hits < creep.hitsMax;
-      }
-    });
+    this._creepsNeedingHealing = _.filter(this.getCreeps(),
+      (creep) => creep.hits < creep.hitsMax);
   }
   return this._creepsNeedingHealing;
 };
@@ -80,16 +88,13 @@ Room.prototype.getDroppedResources = function() {
 
 Room.prototype.getEnergyStorageStructures = function() {
   if (!this._energyStorageStructures) {
-    this._energyStorageStructures = this.find(FIND_STRUCTURES, {
-      filter: (structure) => {
-        return ((structure.structureType === STRUCTURE_EXTENSION ||
-            structure.structureType === STRUCTURE_SPAWN ||
-            structure.structureType === STRUCTURE_TOWER) &&
-            structure.energy < structure.energyCapacity) ||
-            (structure.structureType === STRUCTURE_CONTAINER &&
-            _.sum(structure.store) < 2000);
-      }
-    });
+    this._energyStorageStructures = _.filter(this.getAllStructures(),
+      (structure) => ((structure.structureType === STRUCTURE_EXTENSION ||
+          structure.structureType === STRUCTURE_SPAWN ||
+          structure.structureType === STRUCTURE_TOWER) &&
+          structure.energy < structure.energyCapacity) ||
+          (structure.structureType === STRUCTURE_CONTAINER &&
+          _.sum(structure.store) < 2000));
   }
   return this._energyStorageStructures;
 };
@@ -98,28 +103,30 @@ Room.prototype.getHostiles = function() {
   return this.find(FIND_HOSTILE_CREEPS);
 };
 
+Room.prototype.getNumberOfHarvesters = function() {
+  if (!this._numberOfHarvesters) {
+    this._numberOfHarvesters = _.filter(this.getCreeps(),
+      (creep) => creep.memory.role === 'harvester');
+  }
+  return this._numberOfHarvesters;
+};
+
 Room.prototype.getRampartsAndWallsNeedingRepair = function() {
   if (!this._rampartsAndWallsNeedingRepair) {
-    this._rampartsAndWallsNeedingRepair = this.find(FIND_STRUCTURES, {
-      filter: (structure) => {
-        return (structure.structureType === STRUCTURE_WALL &&
-          structure.hits < 1000) ||
-          (structure.structureType === STRUCTURE_RAMPART &&
-          structure.hits < 30000);
-      }
-    });
+    this._rampartsAndWallsNeedingRepair = _.filter(this.getAllStructures(),
+      (structure) => (structure.structureType === STRUCTURE_WALL &&
+        structure.hits < 1000) ||
+        (structure.structureType === STRUCTURE_RAMPART &&
+        structure.hits < 30000));
   }
   return this._rampartsAndWallsNeedingRepair;
 };
 
 Room.prototype.getRoadsNeedingRepair = function() {
   if (!this._roadsNeedingRepair) {
-    this._roadsNeedingRepair = this.find(FIND_STRUCTURES, {
-      filter: (structure) => {
-        return structure.structureType === STRUCTURE_ROAD &&
-          (structure.hits < structure.hitsMax / 2);
-      }
-    });
+    this._roadsNeedingRepair = _.filter(this.getAllStructures(),
+      (structure) => structure.structureType === STRUCTURE_ROAD &&
+        (structure.hits < structure.hitsMax / 2));
   }
   return this._roadsNeedingRepair;
 };
@@ -137,27 +144,21 @@ Room.prototype.getSourcesMinusBlacklist = function() {
 
 Room.prototype.getStructuresNeedingRepair = function() {
   if (!this._structuresNeedingRepair) {
-    this._structuresNeedingRepair = this.find(FIND_STRUCTURES, {
-      filter: (structure) => {
-        return structure.structureType !== STRUCTURE_CONTAINER &&
-          structure.structureType !== STRUCTURE_ROAD &&
-          structure.structureType !== STRUCTURE_WALL &&
-          structure.structureType !== STRUCTURE_RAMPART &&
-          structure.hits < structure.hitsMax;
-      }
-    });
+    this._structuresNeedingRepair = _.filter(this.getAllStructures(),
+      (structure) => structure.structureType !== STRUCTURE_CONTAINER &&
+        structure.structureType !== STRUCTURE_ROAD &&
+        structure.structureType !== STRUCTURE_WALL &&
+        structure.structureType !== STRUCTURE_RAMPART &&
+        structure.hits < structure.hitsMax);
   }
   return this._structuresNeedingRepair;
 };
 
 Room.prototype.getTowers = function() {
   if (!this._towers) {
-    this._towers = this.find(FIND_STRUCTURES, {
-      filter: (structure) => {
-        return structure.structureType === STRUCTURE_TOWER &&
-        structure.room.name === this.name;
-      }
-    });
+    this._towers = _.filter(this.getAllStructures(),
+      (structure) => structure.structureType === STRUCTURE_TOWER &&
+        structure.room.name === this.name);
   }
   return this._towers;
 };
