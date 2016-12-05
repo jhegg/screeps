@@ -5,6 +5,7 @@ var roleBuilder = {
     if (creep.memory.building && creep.carry.energy === 0) {
       creep.memory.building = false;
       creep.memory.containerId = undefined;
+      creep.memory.pickupWasEmptyCounter = undefined;
       creep.say('harvesting');
     }
     if (!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
@@ -34,7 +35,7 @@ var roleBuilder = {
         console.log('Builder '+creep+' has no construction site; error?');
       }
     } else {
-      if (creepWorkData.droppedResources.length) {
+      if (creep.memory.containerId === undefined && creepWorkData.droppedResources.length) {
         if (creep.pickup(creepWorkData.droppedResources[0]) == ERR_NOT_IN_RANGE) {
           creep.moveTo(creepWorkData.droppedResources[0]);
         }
@@ -47,7 +48,7 @@ var roleBuilder = {
         switch (withdrawResult) {
           case OK:
             creep.memory.pickupWasEmptyCounter = undefined;
-            break;
+            return;
           case ERR_NOT_OWNER:
             console.log(`Error: builder unable to transfer from ${container}
               due to ownership/rampart`);
@@ -75,8 +76,9 @@ var roleBuilder = {
               anyway`);
             break;
           case ERR_NOT_IN_RANGE:
+            creep.memory.pickupWasEmptyCounter = undefined;
             creep.moveTo(container);
-            break;
+            return;
           case ERR_INVALID_ARGS:
             console.log(`Error: builder ${creep} tried to withdraw from
                ${container} but resource amount or type was incorrect`);
@@ -101,6 +103,7 @@ var roleBuilder = {
 
       for (var container of containers) {
         if (container && container.store[RESOURCE_ENERGY] > 250) {
+          console.log(`${creep.name} (${creep.memory.role}) selected container ${container.id} to withdraw from.`);
           creep.memory.containerId = container.id;
           if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(container);
@@ -112,6 +115,7 @@ var roleBuilder = {
       const containersWithEnergy =
         roleUtility.containersWithEnergy(creepWorkData.energyStorageStructures);
       if (containersWithEnergy.length) {
+        console.log(`${creep.name} (${creep.memory.role}) fell back to random container search and found ${container.id}.`);
         creep.memory.containerId = containersWithEnergy[0].id;
         if (creep.withdraw(containersWithEnergy[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
           creep.moveTo(containersWithEnergy[0]);
