@@ -80,23 +80,13 @@ var roleUpgrader = {
       ];
 
       for (var container of containers) {
-        if (container && container.store[RESOURCE_ENERGY] > 250) {
+        if (container && container.store[RESOURCE_ENERGY] > 150) {
           creep.memory.containerId = container.id;
           if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(container);
           }
           return;
         }
-      }
-
-      const containersWithEnergy =
-        roleUtility.containersWithEnergy(creepWorkData.energyStorageStructures);
-      if (containersWithEnergy.length) {
-        creep.memory.containerId = containersWithEnergy[0].id;
-        if (creep.withdraw(containersWithEnergy[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(containersWithEnergy[0]);
-        }
-        return;
       }
 
       const source = Game.getObjectById(creep.memory.sourceId);
