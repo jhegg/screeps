@@ -115,9 +115,11 @@ var roleBuilder = {
         }
       }
 
-      const source = Game.getObjectById(creep.memory.sourceId);
-      if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-        creep.moveTo(source);
+      if (!creep.room.memory.sourceContainers) {
+        const source = Game.getObjectById(creep.memory.sourceId);
+        if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
+          creep.moveTo(source);
+        }
       }
     }
   }
