@@ -12,8 +12,6 @@ module.exports.loop = function() {
 
   for (var spawnName in Game.spawns) {
     const room = Game.spawns[spawnName].room;
-    const roadsToRepair = room.getRoadsNeedingRepair();
-    const hostileCreeps = room.getHostiles();
     const constructionSites = room.getConstructionSites();
     const droppedResources = room.getDroppedResources();
     const energyStorageStructures = room.getEnergyStorageStructures();
@@ -27,7 +25,7 @@ module.exports.loop = function() {
 
     room.activateSafeModeIfNecessary();
 
-    towerController.run(room, hostileCreeps, roadsToRepair);
+    towerController.run(room);
 
     for (var name in Game.creeps) {
       var creep = Game.creeps[name];

@@ -1,7 +1,8 @@
 var towerController = {
-  run: function(room, hostileCreeps, roadsToRepair) {
+  run: function(room) {
     const towersInRoom = room.getTowers();
     towersInRoom.forEach(function(tower) {
+      const hostileCreeps = room.getHostiles();
       if (hostileCreeps.length > 0) {
         attackHostile(tower, room, hostileCreeps[0]);
         return;
@@ -32,6 +33,7 @@ var towerController = {
         return;
       }
 
+      const roadsToRepair = room.getRoadsNeedingRepair();
       if (roadsToRepair.length > 0) {
         repairStructure(tower, roadsToRepair[0]);
         return;
