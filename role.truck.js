@@ -178,7 +178,8 @@ function prioritizeStructures(room, structures) {
     extensions,
     spawns,
     towers,
-    containers
+    containers,
+    [room.storage],
   ]);
 }
 
