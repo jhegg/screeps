@@ -1,5 +1,4 @@
 var creepsTemplates = require('creeps.templates');
-var roomFinders = require('room.finders');
 
 var creepsSpawner = {
   spawnSmallCreeps: function(spawn) {

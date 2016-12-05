@@ -1,9 +1,10 @@
+require('room');
+
 var creepsMaintainer = require('creeps.maintainer');
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 var roleTruck = require('role.truck');
-var roomFinders = require('room.finders');
 var roomUtility = require('room.utility');
 var towerController = require('tower.controller');
 
@@ -17,11 +18,11 @@ module.exports.loop = function() {
 
     for (var spawnName in Game.spawns) {
       const room = Game.spawns[spawnName].room;
-      const roadsToRepair = roomFinders.findRoadsToRepair(room);
-      const hostileCreeps = roomFinders.findHostiles(room);
-      const constructionSites = roomFinders.findConstructionSites(room);
-      const droppedResources = roomFinders.findDroppedResources(room);
-      const energyStorageStructures = roomFinders.findEnergyStorageStructures(room);
+      const roadsToRepair = room.getRoadsNeedingRepair();
+      const hostileCreeps = room.getHostiles();
+      const constructionSites = room.getConstructionSites();
+      const droppedResources = room.getDroppedResources();
+      const energyStorageStructures = room.getEnergyStorageStructures();
       const creepWorkData = {
         constructionSites: constructionSites,
         droppedResources: droppedResources,
@@ -30,15 +31,7 @@ module.exports.loop = function() {
 
       creepsMaintainer.spawnNewCreeps(Game.spawns[spawnName]);
 
-      for (var hostileCreep of hostileCreeps) {
-        // if any hostile creep is beyond 5 spaces of 50x50 room edges, activate
-        if (hostileCreep.pos.x > 5 ||
-          hostileCreep.pos.x < 45 ||
-          hostileCreep.pos.y > 5 ||
-          hostileCreep.pos.y < 45) {
-            roomUtility.activateSafeMode(room, hostileCreep);
-        }
-      }
+      room.activateSafeModeIfNecessary();
 
       towerController.run(room, hostileCreeps, roadsToRepair);
 
@@ -56,11 +49,7 @@ module.exports.loop = function() {
 
 function assignSourceToCreep(creep) {
   if (!creep.memory.sourceId) {
-    const sources = creep.room.find(FIND_SOURCES, {
-      filter: (source) => {
-        return !_.includes(source.room.memory.blacklistedSources, source.id);
-      }
-    });
+    const sources = creep.room.getSourcesMinusBlacklist();
     const desiredSource = sources[Math.floor(Math.random() * sources.length)];
     creep.memory.sourceId = desiredSource.id;
     console.log('Setting sourceId to ' + desiredSource.id + ' for creep: ' + creep);

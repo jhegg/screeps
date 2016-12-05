@@ -28,5 +28,56 @@ Game.profiler.profile(50)
 Avg: 4.40	Total: 220.12	Ticks: 50
 
 
+A few prototypes added:
+
+calls		time		avg		function
+187		63.9		0.342		Creep.moveTo
+447		40.7		0.091		Room.find
+187		40.3		0.216		Creep.move
+168		38.1		0.227		Creep.upgradeController
+138		30.6		0.222		Creep.moveByPath
+83		19.2		0.231		Creep.harvest
+49		14.4		0.293		RoomPosition.findPathTo
+49		13.6		0.278		Room.findPath
+50		9.5		0.190		Room.getRoadsNeedingRepair
+144		9.3		0.064		Creep.transfer
+104		3.8		0.037		Creep.withdraw
+625		2.3		0.004		Creep.getActiveBodyparts
+356		1.0		0.003		RoomPosition.isNearTo
+50		0.6		0.012		Room.getHostiles
+1		0.5		0.469		Spawn.createCreep
+50		0.4		0.007		Room.getConstructionSites
+168		0.3		0.002		RoomPosition.inRangeTo
+1		0.2		0.241		Creep.drop
+1		0.2		0.214		Creep.suicide
+18		0.2		0.010		Creep.say
+Avg: 4.56	Total: 228.08	Ticks: 50
+
+
+Room finders converted to prototypes:
+
+calls		time		avg		function
+197		63.1		0.320		Creep.moveTo
+550		46.5		0.085		Room.find
+189		42.3		0.224		Creep.upgradeController
+197		42.2		0.214		Creep.move
+156		34.5		0.221		Creep.moveByPath
+84		18.8		0.223		Creep.harvest
+50		14.5		0.290		Room.getEnergyStorageStructures
+41		12.5		0.305		RoomPosition.findPathTo
+41		11.9		0.290		Room.findPath
+100		9.9		0.099		Room.getStructuresNeedingRepair
+50		8.4		0.169		Room.getRoadsNeedingRepair
+133		6.8		0.051		Creep.transfer
+98		6.7		0.069		Room.getRampartsAndWallsNeedingRepair
+100		4.0		0.040		Room.getContainersNeedingRepair
+93		3.6		0.038		Creep.withdraw
+50		3.6		0.071		Room.getTowers
+664		2.1		0.003		Creep.getActiveBodyparts
+100		1.2		0.012		Room.getCreepsNeedingHealing
+100		0.8		0.008		Room.getHostiles
+50		0.7		0.014		Room.activateSafeModeIfNecessary
+Avg: 4.62	Total: 230.85	Ticks: 50
+
 
 -------------------------------------------

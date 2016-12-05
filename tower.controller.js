@@ -1,8 +1,6 @@
-var roomFinders = require('room.finders');
-
 var towerController = {
   run: function(room, hostileCreeps, roadsToRepair) {
-    const towersInRoom = roomFinders.findTowers(room);
+    const towersInRoom = room.getTowers();
     towersInRoom.forEach(function(tower) {
       if (hostileCreeps.length > 0) {
         attackHostile(tower, room, hostileCreeps[0]);
@@ -13,13 +11,13 @@ var towerController = {
         return;
       }
 
-      const creepsNeedingHealing = roomFinders.findCreepsNeedingHealing(room);
+      const creepsNeedingHealing = room.getCreepsNeedingHealing();
       if (creepsNeedingHealing.length > 0) {
         healCreep(tower, creepsNeedingHealing[0]);
         return;
       }
 
-      const containersToRepair = roomFinders.findContainersToRepair(room);
+      const containersToRepair = room.getContainersNeedingRepair();
       if (containersToRepair.length > 0) {
         const containersToRepairSortedByHits = containersToRepair.sort(function(a,b) {
           return a.hits - b.hits;
@@ -28,7 +26,7 @@ var towerController = {
         return;
       }
 
-      const structuresToRepair = roomFinders.findStructuresToRepair(room);
+      const structuresToRepair = room.getStructuresNeedingRepair();
       if (structuresToRepair.length > 0) {
         repairStructure(tower, structuresToRepair[0]);
         return;
@@ -39,7 +37,7 @@ var towerController = {
         return;
       }
 
-      const wallsToRepair = roomFinders.findWallsToRepair(room);
+      const wallsToRepair = room.getRampartsAndWallsNeedingRepair();
       if (wallsToRepair.length > 0) {
         repairStructure(tower, wallsToRepair[0]);
         return;
