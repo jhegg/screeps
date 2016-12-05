@@ -7,49 +7,37 @@ var roleBuilder = require('role.builder');
 var roleTruck = require('role.truck');
 var towerController = require('tower.controller');
 
-// https://github.com/gdborton/screeps-profiler
-const profiler = require('screeps-profiler');
-profiler.registerObject(creepsMaintainer, 'creepsMaintainer');
-profiler.registerObject(roleBuilder, 'roleBuilder');
-profiler.registerObject(roleHarvester, 'roleHarvester');
-profiler.registerObject(roleTruck, 'roleTruck');
-profiler.registerObject(roleUpgrader, 'roleUpgrader');
-profiler.registerObject(towerController, 'towerController');
-//profiler.enable();
-
 module.exports.loop = function() {
-  profiler.wrap(function() {
-    creepsMaintainer.cleanOldCreepMemory();
+  creepsMaintainer.cleanOldCreepMemory();
 
-    for (var spawnName in Game.spawns) {
-      const room = Game.spawns[spawnName].room;
-      const roadsToRepair = room.getRoadsNeedingRepair();
-      const hostileCreeps = room.getHostiles();
-      const constructionSites = room.getConstructionSites();
-      const droppedResources = room.getDroppedResources();
-      const energyStorageStructures = room.getEnergyStorageStructures();
-      const creepWorkData = {
-        constructionSites: constructionSites,
-        droppedResources: droppedResources,
-        energyStorageStructures: energyStorageStructures,
-      };
+  for (var spawnName in Game.spawns) {
+    const room = Game.spawns[spawnName].room;
+    const roadsToRepair = room.getRoadsNeedingRepair();
+    const hostileCreeps = room.getHostiles();
+    const constructionSites = room.getConstructionSites();
+    const droppedResources = room.getDroppedResources();
+    const energyStorageStructures = room.getEnergyStorageStructures();
+    const creepWorkData = {
+      constructionSites: constructionSites,
+      droppedResources: droppedResources,
+      energyStorageStructures: energyStorageStructures,
+    };
 
-      creepsMaintainer.spawnNewCreeps(Game.spawns[spawnName]);
+    creepsMaintainer.spawnNewCreeps(Game.spawns[spawnName]);
 
-      room.activateSafeModeIfNecessary();
+    room.activateSafeModeIfNecessary();
 
-      towerController.run(room, hostileCreeps, roadsToRepair);
+    towerController.run(room, hostileCreeps, roadsToRepair);
 
-      for (var name in Game.creeps) {
-        var creep = Game.creeps[name];
-        assignSourceToCreep(creep);
-        if (shouldRetire(creep)) {
-          creepsMaintainer.retireOldCreep(creep);
-        }
-        putCreepToWork(creep, creepWorkData);
+    for (var name in Game.creeps) {
+      var creep = Game.creeps[name];
+      assignSourceToCreep(creep);
+      if (shouldRetire(creep)) {
+        creepsMaintainer.retireOldCreep(creep);
       }
+      putCreepToWork(creep, creepWorkData);
     }
-  });
+  }
 };
 
 function assignSourceToCreep(creep) {
