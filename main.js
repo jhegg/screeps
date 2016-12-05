@@ -5,7 +5,6 @@ var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 var roleTruck = require('role.truck');
-var roomUtility = require('room.utility');
 var towerController = require('tower.controller');
 
 // https://github.com/gdborton/screeps-profiler

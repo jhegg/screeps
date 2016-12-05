@@ -1,5 +1,3 @@
-var roomUtility = require('room.utility');
-
 var roleTruck = {
   run: function(creep, energyStorageStructures) {
     if (creep.memory.delivering &&
@@ -125,7 +123,7 @@ function getPickupContainer(creep) {
     return container;
   } else {
     const newContainer = filterContainersWhichHaveEnergy(
-      roomUtility.getSourceContainers(creep.room))[0];
+      creep.room.getSourceContainers())[0];
     if (newContainer) {
       creep.memory.pickupId = newContainer.id;
       return newContainer;
@@ -191,7 +189,7 @@ function filterStructuresByTypeAndEnergy(structures, structureType) {
 }
 
 function filterContainersByStorage(room, structures) {
-  const sourceContainers = roomUtility.getSourceContainers(room);
+  const sourceContainers = room.getSourceContainers();
   const nonSourceContainers = _.filter(structures, function(structure) {
     return structure.structureType === STRUCTURE_CONTAINER &&
       !_.any(sourceContainers, 'id', structure.id) &&

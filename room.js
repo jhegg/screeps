@@ -131,6 +131,15 @@ Room.prototype.getRoadsNeedingRepair = function() {
   return this._roadsNeedingRepair;
 };
 
+Room.prototype.getSourceContainers = function() {
+  if (!this._sourceContainers) {
+    this._sourceContainers = _.map(this.memory.sourceContainers, function(sourceContainer) {
+      return Game.getObjectById(sourceContainer.id);
+    });
+  }
+  return this._sourceContainers;
+};
+
 Room.prototype.getSourcesMinusBlacklist = function() {
   if (!this._sourcesMinusBlacklist) {
     this._sourcesMinusBlacklist = this.find(FIND_SOURCES, {
@@ -161,4 +170,9 @@ Room.prototype.getTowers = function() {
         structure.room.name === this.name);
   }
   return this._towers;
+};
+
+Room.prototype.hasSourceContainers = function() {
+  const sourceContainers = this.getSourceContainers();
+  return sourceContainers && sourceContainers.length > 0;
 };
