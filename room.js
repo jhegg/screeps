@@ -113,13 +113,25 @@ Room.prototype.getNumberOfHarvesters = function() {
 
 Room.prototype.getRampartsAndWallsNeedingRepair = function() {
   if (!this._rampartsAndWallsNeedingRepair) {
+    const desiredRampartAndWallHits = getDesiredRampartAndWallHits(this);
     this._rampartsAndWallsNeedingRepair = _.filter(this.getAllStructures(),
       (structure) => (structure.structureType === STRUCTURE_WALL &&
-        structure.hits < 1000) ||
+        structure.hits < desiredRampartAndWallHits.wall) ||
         (structure.structureType === STRUCTURE_RAMPART &&
-        structure.hits < 30000));
+        structure.hits < desiredRampartAndWallHits.rampart ));
   }
   return this._rampartsAndWallsNeedingRepair;
+};
+
+const getDesiredRampartAndWallHits = function(room) {
+  const level = room.controller.level;
+  if (level <= 2) {
+    return { wall: 1000, rampart: 10000 };
+  } else if (level <= 4) {
+    return { wall: 25000, rampart: 25000 };
+  } else {
+    return { wall: 50000, rampart: 50000 };
+  }
 };
 
 Room.prototype.getRoadsNeedingRepair = function() {
