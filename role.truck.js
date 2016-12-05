@@ -191,11 +191,14 @@ function filterStructuresByTypeAndEnergy(structures, structureType) {
 
 function filterContainersByStorage(room, structures) {
   const sourceContainers = roomUtility.getSourceContainers(room);
-  return _.filter(structures, function(structure) {
+  const nonSourceContainers = _.filter(structures, function(structure) {
     return structure.structureType === STRUCTURE_CONTAINER &&
       !_.any(sourceContainers, 'id', structure.id) &&
       _.sum(structure.store) < 2000;
   });
+  return _.sortByOrder(nonSourceContainers, function(container) {
+    return _.sum(container.store);
+  }, ['asc']);
 }
 
 module.exports = roleTruck;
