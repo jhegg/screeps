@@ -1,0 +1,32 @@
+-------------------------------------------
+December 4 2016
+
+Before introducing prototype usage:
+
+Game.profiler.profile(50)
+[7:28:41 PM] calls		time		avg		function
+174		58.9		0.338		Creep.moveTo
+190		41.6		0.219		Creep.upgradeController
+443		40.7		0.092		Room.find
+174		38.0		0.218		Creep.move
+137		30.6		0.224		Creep.moveByPath
+83		19.2		0.232		Creep.harvest
+37		12.8		0.347		RoomPosition.findPathTo
+37		12.2		0.330		Room.findPath
+117		7.4		0.063		Creep.transfer
+109		3.6		0.033		Creep.withdraw
+621		2.2		0.003		Creep.getActiveBodyparts
+322		0.8		0.002		RoomPosition.isNearTo
+1		0.5		0.473		Spawn.createCreep
+190		0.3		0.002		RoomPosition.inRangeTo
+1		0.2		0.214		Creep.suicide
+19		0.2		0.011		Creep.say
+74		0.1		0.002		RoomPosition.isEqualTo
+2		0.0		0.015		Spawn.canCreateCreep
+1		0.0		0.009		Creep.drop
+2		0.0		0.003		Creep.toString
+Avg: 4.40	Total: 220.12	Ticks: 50
+
+
+
+-------------------------------------------
