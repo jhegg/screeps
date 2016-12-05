@@ -115,17 +115,6 @@ var roleBuilder = {
         }
       }
 
-      const containersWithEnergy =
-        roleUtility.containersWithEnergy(creepWorkData.energyStorageStructures);
-      if (containersWithEnergy.length) {
-        console.log(`${creep.name} (${creep.memory.role}) fell back to random container search and found ${container.id}.`);
-        creep.memory.containerId = containersWithEnergy[0].id;
-        if (creep.withdraw(containersWithEnergy[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(containersWithEnergy[0]);
-        }
-        return;
-      }
-
       const source = Game.getObjectById(creep.memory.sourceId);
       if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
         creep.moveTo(source);
