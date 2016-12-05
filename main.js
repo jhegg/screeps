@@ -9,8 +9,14 @@ var towerController = require('tower.controller');
 
 // https://github.com/gdborton/screeps-profiler
 const profiler = require('screeps-profiler');
+profiler.registerObject(creepsMaintainer, 'creepsMaintainer');
+profiler.registerObject(roleBuilder, 'roleBuilder');
+profiler.registerObject(roleHarvester, 'roleHarvester');
+profiler.registerObject(roleTruck, 'roleTruck');
+profiler.registerObject(roleUpgrader, 'roleUpgrader');
+profiler.registerObject(towerController, 'towerController');
+//profiler.enable();
 
-profiler.enable();
 module.exports.loop = function() {
   profiler.wrap(function() {
     creepsMaintainer.cleanOldCreepMemory();
