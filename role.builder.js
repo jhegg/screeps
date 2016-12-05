@@ -106,7 +106,6 @@ var roleBuilder = {
 
       for (var container of containers) {
         if (container && container.store[RESOURCE_ENERGY] > 250) {
-          console.log(`${creep.name} (${creep.memory.role}) selected container ${container.id} to withdraw from.`);
           creep.memory.containerId = container.id;
           if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(container);
