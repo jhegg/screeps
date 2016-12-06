@@ -142,6 +142,8 @@ function findAndPickupDroppedResource(creep, resource) {
     case ERR_NOT_IN_RANGE:
       creep.moveTo(resource);
       break;
+    case ERR_BUSY:
+      break;
     default:
       console.log(`Error: unhandled error ${pickupResult} from ${creep.memory.role} ${creep} trying to pickup resource ${resource}`);
       break;
