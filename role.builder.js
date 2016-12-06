@@ -28,10 +28,12 @@ var roleBuilder = {
         if (extensionSites.length) {
           if (creep.build(extensionSites[0]) === ERR_NOT_IN_RANGE) {
             creep.moveTo(extensionSites[0]);
+            creep.build(extensionSites[0]);
           }
         } else {
           if (creep.build(constructionSitesSortedByDistance[0]) === ERR_NOT_IN_RANGE) {
             creep.moveTo(constructionSitesSortedByDistance[0]);
+            creep.build(constructionSitesSortedByDistance[0]);
           }
         }
       } else {
@@ -74,6 +76,7 @@ var roleBuilder = {
           case ERR_NOT_IN_RANGE:
             creep.memory.pickupWasEmptyCounter = undefined;
             creep.moveTo(container);
+            creep.withdraw(container, RESOURCE_ENERGY);
             return;
           case ERR_INVALID_ARGS:
             console.log(`Error: builder ${creep} tried to withdraw from
@@ -102,6 +105,7 @@ var roleBuilder = {
           creep.memory.containerId = container.id;
           if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(container);
+            creep.withdraw(container, RESOURCE_ENERGY);
           }
           return;
         }
@@ -111,6 +115,7 @@ var roleBuilder = {
         const source = Game.getObjectById(creep.memory.sourceId);
         if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
           creep.moveTo(source);
+          creep.harvest(source);
         }
       }
     }
