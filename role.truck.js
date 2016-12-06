@@ -31,7 +31,7 @@ var roleTruck = {
     }
 
     if (!creep.memory.delivering) {
-      retrieveEnergy(creep, energyStorageStructures);
+      retrieveResources(creep, energyStorageStructures);
     } else {
       updateDedicatedControllerContainerTruck(creep);
       if (shouldDeliverToControllerContainer(creep)) {
@@ -81,7 +81,13 @@ function deliverResourceToTarget(creep, deliveryTarget) {
   }
 }
 
-function retrieveEnergy(creep, energyStorageStructures) {
+function retrieveResources(creep, energyStorageStructures) {
+  const droppedResources = creep.room.getDroppedResources();
+  if (droppedResources.length) {
+    findAndPickupDroppedResource(creep, droppedResources[0]);
+    return;
+  }
+
   const sourceContainer = getPickupContainer(creep);
   if (!sourceContainer) {
     // no sources available :(
@@ -124,6 +130,21 @@ function retrieveEnergy(creep, energyStorageStructures) {
     default:
       console.log(`Warning: unknown result ${withdrawResult} from truck
          withdraw`);
+  }
+}
+
+function findAndPickupDroppedResource(creep, resource) {
+  const pickupResult = creep.pickup(resource);
+  switch (pickupResult) {
+    case OK:
+      creep.memory.claimedResource = undefined;
+      break;
+    case ERR_NOT_IN_RANGE:
+      creep.moveTo(resource);
+      break;
+    default:
+      console.log(`Error: unhandled error ${pickupResult} from ${creep.memory.role} ${creep} trying to pickup resource ${resource}`);
+      break;
   }
 }
 
