@@ -17,6 +17,7 @@ var roleUpgrader = {
     if (creep.memory.upgrading) {
       if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
         creep.moveTo(creep.room.controller);
+        creep.upgradeController(creep.room.controller);
       }
     } else {
       if (creep.memory.containerId !== undefined) {
@@ -25,6 +26,7 @@ var roleUpgrader = {
         switch (withdrawResult) {
           case OK:
             creep.memory.pickupWasEmptyCounter = undefined;
+            creep.upgradeController(creep.room.controller);
             break;
           case ERR_NOT_OWNER:
             console.log(`Error: upgrader unable to transfer from ${container}
@@ -54,6 +56,7 @@ var roleUpgrader = {
             break;
           case ERR_NOT_IN_RANGE:
             creep.moveTo(container);
+            creep.withdraw(container, RESOURCE_ENERGY);
             break;
           case ERR_INVALID_ARGS:
             console.log(`Error: upgrader ${creep} tried to withdraw from
@@ -84,6 +87,7 @@ var roleUpgrader = {
           creep.memory.containerId = container.id;
           if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             creep.moveTo(container);
+            creep.withdraw(container, RESOURCE_ENERGY);
           }
           return;
         }
@@ -92,6 +96,7 @@ var roleUpgrader = {
       const source = Game.getObjectById(creep.memory.sourceId);
       if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
         creep.moveTo(source);
+        creep.harvest(source);
       }
     }
   }
