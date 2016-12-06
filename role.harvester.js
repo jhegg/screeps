@@ -46,8 +46,19 @@ function creepNeedsEnergyToCarry(creep) {
 
 function harvestEnergy(creep, energyStorageStructures) {
   const source = Game.getObjectById(creep.memory.sourceId);
-  if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-    creep.moveTo(source);
+  const harvestResult = creep.harvest(source);
+  switch (harvestResult) {
+    case OK:
+      const container = Game.getObjectById(creep.memory.containerId);
+      if (container) {
+        creep.transfer(container, RESOURCE_ENERGY);
+      }
+      break;
+    case ERR_NOT_IN_RANGE:
+      creep.moveTo(source);
+      break;
+    default:
+      break;
   }
 }
 

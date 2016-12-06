@@ -42,11 +42,6 @@ const upgraderBody = [
   MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
 ]; // cost: 750
 
-const extraLargeHarvesterBody = [
-  WORK, WORK, WORK, WORK, WORK, WORK,
-  CARRY,
-  MOVE
-]; // cost: 700
 const extraLargeBuilderBody = [
   WORK, WORK, WORK, WORK, WORK,
   CARRY, CARRY, CARRY, CARRY,
@@ -144,7 +139,7 @@ var creepsTemplates = {
   extraLargeBodyWithTrucksTemplate: function() {
     return [
       { role: harvesterRole,
-        body: extraLargeHarvesterBody,
+        body: largeHarvesterBody,
         maxCreepsOfType: 2},
       { role: truckRole,
         body: mediumTruckBody,
