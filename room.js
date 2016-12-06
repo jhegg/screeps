@@ -94,7 +94,7 @@ Room.prototype.getEnergyStorageStructures = function() {
           structure.structureType === STRUCTURE_TOWER) &&
           structure.energy < structure.energyCapacity) ||
           (structure.structureType === STRUCTURE_CONTAINER &&
-          _.sum(structure.store) < 2000));
+          _.sum(structure.store) < structure.storeCapacity));
   }
   return this._energyStorageStructures;
 };
@@ -132,6 +132,16 @@ const getDesiredRampartAndWallHits = function(room) {
   } else {
     return { wall: 50000, rampart: 50000 };
   }
+};
+
+Room.prototype.getResourceStorageStructures = function() {
+  if (!this._resourceStorageStructures) {
+    this._resourceStorageStructures = _.filter(this.getAllStructures(),
+      (structure) => (structure.structureType === STRUCTURE_CONTAINER ||
+        structure.structureType === STRUCTURE_STORAGE) &&
+        _.sum(structure.store) < structure.storeCapacity);
+  }
+  return this._resourceStorageStructures;
 };
 
 Room.prototype.getRoadsNeedingRepair = function() {

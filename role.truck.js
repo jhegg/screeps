@@ -1,7 +1,7 @@
 var roleTruck = {
   run: function(creep, energyStorageStructures) {
     if (creep.memory.delivering &&
-      creep.carry.energy === 0) {
+      _.sum(creep.carry) === 0) {
       creep.memory.delivering = false;
       creep.memory.deliveryId = undefined;
       creep.memory.pickupId = undefined;
@@ -21,8 +21,8 @@ var roleTruck = {
     }
 
     if (!creep.memory.delivering &&
-      (creep.carry.energy === creep.carryCapacity ||
-        (creep.memory.pickupWasEmptyCounter > 4 && creep.carry.energy > 49))) {
+      (_.sum(creep.carry) === creep.carryCapacity ||
+        (creep.memory.pickupWasEmptyCounter > 4 && _.sum(creep.carry) > 49))) {
       creep.memory.delivering = true;
       creep.memory.deliveryId = undefined;
       creep.memory.pickupId = undefined;
@@ -40,13 +40,20 @@ var roleTruck = {
       }
       const deliveryTarget = getDeliveryTarget(creep, energyStorageStructures);
       if (deliveryTarget) {
-        deliverEnergyToTarget(creep, deliveryTarget);
+        deliverResourceToTarget(creep, deliveryTarget);
       }
     }
   },
 };
 
 function getDeliveryTarget(creep, energyStorageStructures) {
+  const nonEnergyResources = _.any(Object.keys(creep.carry), function(resource) {
+    return resource !== RESOURCE_ENERGY; });
+  if (nonEnergyResources &&
+    creep.room.storage &&
+    (_.sum(creep.room.storage.store) < creep.room.storage.storeCapacity)) {
+      return creep.room.storage;
+    }
   const deliveryTarget = Game.getObjectById(creep.memory.deliveryId);
   if (deliveryTarget !== null) {
     return deliveryTarget;
@@ -65,8 +72,11 @@ function pickTargetDestination(creep, structures) {
   }
 }
 
-function deliverEnergyToTarget(creep, deliveryTarget) {
-  if (creep.transfer(deliveryTarget, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+function deliverResourceToTarget(creep, deliveryTarget) {
+  const resource = _.findKey(creep.carry, function(resource) {
+    return resource > 0;
+  });
+  if (creep.transfer(deliveryTarget, resource) == ERR_NOT_IN_RANGE) {
     creep.moveTo(deliveryTarget);
   }
 }
@@ -193,7 +203,7 @@ function filterContainersByStorage(room, structures) {
   const nonSourceContainers = _.filter(structures, function(structure) {
     return structure.structureType === STRUCTURE_CONTAINER &&
       !_.any(sourceContainers, 'id', structure.id) &&
-      _.sum(structure.store) < 2000;
+      _.sum(structure.store) < structure.storeCapacity;
   });
   return _.sortByOrder(nonSourceContainers, function(container) {
     return _.sum(container.store);
