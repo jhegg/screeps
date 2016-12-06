@@ -38,13 +38,6 @@ var roleBuilder = {
         console.log('Builder '+creep+' has no construction site; error?');
       }
     } else {
-      if (creep.memory.containerId === undefined && creepWorkData.droppedResources.length) {
-        if (creep.pickup(creepWorkData.droppedResources[0]) == ERR_NOT_IN_RANGE) {
-          creep.moveTo(creepWorkData.droppedResources[0]);
-        }
-        return;
-      }
-
       if (creep.memory.containerId !== undefined) {
         const container = Game.getObjectById(creep.memory.containerId);
         const withdrawResult = creep.withdraw(container, RESOURCE_ENERGY);
