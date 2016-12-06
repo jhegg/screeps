@@ -78,6 +78,7 @@ function deliverResourceToTarget(creep, deliveryTarget) {
   });
   if (creep.transfer(deliveryTarget, resource) == ERR_NOT_IN_RANGE) {
     creep.moveTo(deliveryTarget);
+    creep.transfer(deliveryTarget, resource);
   }
 }
 
@@ -122,6 +123,7 @@ function retrieveResources(creep, energyStorageStructures) {
       break;
     case ERR_NOT_IN_RANGE:
       creep.moveTo(sourceContainer);
+      creep.withdraw(sourceContainer, RESOURCE_ENERGY);
       break;
     case ERR_INVALID_ARGS:
       console.log(`Error: truck ${creep} tried to withdraw from
@@ -141,6 +143,9 @@ function findAndPickupDroppedResource(creep, resource) {
       break;
     case ERR_NOT_IN_RANGE:
       creep.moveTo(resource);
+      if (creep.pickup(resource) === OK) {
+        creep.memory.pickupWasEmptyCounter = undefined;
+      }
       break;
     case ERR_BUSY:
       break;
@@ -183,6 +188,7 @@ function deliverEnergyToControllerContainer(creep) {
   const container = Game.getObjectById(creep.room.memory.ControllerContainer);
   if (creep.transfer(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
     creep.moveTo(container);
+    creep.transfer(container, RESOURCE_ENERGY);
   }
 }
 
