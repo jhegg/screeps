@@ -76,6 +76,17 @@ function deliverResourceToTarget(creep, deliveryTarget) {
   const resource = _.findKey(creep.carry, function(resource) {
     return resource > 0;
   });
+  switch (creep.transfer(deliveryTarget, resource)) {
+    case ERR_NOT_IN_RANGE:
+      creep.moveTo(deliveryTarget);
+      creep.transfer(deliveryTarget, resource);
+      break;
+    case ERR_FULL:
+      pickTargetDestination(creep, creep.room.getEnergyStorageStructures());
+      break;
+    default:
+      break;
+  }
   if (creep.transfer(deliveryTarget, resource) == ERR_NOT_IN_RANGE) {
     creep.moveTo(deliveryTarget);
     creep.transfer(deliveryTarget, resource);
