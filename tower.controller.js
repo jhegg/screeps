@@ -41,7 +41,10 @@ var towerController = {
 
       const wallsToRepair = room.getRampartsAndWallsNeedingRepair();
       if (wallsToRepair.length > 0) {
-        repairStructure(tower, wallsToRepair[0]);
+        const sortedWallsByHits = _.sortByOrder(wallsToRepair, function(wall) {
+          return wall.hits;
+        }, ['asc']);
+        repairStructure(tower, sortedWallsByHits[0]);
         return;
       }
     });
