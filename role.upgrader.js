@@ -72,12 +72,14 @@ var roleUpgrader = {
       const controllerContainer = Game.getObjectById(creep.room.memory.ControllerContainer);
       const spawnContainer = Game.getObjectById(creep.room.memory.SpawnContainer);
       const towerContainer = Game.getObjectById(creep.room.memory.TowerContainer);
+      const roomStorage = creep.room.storage;
       const source1Container = Game.getObjectById(creep.room.memory.Source1Container);
       const source2Container = Game.getObjectById(creep.room.memory.Source2Container);
       const containers = [
         controllerContainer,
         spawnContainer,
         towerContainer,
+        roomStorage,
         source1Container,
         source2Container,
       ];

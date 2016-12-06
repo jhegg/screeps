@@ -91,11 +91,13 @@ var roleBuilder = {
 
       const spawnContainer = Game.getObjectById(creep.room.memory.SpawnContainer);
       const towerContainer = Game.getObjectById(creep.room.memory.TowerContainer);
+      const roomStorage = creep.room.storage;
       const source1Container = Game.getObjectById(creep.room.memory.Source1Container);
       const source2Container = Game.getObjectById(creep.room.memory.Source2Container);
       const containers = [
         spawnContainer,
         towerContainer,
+        roomStorage,
         source1Container,
         source2Container,
       ];
