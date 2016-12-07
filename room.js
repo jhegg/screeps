@@ -129,6 +129,8 @@ const getDesiredRampartAndWallHits = function(room) {
     return { wall: 1000, rampart: 10000 };
   } else if (level <= 4) {
     return { wall: 25000, rampart: 25000 };
+  } else if (level >= 5 && room.getTowers() && room.getTowers().length > 1) {
+    return { wall: 100000, rampart: 100000 };
   } else {
     return { wall: 50000, rampart: 50000 };
   }
