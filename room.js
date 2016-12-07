@@ -28,9 +28,9 @@ Room.prototype.activateSafeModeDueToHostile = function(hostileCreep) {
 Room.prototype.activateSafeModeIfNecessary = function() {
   for (var hostileCreep of this.getHostiles()) {
     // if any hostile creep is beyond 5 spaces of 50x50 room edges, activate
-    if (hostileCreep.pos.x > 5 ||
-      hostileCreep.pos.x < 45 ||
-      hostileCreep.pos.y > 5 ||
+    if (hostileCreep.pos.x > 5 &&
+      hostileCreep.pos.x < 45 &&
+      hostileCreep.pos.y > 5 &&
       hostileCreep.pos.y < 45) {
         this.activateSafeModeDueToHostile(hostileCreep);
     }
