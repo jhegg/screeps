@@ -1,7 +1,8 @@
 var roleAttack = {
   run: function(creep) {
     const enemyStructures = _.filter(creep.room.getAllStructures(),
-      (structure) => structure.my === false);
+      (structure) => structure.my === false &&
+      structure.structureType !== STRUCTURE_CONTROLLER);
     if (enemyStructures.length) {
       const enemyStructuresByRange = enemyStructures.sort(function(a, b) {
         const distanceA = Math.hypot(creep.pos.x - a.pos.x, creep.pos.y - a.pos.y);
