@@ -1,6 +1,7 @@
 require('room');
 
 var creepsMaintainer = require('creeps.maintainer');
+var roleAttack = require('role.attack');
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
@@ -39,7 +40,7 @@ module.exports.loop = function() {
 };
 
 function assignSourceToCreep(creep) {
-  if (!creep.memory.sourceId) {
+  if (!creep.memory.sourceId && creep.memory.role !== 'attack') {
     const sources = creep.room.getSourcesMinusBlacklist();
     const desiredSource = sources[Math.floor(Math.random() * sources.length)];
     creep.memory.sourceId = desiredSource.id;
@@ -77,5 +78,9 @@ function putCreepToWork(creep, creepWorkData) {
     } else {
       roleUpgrader.run(creep, creepWorkData);
     }
+  }
+
+  if (creep.memory.role === 'attack') {
+    roleAttack.run(creep);
   }
 }
