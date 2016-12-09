@@ -52,6 +52,8 @@ var creepsMaintainer = {
     } else {
       extraLargeEnergyCapacitySpawning(spawn);
     }
+
+    produceNewSpawnBuilder(spawn);
   },
 };
 
@@ -84,6 +86,33 @@ function extraLargeEnergyCapacitySpawning(spawn) {
     creepsSpawner.spawnExtraLargeCreepsWithTrucks(spawn);
   } else {
     creepsSpawner.spawnLargeCreeps(spawn);
+  }
+}
+
+function produceNewSpawnBuilder(spawn) {
+  if (Game.gcl.level > 1 &&
+    spawn.spawning === null &&
+    spawn.room.memory.emergencyMode !== true) {
+    const creepsAssignedToFlags = _.filter(Game.creeps, (creep) =>
+      creep.memory.targetFlag !== undefined
+    );
+    const unclaimedFlags = _.filter(Game.flags, (flag) =>
+      flag.name.startsWith('NewSpawnFlag') &&
+      !_.any(creepsAssignedToFlags, (creep) =>
+        creep.memory.targetFlag === flag.name
+    ));
+    if (unclaimedFlags.length) {
+      const body = [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE];
+      if (spawn.canCreateCreep(body) === OK) {
+        const spawnedCreep = spawn.createCreep(body,
+          undefined,
+          {
+            role: 'newSpawnBuilder',
+            targetFlag: unclaimedFlags[0].name
+          });
+        console.log(`Spawning newSpawnBuilder ${spawnedCreep} for flag ${unclaimedFlags[0]}`);
+      }
+    }
   }
 }
 

@@ -155,6 +155,10 @@ Room.prototype.getRoadsNeedingRepair = function() {
   return this._roadsNeedingRepair;
 };
 
+Room.prototype.getSpawns = function() {
+  return this.find(STRUCTURE_SPAWN);
+};
+
 Room.prototype.getSourceContainers = function() {
   if (!this._sourceContainers) {
     this._sourceContainers = _.map(this.memory.sourceContainers, function(sourceContainer) {

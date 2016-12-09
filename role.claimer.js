@@ -37,8 +37,8 @@ var roleClaimer = {
               case OK:
                 console.log(`${creep.memory.role} ${creep} successfully claimed ${roomController} in ${creep.room.name}!`);
                 Game.notify(`${creep.memory.role} ${creep} successfully claimed ${roomController} in ${creep.room.name}!`);
+                flag.room.createFlag(flag.pos, `NewSpawnFlag${flag.room.name}`);
                 flag.remove();
-                // TODO add NewSpawnFlag# ?
                 break;
               case ERR_NOT_IN_RANGE:
                 creep.moveTo(roomController);
