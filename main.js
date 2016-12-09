@@ -2,6 +2,7 @@ require('room');
 
 var creepsMaintainer = require('creeps.maintainer');
 var roleAttack = require('role.attack');
+var roleClaimer = require('role.claimer');
 var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
@@ -82,5 +83,9 @@ function putCreepToWork(creep, creepWorkData) {
 
   if (creep.memory.role === 'attack') {
     roleAttack.run(creep);
+  }
+
+  if (creep.memory.role === 'claimer') {
+    roleClaimer.run(creep);
   }
 }
