@@ -13,7 +13,10 @@ module.exports.loop = function() {
   creepsMaintainer.cleanOldCreepMemory();
 
   for (var spawnName in Game.spawns) {
-    creepsMaintainer.spawnNewCreeps(Game.spawns[spawnName]);
+    const spawn = Game.spawns[spawnName];
+    if (spawn.spawning === null) {
+      creepsMaintainer.spawnNewCreeps(spawn);
+    }
   }
 
   for (var roomName in Game.rooms) {
