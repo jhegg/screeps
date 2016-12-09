@@ -14,7 +14,10 @@ module.exports.loop = function() {
 
   for (var spawnName in Game.spawns) {
     creepsMaintainer.spawnNewCreeps(Game.spawns[spawnName]);
-    const room = Game.spawns[spawnName].room;
+  }
+
+  for (var roomName in Game.rooms) {
+    const room = Game.rooms[roomName];
     room.activateSafeModeIfNecessary();
     towerController.run(room);
   }
