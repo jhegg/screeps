@@ -99,9 +99,8 @@ function produceNewSpawnBuilder(spawn) {
     );
     const unclaimedFlags = _.filter(Game.flags, (flag) =>
       flag.name.startsWith('NewSpawnFlag') &&
-      !_.any(creepsAssignedToFlags, (creep) =>
-        creep.memory.targetFlag === flag.name
-    ));
+      _.filter(creepsAssignedToFlags, (creep) =>
+        creep.memory.targetFlag === flag.name).length < 2);
     if (unclaimedFlags.length) {
       const body = [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE];
       if (spawn.canCreateCreep(body) === OK) {
