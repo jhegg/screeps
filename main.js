@@ -30,8 +30,9 @@ module.exports.loop = function() {
     assignSourceToCreep(creep);
     if (shouldRetire(creep)) {
       creepsMaintainer.retireOldCreep(creep);
+    } else {
+      putCreepToWork(creep);
     }
-    putCreepToWork(creep);
   }
 };
 
