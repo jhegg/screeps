@@ -1,7 +1,7 @@
 var roleUtility = require('role.utility');
 
 var roleBuilder = {
-  run: function(creep, creepWorkData) {
+  run: function(creep) {
     if (creep.memory.building && creep.carry.energy === 0) {
       creep.memory.building = false;
       creep.memory.containerId = undefined;
@@ -15,9 +15,9 @@ var roleBuilder = {
     }
 
     if (creep.memory.building) {
-      if (creepWorkData.constructionSites.length) {
+      if (creep.room.getConstructionSites().length) {
         const creepPosition = creep.pos;
-        const constructionSitesSortedByDistance = creepWorkData.constructionSites.sort(function(a, b) {
+        const constructionSitesSortedByDistance = creep.room.getConstructionSites().sort(function(a, b) {
           const distanceA = Math.hypot(creepPosition.x - a.pos.x, creepPosition.y - a.pos.y);
           const distanceB = Math.hypot(creepPosition.x - b.pos.x, creepPosition.y - b.pos.y);
           return distanceA - distanceB;

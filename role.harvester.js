@@ -1,5 +1,6 @@
 var roleHarvester = {
-  run: function(creep, energyStorageStructures) {
+  run: function(creep) {
+    const energyStorageStructures = creep.room.getEnergyStorageStructures();
     updateCreepContainerAssignments(creep, energyStorageStructures);
     if (creepNeedsEnergyToCarry(creep)) {
       harvestEnergy(creep, energyStorageStructures);

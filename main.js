@@ -14,14 +14,6 @@ module.exports.loop = function() {
 
   for (var spawnName in Game.spawns) {
     const room = Game.spawns[spawnName].room;
-    const constructionSites = room.getConstructionSites();
-    const droppedResources = room.getDroppedResources();
-    const energyStorageStructures = room.getEnergyStorageStructures();
-    const creepWorkData = {
-      constructionSites: constructionSites,
-      droppedResources: droppedResources,
-      energyStorageStructures: energyStorageStructures,
-    };
 
     creepsMaintainer.spawnNewCreeps(Game.spawns[spawnName]);
 
@@ -35,7 +27,7 @@ module.exports.loop = function() {
       if (shouldRetire(creep)) {
         creepsMaintainer.retireOldCreep(creep);
       }
-      putCreepToWork(creep, creepWorkData);
+      putCreepToWork(creep);
     }
   }
 };
@@ -54,30 +46,30 @@ function shouldRetire(creep) {
     creep.ticksToLive < 5;
 }
 
-function putCreepToWork(creep, creepWorkData) {
+function putCreepToWork(creep) {
   if (creep.memory.role == 'harvester') {
-    if (creepWorkData.energyStorageStructures.length) {
-      roleHarvester.run(creep, creepWorkData.energyStorageStructures);
-    } else if (creepWorkData.constructionSites.length) {
-      roleBuilder.run(creep, creepWorkData);
+    if (creep.room.getEnergyStorageStructures().length) {
+      roleHarvester.run(creep);
+    } else if (creep.room.getConstructionSites().length) {
+      roleBuilder.run(creep);
     } else {
-      roleUpgrader.run(creep, creepWorkData);
+      roleUpgrader.run(creep);
     }
   }
 
   if (creep.memory.role == 'truck') {
-    roleTruck.run(creep, creepWorkData.energyStorageStructures);
+    roleTruck.run(creep, creep.room.getEnergyStorageStructures());
   }
 
   if (creep.memory.role == 'upgrader') {
-    roleUpgrader.run(creep, creepWorkData);
+    roleUpgrader.run(creep);
   }
 
   if (creep.memory.role == 'builder') {
-    if (creepWorkData.constructionSites.length) {
-      roleBuilder.run(creep, creepWorkData);
+    if (creep.room.getConstructionSites().length) {
+      roleBuilder.run(creep);
     } else {
-      roleUpgrader.run(creep, creepWorkData);
+      roleUpgrader.run(creep);
     }
   }
 
