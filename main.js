@@ -13,22 +13,19 @@ module.exports.loop = function() {
   creepsMaintainer.cleanOldCreepMemory();
 
   for (var spawnName in Game.spawns) {
-    const room = Game.spawns[spawnName].room;
-
     creepsMaintainer.spawnNewCreeps(Game.spawns[spawnName]);
-
+    const room = Game.spawns[spawnName].room;
     room.activateSafeModeIfNecessary();
-
     towerController.run(room);
+  }
 
-    for (var name in Game.creeps) {
-      var creep = Game.creeps[name];
-      assignSourceToCreep(creep);
-      if (shouldRetire(creep)) {
-        creepsMaintainer.retireOldCreep(creep);
-      }
-      putCreepToWork(creep);
+  for (var name in Game.creeps) {
+    var creep = Game.creeps[name];
+    assignSourceToCreep(creep);
+    if (shouldRetire(creep)) {
+      creepsMaintainer.retireOldCreep(creep);
     }
+    putCreepToWork(creep);
   }
 };
 
