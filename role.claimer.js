@@ -1,7 +1,7 @@
 var roleClaimer = {
   run: function(creep) {
     const flag = Game.flags[creep.memory.claimFlag];
-    if (flag.pos.roomName === creep.room.name) {
+    if (flag !== undefined && flag.pos.roomName === creep.room.name) {
       const roomController = creep.room.controller;
       if (roomController && roomController.my === false || roomController.my === undefined) {
         if (roomController.level > 0) {
