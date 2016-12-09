@@ -54,6 +54,7 @@ var creepsMaintainer = {
     }
 
     produceNewSpawnBuilder(spawn);
+    produceClaimer(spawn);
   },
 };
 
@@ -111,6 +112,33 @@ function produceNewSpawnBuilder(spawn) {
             targetFlag: unclaimedFlags[0].name
           });
         console.log(`Spawning newSpawnBuilder ${spawnedCreep} for flag ${unclaimedFlags[0]}`);
+      }
+    }
+  }
+}
+
+function produceClaimer(spawn) {
+  if (Game.gcl.level > 1 &&
+    spawn.spawning === null &&
+    spawn.room.memory.emergencyMode !== true) {
+    const creepsAssignedToFlags = _.filter(Game.creeps, (creep) =>
+      creep.memory.claimFlag !== undefined
+    );
+    const unclaimedFlags = _.filter(Game.flags, (flag) =>
+      flag.name.startsWith('ClaimFlag') &&
+      !_.any(creepsAssignedToFlags, (creep) =>
+        creep.memory.claimFlag === flag.name
+    ));
+    if (unclaimedFlags.length) {
+      const body = [CLAIM, MOVE, MOVE];
+      if (spawn.canCreateCreep(body) === OK) {
+        const spawnedCreep = spawn.createCreep(body,
+          undefined,
+          {
+            role: 'claimer',
+            claimFlag: unclaimedFlags[0].name
+          });
+        console.log(`Spawning claimer ${spawnedCreep} for flag ${unclaimedFlags[0]}`);
       }
     }
   }
