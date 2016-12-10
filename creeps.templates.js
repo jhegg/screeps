@@ -12,10 +12,10 @@ const mediumBody = [
   MOVE, MOVE, MOVE, MOVE
 ]; // cost: 500
 const mediumHarvesterBody = [
-  WORK, WORK,
+  WORK, WORK, WORK,
   CARRY,
   MOVE
-]; // cost: 300
+]; // cost: 400
 const mediumTruckBody = [
   CARRY, CARRY, CARRY, CARRY,
   MOVE, MOVE, MOVE, MOVE
