@@ -1,10 +1,10 @@
+require('role.miner');
 require('room');
 
 var creepsMaintainer = require('creeps.maintainer');
 var roleAttack = require('role.attack');
 var roleClaimer = require('role.claimer');
 var roleHarvester = require('role.harvester');
-var roleMiner = require('role.miner');
 var roleNewSpawnBuilder = require('role.newSpawnBuilder');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
