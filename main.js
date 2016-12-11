@@ -8,9 +8,9 @@ require('role.truck');
 require('role.upgrader');
 require('room');
 require('spawn');
+require('tower');
 
 var creepsMaintainer = require('creeps.maintainer');
-var towerController = require('tower.controller');
 
 module.exports.loop = function() {
   creepsMaintainer.cleanOldCreepMemory();
@@ -26,7 +26,7 @@ module.exports.loop = function() {
   for (var roomName in Game.rooms) {
     const room = Game.rooms[roomName];
     room.activateSafeModeIfNecessary();
-    towerController.run(room);
+    room.getTowers().forEach((tower) => tower.run());
   }
 
   for (var name in Game.creeps) {
