@@ -7,6 +7,7 @@ require('role.newSpawnBuilder');
 require('role.truck');
 require('role.upgrader');
 require('room');
+require('spawn');
 
 var creepsMaintainer = require('creeps.maintainer');
 var towerController = require('tower.controller');
@@ -18,7 +19,7 @@ module.exports.loop = function() {
   for (var spawnName in Game.spawns) {
     const spawn = Game.spawns[spawnName];
     if (spawn.spawning === null) {
-      creepsMaintainer.spawnNewCreeps(spawn);
+      spawn.spawnNewCreeps(spawn);
     }
   }
 
