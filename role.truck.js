@@ -168,13 +168,14 @@ function findAndPickupDroppedResource(creep, resource) {
 
 function getPickupContainer(creep) {
   const container = Game.getObjectById(creep.memory.pickupId);
-  if (container) {
+  if (container && creep.memory.pickupWasEmptyCounter < 25) {
     return container;
   } else {
     const newContainer = filterContainersWhichHaveEnergy(
       creep.room.getSourceContainers())[0];
     if (newContainer) {
       creep.memory.pickupId = newContainer.id;
+      creep.memory.pickupWasEmptyCounter = undefined;
       return newContainer;
     }
   }
