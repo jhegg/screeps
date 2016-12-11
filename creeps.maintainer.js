@@ -19,6 +19,9 @@ var creepsMaintainer = {
     creep.suicide();
   },
   spawnNewCreeps: function(spawn) {
+    if (spawn.spawning !== null) {
+      return;
+    }
     const energyCapacity = spawn.room.energyCapacityAvailable;
     const mediumEnergyCapacity = 550;
     const largeEnergyCapacity = 1000;
