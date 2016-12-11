@@ -1,13 +1,11 @@
-var roleHarvester = {
-  run: function(creep) {
-    const energyStorageStructures = creep.room.getEnergyStorageStructures();
-    updateCreepContainerAssignments(creep, energyStorageStructures);
-    if (creepNeedsEnergyToCarry(creep)) {
-      harvestEnergy(creep, energyStorageStructures);
-    } else {
-      deliverEnergyToStructures(creep, energyStorageStructures);
-    }
-  },
+Creep.prototype.harvesting = function() {
+  const energyStorageStructures = this.room.getEnergyStorageStructures();
+  updateCreepContainerAssignments(this, energyStorageStructures);
+  if (creepNeedsEnergyToCarry(this)) {
+    harvestEnergy(this, energyStorageStructures);
+  } else {
+    deliverEnergyToStructures(this, energyStorageStructures);
+  }
 };
 
 function updateCreepContainerAssignments(creep, structures) {
@@ -116,5 +114,3 @@ function filterContainersByStorage(structures) {
       _.sum(structure.store) < 2000;
   });
 }
-
-module.exports = roleHarvester;

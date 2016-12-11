@@ -1,54 +1,50 @@
-var roleClaimer = {
-  run: function(creep) {
-    const flag = Game.flags[creep.memory.claimFlag];
-    if (flag !== undefined && flag.pos.roomName === creep.room.name) {
-      const roomController = creep.room.controller;
-      if (roomController && roomController.my === false || roomController.my === undefined) {
-        if (roomController.level > 0) {
-          // TODO: if creep has less than 5 CLAIM parts, can't attack.
-          if (creep.attackController(roomController) === ERR_NOT_IN_RANGE) {
-            creep.moveTo(roomController);
-            creep.attackController(roomController);
+Creep.prototype.claiming = function() {
+  const flag = Game.flags[this.memory.claimFlag];
+  if (flag !== undefined && flag.pos.roomName === this.room.name) {
+    const roomController = this.room.controller;
+    if (roomController && roomController.my === false || roomController.my === undefined) {
+      if (roomController.level > 0) {
+        // TODO: if this has less than 5 CLAIM parts, can't attack.
+        if (this.attackController(roomController) === ERR_NOT_IN_RANGE) {
+          this.moveTo(roomController);
+          this.attackController(roomController);
+        }
+        return;
+      } else {
+        if (this.memory.claimFailed === undefined) {
+          const claimResult = this.claimController(roomController);
+          switch (claimResult) {
+            case OK:
+              console.log(`${this.memory.role} ${this} successfully claimed ${roomController} in ${this.room.name}!`);
+              Game.notify(`${this.memory.role} ${this} successfully claimed ${roomController} in ${this.room.name}!`);
+              flag.room.createFlag(flag.pos, `NewSpawnFlag${flag.room.name}`);
+              flag.remove();
+              break;
+            case ERR_NOT_IN_RANGE:
+              this.moveTo(roomController);
+              this.claimController(roomController);
+              break;
+            case ERR_FULL:
+              console.log(`${this.memory.role} ${this} unable to claim ${roomController} due to Novice Area limit.`);
+              this.memory.claimFailed = true;
+              break;
+            case ERR_GCL_NOT_ENOUGH:
+              console.log(`${this.memory.role} ${this} unable to claim ${roomController} due to GCL too low.`);
+              this.memory.claimFailed = true;
+              break;
+            default:
+              console.log(`${this.memory.role} ${this} unable to claim ${roomController} due to error: ${claimResult}`);
+              break;
           }
-          return;
         } else {
-          if (creep.memory.claimFailed === undefined) {
-            const claimResult = creep.claimController(roomController);
-            switch (claimResult) {
-              case OK:
-                console.log(`${creep.memory.role} ${creep} successfully claimed ${roomController} in ${creep.room.name}!`);
-                Game.notify(`${creep.memory.role} ${creep} successfully claimed ${roomController} in ${creep.room.name}!`);
-                flag.room.createFlag(flag.pos, `NewSpawnFlag${flag.room.name}`);
-                flag.remove();
-                break;
-              case ERR_NOT_IN_RANGE:
-                creep.moveTo(roomController);
-                creep.claimController(roomController);
-                break;
-              case ERR_FULL:
-                console.log(`${creep.memory.role} ${creep} unable to claim ${roomController} due to Novice Area limit.`);
-                creep.memory.claimFailed = true;
-                break;
-              case ERR_GCL_NOT_ENOUGH:
-                console.log(`${creep.memory.role} ${creep} unable to claim ${roomController} due to GCL too low.`);
-                creep.memory.claimFailed = true;
-                break;
-              default:
-                console.log(`${creep.memory.role} ${creep} unable to claim ${roomController} due to error: ${claimResult}`);
-                break;
-            }
-          } else {
-            if (creep.reserveController(roomController) === ERR_NOT_IN_RANGE) {
-              creep.moveTo(roomController);
-              creep.reserveController(roomController);
-            }
+          if (this.reserveController(roomController) === ERR_NOT_IN_RANGE) {
+            this.moveTo(roomController);
+            this.reserveController(roomController);
           }
         }
       }
-    } else {
-      creep.moveTo(flag);
     }
+  } else {
+    this.moveTo(flag);
   }
 };
-
-module.exports = roleClaimer;

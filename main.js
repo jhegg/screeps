@@ -1,14 +1,14 @@
+require('role.attack');
+require('role.builder');
+require('role.claimer');
+require('role.harvester');
 require('role.miner');
+require('role.newSpawnBuilder');
+require('role.truck');
+require('role.upgrader');
 require('room');
 
 var creepsMaintainer = require('creeps.maintainer');
-var roleAttack = require('role.attack');
-var roleClaimer = require('role.claimer');
-var roleHarvester = require('role.harvester');
-var roleNewSpawnBuilder = require('role.newSpawnBuilder');
-var roleUpgrader = require('role.upgrader');
-var roleBuilder = require('role.builder');
-var roleTruck = require('role.truck');
 var towerController = require('tower.controller');
 
 module.exports.loop = function() {
@@ -68,40 +68,40 @@ function shouldRetire(creep) {
 function putCreepToWork(creep) {
   if (creep.memory.role == 'harvester') {
     if (creep.room.getEnergyStorageStructures().length) {
-      roleHarvester.run(creep);
+      creep.harvesting();
     } else if (creep.room.getConstructionSites().length) {
-      roleBuilder.run(creep);
+      creep.building();
     } else {
-      roleUpgrader.run(creep);
+      creep.upgrading();
     }
   }
 
   if (creep.memory.role == 'truck') {
-    roleTruck.run(creep, creep.room.getEnergyStorageStructures());
+    creep.trucking();
   }
 
   if (creep.memory.role == 'upgrader') {
-    roleUpgrader.run(creep);
+    creep.upgrading();
   }
 
   if (creep.memory.role == 'builder') {
     if (creep.room.getConstructionSites().length) {
-      roleBuilder.run(creep);
+      creep.building();
     } else {
-      roleUpgrader.run(creep);
+      creep.upgrading();
     }
   }
 
   if (creep.memory.role === 'attack') {
-    roleAttack.run(creep);
+    creep.attacking();
   }
 
   if (creep.memory.role === 'claimer') {
-    roleClaimer.run(creep);
+    creep.claiming();
   }
 
   if (creep.memory.role === 'newSpawnBuilder') {
-    roleNewSpawnBuilder.run(creep);
+    creep.newSpawnBuilding();
   }
 
   if (creep.memory.role === 'miner') {

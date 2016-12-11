@@ -1,21 +1,17 @@
-var newSpawnBuilder = {
-  run: function(creep) {
-    const flag = Game.flags[creep.memory.targetFlag];
-    if (flag === undefined) {
-      creep.memory.role = 'builder';
-      creep.memory.sourceId = undefined;
-      creep.memory.upgrading = undefined;
-    }
+Creep.prototype.newSpawnBuilding = function() {
+  const flag = Game.flags[this.memory.targetFlag];
+  if (flag === undefined) {
+    this.memory.role = 'builder';
+    this.memory.sourceId = undefined;
+    this.memory.upgrading = undefined;
+  }
 
-    if (creep.pos.isNearTo(flag)) {
-      creep.room.createConstructionSite(flag.pos, STRUCTURE_SPAWN);
-      creep.memory.role = 'builder';
-      creep.memory.sourceId = undefined;
-      creep.memory.upgrading = undefined;
-    } else {
-      creep.moveTo(flag);
-    }
+  if (this.pos.isNearTo(flag)) {
+    this.room.createConstructionSite(flag.pos, STRUCTURE_SPAWN);
+    this.memory.role = 'builder';
+    this.memory.sourceId = undefined;
+    this.memory.upgrading = undefined;
+  } else {
+    this.moveTo(flag);
   }
 };
-
-module.exports = newSpawnBuilder;

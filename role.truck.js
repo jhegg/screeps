@@ -1,49 +1,49 @@
-var roleTruck = {
-  run: function(creep, energyStorageStructures) {
-    if (creep.memory.delivering &&
-      _.sum(creep.carry) === 0) {
-      creep.memory.delivering = false;
-      creep.memory.deliveryId = undefined;
-      creep.memory.pickupId = undefined;
-      creep.say('pickup');
-    } else if (creep.memory.delivering &&
-      creep.memory.dedicatedControllerContainer === undefined) {
-      const deliveryTarget = Game.getObjectById(creep.memory.deliveryId);
-      if (deliveryTarget === null ||
-        (deliveryTarget.structureType !== STRUCTURE_CONTAINER &&
-        deliveryTarget.energy === deliveryTarget.energyCapacity) ||
-        (deliveryTarget.structureType === STRUCTURE_CONTAINER &&
-        _.sum(deliveryTarget.store) === deliveryTarget.storeCapacity)) {
-        creep.memory.delivering = true; // need new target, but still delivering
-        creep.memory.deliveryId = undefined;
-        creep.memory.pickupId = undefined;
-      }
+Creep.prototype.trucking = function() {
+  if (this.memory.delivering &&
+    _.sum(this.carry) === 0) {
+    this.memory.delivering = false;
+    this.memory.deliveryId = undefined;
+    this.memory.pickupId = undefined;
+    this.say('pickup');
+  } else if (this.memory.delivering &&
+    this.memory.dedicatedControllerContainer === undefined) {
+    const deliveryTarget = Game.getObjectById(this.memory.deliveryId);
+    if (deliveryTarget === null ||
+      (deliveryTarget.structureType !== STRUCTURE_CONTAINER &&
+      deliveryTarget.energy === deliveryTarget.energyCapacity) ||
+      (deliveryTarget.structureType === STRUCTURE_CONTAINER &&
+      _.sum(deliveryTarget.store) === deliveryTarget.storeCapacity)) {
+      this.memory.delivering = true; // need new target, but still delivering
+      this.memory.deliveryId = undefined;
+      this.memory.pickupId = undefined;
     }
+  }
 
-    if (!creep.memory.delivering &&
-      (_.sum(creep.carry) === creep.carryCapacity ||
-        (creep.memory.pickupWasEmptyCounter > 4 && _.sum(creep.carry) > 49))) {
-      creep.memory.delivering = true;
-      creep.memory.deliveryId = undefined;
-      creep.memory.pickupId = undefined;
-      creep.memory.pickupWasEmptyCounter = undefined;
-      creep.say('delivering');
-    }
+  if (!this.memory.delivering &&
+    (_.sum(this.carry) === this.carryCapacity ||
+      (this.memory.pickupWasEmptyCounter > 4 && _.sum(this.carry) > 49))) {
+    this.memory.delivering = true;
+    this.memory.deliveryId = undefined;
+    this.memory.pickupId = undefined;
+    this.memory.pickupWasEmptyCounter = undefined;
+    this.say('delivering');
+  }
 
-    if (!creep.memory.delivering) {
-      retrieveResources(creep, energyStorageStructures);
-    } else {
-      updateDedicatedControllerContainerTruck(creep);
-      if (shouldDeliverToControllerContainer(creep)) {
-        deliverEnergyToControllerContainer(creep);
-        return;
-      }
-      const deliveryTarget = getDeliveryTarget(creep, energyStorageStructures);
-      if (deliveryTarget) {
-        deliverResourceToTarget(creep, deliveryTarget);
-      }
+  const energyStorageStructures = this.room.getEnergyStorageStructures();
+
+  if (!this.memory.delivering) {
+    retrieveResources(this, energyStorageStructures);
+  } else {
+    updateDedicatedControllerContainerTruck(this);
+    if (shouldDeliverToControllerContainer(this)) {
+      deliverEnergyToControllerContainer(this);
+      return;
     }
-  },
+    const deliveryTarget = getDeliveryTarget(this, energyStorageStructures);
+    if (deliveryTarget) {
+      deliverResourceToTarget(this, deliveryTarget);
+    }
+  }
 };
 
 function getDeliveryTarget(creep, energyStorageStructures) {
@@ -250,5 +250,3 @@ function filterContainersByStorage(room, structures) {
     return _.sum(container.store);
   }, ['asc']);
 }
-
-module.exports = roleTruck;
