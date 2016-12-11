@@ -4,6 +4,7 @@ var creepsMaintainer = require('creeps.maintainer');
 var roleAttack = require('role.attack');
 var roleClaimer = require('role.claimer');
 var roleHarvester = require('role.harvester');
+var roleMiner = require('role.miner');
 var roleNewSpawnBuilder = require('role.newSpawnBuilder');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
@@ -101,5 +102,9 @@ function putCreepToWork(creep) {
 
   if (creep.memory.role === 'newSpawnBuilder') {
     roleNewSpawnBuilder.run(creep);
+  }
+
+  if (creep.memory.role === 'miner') {
+    creep.mining();
   }
 }

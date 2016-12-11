@@ -99,8 +99,23 @@ Room.prototype.getEnergyStorageStructures = function() {
   return this._energyStorageStructures;
 };
 
+Room.prototype.getExtractors = function() {
+  if (!this._extractors) {
+    this._extractors = _.filter(this.getAllStructures(),
+      (structure) => structure.structureType === STRUCTURE_EXTRACTOR);
+  }
+  return this._extractors;
+};
+
 Room.prototype.getHostiles = function() {
   return this.find(FIND_HOSTILE_CREEPS);
+};
+
+Room.prototype.getMinerals = function() {
+  if (!this._minerals) {
+    this._minerals = this.find(FIND_MINERALS);
+  }
+  return this._minerals;
 };
 
 Room.prototype.getNumberOfHarvesters = function() {

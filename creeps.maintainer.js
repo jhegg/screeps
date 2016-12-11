@@ -55,6 +55,7 @@ var creepsMaintainer = {
 
     produceNewSpawnBuilder(spawn);
     produceClaimer(spawn);
+    produceMiner(spawn);
   },
 };
 
@@ -105,8 +106,7 @@ function produceNewSpawnBuilder(spawn) {
       const body = [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE];
       if (spawn.canCreateCreep(body) === OK) {
         const spawnedCreep = spawn.createCreep(body,
-          undefined,
-          {
+          undefined, {
             role: 'newSpawnBuilder',
             targetFlag: unclaimedFlags[0].name
           });
@@ -127,17 +127,42 @@ function produceClaimer(spawn) {
       flag.name.startsWith('ClaimFlag') &&
       !_.any(creepsAssignedToFlags, (creep) =>
         creep.memory.claimFlag === flag.name
-    ));
+      ));
     if (unclaimedFlags.length) {
       const body = [CLAIM, MOVE, MOVE];
       if (spawn.canCreateCreep(body) === OK) {
         const spawnedCreep = spawn.createCreep(body,
-          undefined,
-          {
+          undefined, {
             role: 'claimer',
             claimFlag: unclaimedFlags[0].name
           });
         console.log(`Spawning claimer ${spawnedCreep} for flag ${unclaimedFlags[0]}`);
+      }
+    }
+  }
+}
+
+function produceMiner(spawn) {
+  if (spawn.room.controller.level >= 6 &&
+    spawn.room.getExtractors().length > 0 &&
+    spawn.room.storage !== undefined &&
+    spawn.spawning === null &&
+    spawn.room.memory.emergencyMode !== true) {
+    const miners = _.filter(spawn.room.getCreeps(), (creep) =>
+      creep.memory.role === 'miner'
+    );
+    if (miners.length < 1) {
+      const body = [
+        WORK, WORK, WORK, WORK, WORK,
+        CARRY, CARRY,
+        MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
+      ]; // 950
+      if (spawn.canCreateCreep(body) === OK) {
+        const spawnedCreep = spawn.createCreep(body,
+          undefined, {
+            role: 'miner'
+          });
+        console.log(`Spawning miner ${spawnedCreep} for ${spawn.room}`);
       }
     }
   }
