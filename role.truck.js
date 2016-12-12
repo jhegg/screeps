@@ -29,48 +29,133 @@ Creep.prototype.trucking = function() {
     this.say('delivering');
   }
 
-  const energyStorageStructures = this.room.getEnergyStorageStructures();
-
   if (!this.memory.delivering) {
-    retrieveResources(this, energyStorageStructures);
+    this.truckPickup();
   } else {
-    updateDedicatedControllerContainerTruck(this);
-    if (shouldDeliverToControllerContainer(this)) {
-      deliverEnergyToControllerContainer(this);
+    this.updateDedicatedControllerContainerTruck();
+    if (this.shouldDeliverToControllerContainer()) {
+      this.deliverEnergyToControllerContainer();
       return;
     }
-    const deliveryTarget = getDeliveryTarget(this, energyStorageStructures);
+    const deliveryTarget = this.getTruckDeliveryTarget();
     if (deliveryTarget) {
       deliverResourceToTarget(this, deliveryTarget);
     }
   }
 };
 
-function getDeliveryTarget(creep, energyStorageStructures) {
-  const nonEnergyResources = _.any(Object.keys(creep.carry), function(resource) {
+Creep.prototype.truckPickup = function() {
+  const droppedResources = this.room.getDroppedResources();
+  if (droppedResources.length) {
+    this.truckPickupDroppedResource(droppedResources[0]);
+    return;
+  }
+
+  const sourceContainer = this.truckGetPickupContainer();
+  if (!sourceContainer) {
+    // no sources available :(
+    return;
+  }
+  const withdrawResult = this.withdraw(sourceContainer, RESOURCE_ENERGY);
+  switch (withdrawResult) {
+    case OK:
+      this.memory.pickupWasEmptyCounter = undefined;
+      break;
+    case ERR_NOT_OWNER:
+      console.log(`Error: truck unable to transfer from ${sourceContainer}
+        due to ownership/rampart`);
+      break;
+    case ERR_BUSY:
+      // still spawning
+      break;
+    case ERR_NOT_ENOUGH_RESOURCES:
+      if (!this.memory.pickupWasEmptyCounter) {
+        this.memory.pickupWasEmptyCounter = 1;
+      } else {
+        this.memory.pickupWasEmptyCounter += 1;
+      }
+      break;
+    case ERR_INVALID_TARGET:
+      console.log(`Error: truck ${this} tried to harvest from
+        ${sourceContainer} which is invalid`);
+      break;
+    case ERR_FULL:
+      console.log(`Warning: truck ${this} was full but tried to harvest
+        anyway`);
+      break;
+    case ERR_NOT_IN_RANGE:
+      this.moveTo(sourceContainer);
+      this.withdraw(sourceContainer, RESOURCE_ENERGY);
+      break;
+    case ERR_INVALID_ARGS:
+      console.log(`Error: truck ${this} tried to withdraw from
+         ${sourceContainer} but resource amount or type was incorrect`);
+      break;
+    default:
+      console.log(`Warning: unknown result ${withdrawResult} from truck
+         withdraw`);
+  }
+};
+
+Creep.prototype.truckPickupDroppedResource = function(resource) {
+  const pickupResult = this.pickup(resource);
+  switch (pickupResult) {
+    case OK:
+      this.memory.claimedResource = undefined;
+      break;
+    case ERR_NOT_IN_RANGE:
+      this.moveTo(resource);
+      if (this.pickup(resource) === OK) {
+        this.memory.pickupWasEmptyCounter = undefined;
+      }
+      break;
+    case ERR_BUSY:
+      break;
+    default:
+      console.log(`Error: unhandled error ${pickupResult} from ${this.memory.role} ${this} trying to pickup resource ${resource}`);
+      break;
+  }
+};
+
+Creep.prototype.truckGetPickupContainer = function() {
+  const container = Game.getObjectById(this.memory.pickupId);
+  if (container && this.memory.pickupWasEmptyCounter < 25) {
+    return container;
+  } else {
+    const newContainer = this.room.sortSourceContainersByEnergy()[0];
+    if (newContainer) {
+      this.memory.pickupId = newContainer.id;
+      this.memory.pickupWasEmptyCounter = undefined;
+      return newContainer;
+    }
+  }
+};
+
+Creep.prototype.getTruckDeliveryTarget = function() {
+  const nonEnergyResources = _.any(Object.keys(this.carry), function(resource) {
     return resource !== RESOURCE_ENERGY; });
   if (nonEnergyResources &&
-    creep.room.storage &&
-    (_.sum(creep.room.storage.store) < creep.room.storage.storeCapacity)) {
-      return creep.room.storage;
+    this.room.storage &&
+    (_.sum(this.room.storage.store) < this.room.storage.storeCapacity)) {
+      return this.room.storage;
     }
-  const deliveryTarget = Game.getObjectById(creep.memory.deliveryId);
+  const deliveryTarget = Game.getObjectById(this.memory.deliveryId);
   if (deliveryTarget !== null) {
     return deliveryTarget;
   } else {
-    return pickTargetDestination(creep, energyStorageStructures);
+    return this.pickTruckTargetDestination();
   }
-}
+};
 
-function pickTargetDestination(creep, structures) {
-  const sortedStructures = prioritizeStructures(creep.room, structures);
+Creep.prototype.pickTruckTargetDestination = function() {
+  const sortedStructures = this.room.prioritizeStructuresForTrucks();
   if (sortedStructures[0]) {
-    creep.memory.deliveryId = sortedStructures[0].id;
+    this.memory.deliveryId = sortedStructures[0].id;
     return sortedStructures[0];
   } else {
     return sortedStructures[0];
   }
-}
+};
 
 function deliverResourceToTarget(creep, deliveryTarget) {
   const resource = _.findKey(creep.carry, function(resource) {
@@ -82,7 +167,7 @@ function deliverResourceToTarget(creep, deliveryTarget) {
       creep.transfer(deliveryTarget, resource);
       break;
     case ERR_FULL:
-      pickTargetDestination(creep, creep.room.getEnergyStorageStructures());
+      creep.pickTruckTargetDestination();
       break;
     default:
       break;
@@ -93,160 +178,25 @@ function deliverResourceToTarget(creep, deliveryTarget) {
   }
 }
 
-function retrieveResources(creep, energyStorageStructures) {
-  const droppedResources = creep.room.getDroppedResources();
-  if (droppedResources.length) {
-    findAndPickupDroppedResource(creep, droppedResources[0]);
-    return;
-  }
-
-  const sourceContainer = getPickupContainer(creep);
-  if (!sourceContainer) {
-    // no sources available :(
-    return;
-  }
-  const withdrawResult = creep.withdraw(sourceContainer, RESOURCE_ENERGY);
-  switch (withdrawResult) {
-    case OK:
-      creep.memory.pickupWasEmptyCounter = undefined;
-      break;
-    case ERR_NOT_OWNER:
-      console.log(`Error: truck unable to transfer from ${sourceContainer}
-        due to ownership/rampart`);
-      break;
-    case ERR_BUSY:
-      // still spawning
-      break;
-    case ERR_NOT_ENOUGH_RESOURCES:
-      if (!creep.memory.pickupWasEmptyCounter) {
-        creep.memory.pickupWasEmptyCounter = 1;
-      } else {
-        creep.memory.pickupWasEmptyCounter += 1;
-      }
-      break;
-    case ERR_INVALID_TARGET:
-      console.log(`Error: truck ${creep} tried to harvest from
-        ${sourceContainer} which is invalid`);
-      break;
-    case ERR_FULL:
-      console.log(`Warning: truck ${creep} was full but tried to harvest
-        anyway`);
-      break;
-    case ERR_NOT_IN_RANGE:
-      creep.moveTo(sourceContainer);
-      creep.withdraw(sourceContainer, RESOURCE_ENERGY);
-      break;
-    case ERR_INVALID_ARGS:
-      console.log(`Error: truck ${creep} tried to withdraw from
-         ${sourceContainer} but resource amount or type was incorrect`);
-      break;
-    default:
-      console.log(`Warning: unknown result ${withdrawResult} from truck
-         withdraw`);
-  }
-}
-
-function findAndPickupDroppedResource(creep, resource) {
-  const pickupResult = creep.pickup(resource);
-  switch (pickupResult) {
-    case OK:
-      creep.memory.claimedResource = undefined;
-      break;
-    case ERR_NOT_IN_RANGE:
-      creep.moveTo(resource);
-      if (creep.pickup(resource) === OK) {
-        creep.memory.pickupWasEmptyCounter = undefined;
-      }
-      break;
-    case ERR_BUSY:
-      break;
-    default:
-      console.log(`Error: unhandled error ${pickupResult} from ${creep.memory.role} ${creep} trying to pickup resource ${resource}`);
-      break;
-  }
-}
-
-function getPickupContainer(creep) {
-  const container = Game.getObjectById(creep.memory.pickupId);
-  if (container && creep.memory.pickupWasEmptyCounter < 25) {
-    return container;
-  } else {
-    const newContainer = filterContainersWhichHaveEnergy(
-      creep.room.getSourceContainers())[0];
-    if (newContainer) {
-      creep.memory.pickupId = newContainer.id;
-      creep.memory.pickupWasEmptyCounter = undefined;
-      return newContainer;
-    }
-  }
-}
-
-function updateDedicatedControllerContainerTruck(creep) {
+Creep.prototype.updateDedicatedControllerContainerTruck = function() {
   const dedicatedTruck = _.filter(Game.creeps, function(creep) {
     return creep.memory.dedicatedControllerContainer !== undefined;
   });
   if (!dedicatedTruck || dedicatedTruck.length === 0) {
-    console.log(`New dedicated controller container truck: ${creep}`);
-    creep.memory.dedicatedControllerContainer = true;
+    console.log(`New dedicated controller container truck: ${this}`);
+    this.memory.dedicatedControllerContainer = true;
   }
-}
+};
 
-function shouldDeliverToControllerContainer(creep) {
-  return creep.memory.dedicatedControllerContainer &&
-    Game.getObjectById(creep.room.memory.ControllerContainer) !== null;
-}
+Creep.prototype.shouldDeliverToControllerContainer = function() {
+  return this.memory.dedicatedControllerContainer &&
+    Game.getObjectById(this.room.memory.ControllerContainer) !== null;
+};
 
-function deliverEnergyToControllerContainer(creep) {
-  const container = Game.getObjectById(creep.room.memory.ControllerContainer);
-  if (creep.transfer(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-    creep.moveTo(container);
-    creep.transfer(container, RESOURCE_ENERGY);
+Creep.prototype.deliverEnergyToControllerContainer = function() {
+  const container = Game.getObjectById(this.room.memory.ControllerContainer);
+  if (this.transfer(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+    this.moveTo(container);
+    this.transfer(container, RESOURCE_ENERGY);
   }
-}
-
-function filterContainersWhichHaveEnergy(structures) {
-  const containersWithEnergy = _.filter(structures, function(structure) {
-    return structure.structureType === STRUCTURE_CONTAINER &&
-      structure.store[RESOURCE_ENERGY] > 0;
-  });
-  return _.sortByOrder(containersWithEnergy, function(container) {
-    return container.store[RESOURCE_ENERGY];
-  }, ['desc']);
-}
-
-function prioritizeStructures(room, structures) {
-  // prioritize Extension -> Spawn -> Tower -> non-source Container
-  const extensions = filterStructuresByTypeAndEnergy(structures,
-    STRUCTURE_EXTENSION);
-  const spawns = filterStructuresByTypeAndEnergy(structures,
-    STRUCTURE_SPAWN);
-  const towers = filterStructuresByTypeAndEnergy(structures,
-    STRUCTURE_TOWER);
-  const containers = filterContainersByStorage(room, structures);
-  return _.flatten([
-    extensions,
-    spawns,
-    towers,
-    containers,
-    [room.storage],
-  ]);
-}
-
-function filterStructuresByTypeAndEnergy(structures, structureType) {
-  return _.filter(structures, function(structure) {
-    return structure.structureType === structureType &&
-      structure.energy < structure.energyCapacity;
-  });
-}
-
-function filterContainersByStorage(room, structures) {
-  const sourceContainers = room.getSourceContainers();
-  const nonSourceContainers = _.filter(structures, function(structure) {
-    return structure.structureType === STRUCTURE_CONTAINER &&
-      !_.any(sourceContainers, 'id', structure.id) &&
-      _.sum(structure.store) < structure.storeCapacity;
-  });
-  return _.sortByOrder(nonSourceContainers, function(container) {
-    return _.sum(container.store);
-  }, ['asc']);
-}
+};

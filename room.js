@@ -219,3 +219,59 @@ Room.prototype.hasSourceContainers = function() {
   const sourceContainers = this.getSourceContainers();
   return sourceContainers && sourceContainers.length > 0;
 };
+
+Room.prototype.prioritizeStructuresForTrucks = function() {
+  if (!this._prioritizedStructuresForTrucks) {
+    // prioritize Extension -> Spawn -> Tower -> non-source Container
+    const structures = this.getEnergyStorageStructures();
+    const extensions = filterStructuresByTypeAndEnergy(structures,
+      STRUCTURE_EXTENSION);
+    const spawns = filterStructuresByTypeAndEnergy(structures,
+      STRUCTURE_SPAWN);
+    const towers = filterStructuresByTypeAndEnergy(structures,
+      STRUCTURE_TOWER);
+    const containers = filterContainersByStorage(this, structures);
+    this._prioritizedStructuresForTrucks = _.flatten([
+      extensions,
+      spawns,
+      towers,
+      containers,
+      [this.storage],
+    ]);
+  }
+  return this._prioritizedStructuresForTrucks;
+};
+
+function filterStructuresByTypeAndEnergy(structures, structureType) {
+  return _.filter(structures, function(structure) {
+    return structure.structureType === structureType &&
+      structure.energy < structure.energyCapacity;
+  });
+}
+
+function filterContainersByStorage(room, structures) {
+  const sourceContainers = room.getSourceContainers();
+  const nonSourceContainers = _.filter(structures, function(structure) {
+    return structure.structureType === STRUCTURE_CONTAINER &&
+      !_.any(sourceContainers, 'id', structure.id) &&
+      _.sum(structure.store) < structure.storeCapacity;
+  });
+  return _.sortByOrder(nonSourceContainers, function(container) {
+    return _.sum(container.store);
+  }, ['asc']);
+}
+
+Room.prototype.sortSourceContainersByEnergy = function() {
+  if (!this._sourceContainersSortedByEnergy) {
+    const structures = this.getSourceContainers();
+    const containersWithEnergy = _.filter(structures, function(structure) {
+      return structure.structureType === STRUCTURE_CONTAINER &&
+        structure.store[RESOURCE_ENERGY] > 0;
+    });
+    this._sourceContainersSortedByEnergy =  _.sortByOrder(containersWithEnergy,
+      function(container) {
+        return container.store[RESOURCE_ENERGY];
+      }, ['desc']);
+  }
+  return this._sourceContainersSortedByEnergy;
+};
