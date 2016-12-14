@@ -128,7 +128,6 @@ Creep.prototype.truckGetPickupContainer = function() {
     if (newContainer) {
       this.memory.pickupId = newContainer.id;
       this.memory.pickupWasEmptyCounter = undefined;
-      console.log(`Truck ${this} switching pickup to ${newContainer}`);
       return newContainer;
     }
   }
