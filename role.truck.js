@@ -151,12 +151,21 @@ Creep.prototype.getTruckDeliveryTarget = function() {
 };
 
 Creep.prototype.pickTruckTargetDestination = function() {
-  const sortedStructures = this.room.prioritizeStructuresForTrucks();
+  const prioritizedStructures = this.room.prioritizeStructuresForTrucks();
+  const filteredStructures = _.filter(prioritizedStructures, (structure) =>
+    structure !== undefined &&
+    !_.any(Game.creeps, 'memory.deliveryId', structure.id));
+  const creepPosition = this.pos;
+  const sortedStructures = filteredStructures.sort(function(a, b) {
+    const distanceA = Math.hypot(creepPosition.x - a.pos.x, creepPosition.y - a.pos.y);
+    const distanceB = Math.hypot(creepPosition.x - b.pos.x, creepPosition.y - b.pos.y);
+    return distanceA - distanceB;
+  });
   if (sortedStructures[0]) {
     this.memory.deliveryId = sortedStructures[0].id;
     return sortedStructures[0];
   } else {
-    return sortedStructures[0];
+    return prioritizedStructures[0];
   }
 };
 
