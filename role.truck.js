@@ -119,13 +119,16 @@ Creep.prototype.truckPickupDroppedResource = function(resource) {
 
 Creep.prototype.truckGetPickupContainer = function() {
   const container = Game.getObjectById(this.memory.pickupId);
-  if (container && this.memory.pickupWasEmptyCounter < 25) {
+  if (container &&
+    (this.memory.pickupWasEmptyCounter === undefined ||
+    this.memory.pickupWasEmptyCounter < 25)) {
     return container;
   } else {
     const newContainer = this.room.sortSourceContainersByEnergy()[0];
     if (newContainer) {
       this.memory.pickupId = newContainer.id;
       this.memory.pickupWasEmptyCounter = undefined;
+      console.log(`Truck ${this} switching pickup to ${newContainer}`);
       return newContainer;
     }
   }
