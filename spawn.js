@@ -110,7 +110,7 @@ function produceClaimer(spawn) {
         creep.memory.claimFlag === flag.name
       ));
     if (unclaimedFlags.length) {
-      const body = [CLAIM, MOVE, MOVE];
+      const body = [CLAIM, CLAIM, MOVE, MOVE];
       if (spawn.canCreateCreep(body) === OK) {
         const spawnedCreep = spawn.createCreep(body,
           undefined, {
