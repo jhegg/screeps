@@ -128,7 +128,8 @@ function produceMiner(spawn) {
     spawn.room.getExtractors().length > 0 &&
     spawn.room.storage !== undefined &&
     spawn.spawning === null &&
-    spawn.room.memory.emergencyMode !== true) {
+    spawn.room.memory.emergencyMode !== true &&
+    !_.any(spawn.room.getExtractors(), 'mineralAmount', 0)) {
     const miners = _.filter(spawn.room.getCreeps(), (creep) =>
       creep.memory.role === 'miner'
     );

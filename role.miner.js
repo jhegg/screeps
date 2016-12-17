@@ -28,6 +28,8 @@ function harvestFromMineralDeposit(creep) {
         creep.moveTo(targetMineral);
         creep.harvest(targetMineral);
         break;
+      case ERR_NOT_ENOUGH_RESOURCES:
+        break;
       case ERR_TIRED:
         break;
       case ERR_BUSY:
