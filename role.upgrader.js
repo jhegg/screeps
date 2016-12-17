@@ -75,9 +75,9 @@ Creep.prototype.upgrading = function() {
     const source2Container = Game.getObjectById(this.room.memory.Source2Container);
     const containers = [
       controllerContainer,
+      roomStorage,
       spawnContainer,
       towerContainer,
-      roomStorage,
       source1Container,
       source2Container,
     ];

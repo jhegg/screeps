@@ -94,9 +94,9 @@ Creep.prototype.building = function() {
     const source1Container = Game.getObjectById(this.room.memory.Source1Container);
     const source2Container = Game.getObjectById(this.room.memory.Source2Container);
     const containers = [
+      roomStorage,
       spawnContainer,
       towerContainer,
-      roomStorage,
       source1Container,
       source2Container,
     ];
