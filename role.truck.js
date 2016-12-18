@@ -124,7 +124,7 @@ Creep.prototype.truckGetPickupContainer = function() {
     this.memory.pickupWasEmptyCounter < 25)) {
     return container;
   } else {
-    const newContainer = this.room.sortSourceContainersByEnergy()[0];
+    const newContainer = getBestPickupContainer(this);
     if (newContainer) {
       this.memory.pickupId = newContainer.id;
       this.memory.pickupWasEmptyCounter = undefined;
@@ -132,6 +132,17 @@ Creep.prototype.truckGetPickupContainer = function() {
     }
   }
 };
+
+function getBestPickupContainer(creep) {
+  const bestSourceContainer = creep.room.sortSourceContainersByEnergy()[0];
+  if (creep.room.storage &&
+    creep.room.storage.store[RESOURCE_ENERGY] > 1000 &&
+    (!bestSourceContainer || bestSourceContainer.store[RESOURCE_ENERGY] < 800)) {
+      return creep.room.storage;
+  } else {
+    return bestSourceContainer;
+  }
+}
 
 Creep.prototype.getTruckDeliveryTarget = function() {
   const nonEnergyResources = _.any(Object.keys(this.carry), function(resource) {
