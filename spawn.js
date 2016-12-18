@@ -25,6 +25,11 @@ StructureSpawn.prototype.spawnNewCreeps = function() {
     }
   }
 
+  if (shouldProduceDefender(this)) {
+    produceDefender(this);
+    return;
+  }
+
   if (energyCapacity < mediumEnergyCapacity) {
     lowEnergyCapacitySpawning(this);
   } else if (energyCapacity < largeEnergyCapacity) {
@@ -69,6 +74,38 @@ function extraLargeEnergyCapacitySpawning(spawn) {
     creepsSpawner.spawnExtraLargeCreepsWithTrucks(spawn);
   } else {
     creepsSpawner.spawnLargeCreeps(spawn);
+  }
+}
+
+function shouldProduceDefender(spawn) {
+  if (spawn.spawning === null &&
+    spawn.room.memory.emergencyMode !== true &&
+    spawn.room.energyCapacityAvailable > 1800 &&
+    spawn.room.getHostiles().length &&
+    getNumberOfDefenders(spawn) < 1) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function getNumberOfDefenders(spawn) {
+  return _.filter(spawn.room.getCreeps(),
+    (creep) => creep.memory.role === 'defender').length;
+}
+
+function produceDefender(spawn) {
+  const body = [
+    TOUGH, TOUGH, TOUGH, // 30
+    ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, // 800
+    MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE // 650
+  ]; // cost: 1480
+  if (spawn.canCreateCreep(body) === OK) {
+    const spawnedCreep = spawn.createCreep(body,
+      undefined, {
+        role: 'defender'
+      });
+    console.log(`Spawning defender ${spawnedCreep} in room ${spawn.room}`);
   }
 }
 

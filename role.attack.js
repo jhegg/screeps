@@ -17,9 +17,10 @@ Creep.prototype.attacking = function() {
 
   const hostiles = this.room.getHostiles();
   if (hostiles.length) {
+    const myPosition = this.pos;
     const hostilesByRange = hostiles.sort(function(a, b) {
-      const distanceA = Math.hypot(this.pos.x - a.pos.x, this.pos.y - a.pos.y);
-      const distanceB = Math.hypot(this.pos.x - b.pos.x, this.pos.y - b.pos.y);
+      const distanceA = Math.hypot(myPosition.x - a.pos.x, myPosition.y - a.pos.y);
+      const distanceB = Math.hypot(myPosition.x - b.pos.x, myPosition.y - b.pos.y);
       return distanceA - distanceB;
     });
     const hostileToAttack = hostilesByRange[0];

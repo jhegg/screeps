@@ -93,7 +93,7 @@ function putCreepToWork(creep) {
     }
   }
 
-  if (creep.memory.role === 'attack') {
+  if (creep.memory.role === 'attack' || creep.memory.role === 'defender') {
     creep.attacking();
   }
 
