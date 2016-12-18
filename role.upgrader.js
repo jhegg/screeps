@@ -67,30 +67,14 @@ Creep.prototype.upgrading = function() {
       return;
     }
 
-    const controllerContainer = Game.getObjectById(this.room.memory.ControllerContainer);
-    const spawnContainer = Game.getObjectById(this.room.memory.SpawnContainer);
-    const towerContainer = Game.getObjectById(this.room.memory.TowerContainer);
-    const roomStorage = this.room.storage;
-    const source1Container = Game.getObjectById(this.room.memory.Source1Container);
-    const source2Container = Game.getObjectById(this.room.memory.Source2Container);
-    const containers = [
-      controllerContainer,
-      roomStorage,
-      spawnContainer,
-      towerContainer,
-      source1Container,
-      source2Container,
-    ];
-
-    for (var container of containers) {
-      if (container && container.store[RESOURCE_ENERGY] > 150) {
-        this.memory.containerId = container.id;
-        if (this.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-          this.moveTo(container);
-          this.withdraw(container, RESOURCE_ENERGY);
-        }
-        return;
+    const pickupStructure = this.room.prioritizePickupsByPosition(this.pos)[0];
+    if (pickupStructure) {
+      this.memory.containerId = pickupStructure.id;
+      if (this.withdraw(pickupStructure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        this.moveTo(pickupStructure);
+        this.withdraw(pickupStructure, RESOURCE_ENERGY);
       }
+      return;
     }
 
     const source = Game.getObjectById(this.memory.sourceId);

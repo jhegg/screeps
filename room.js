@@ -213,6 +213,18 @@ Room.prototype.hasSourceContainers = function() {
   return sourceContainers && sourceContainers.length > 0;
 };
 
+Room.prototype.prioritizePickupsByPosition = function(creepPosition) {
+  return _.filter(_.sortBy(_.compact([
+    Game.getObjectById(this.memory.SpawnContainer),
+    Game.getObjectById(this.memory.TowerContainer),
+    Game.getObjectById(this.memory.Source1Container),
+    Game.getObjectById(this.memory.Source2Container),
+    this.storage
+  ]), (structure) => Math.hypot(creepPosition.x - structure.pos.x,
+    creepPosition.y - structure.pos.y)
+  ), (structure) => structure.store[RESOURCE_ENERGY] > 250);
+};
+
 Room.prototype.prioritizeStructuresForTrucks = function() {
   if (!this._prioritizedStructuresForTrucks) {
     // prioritize Extension -> Spawn -> Tower -> non-source Container
