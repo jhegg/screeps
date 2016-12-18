@@ -80,6 +80,7 @@ function extraLargeEnergyCapacitySpawning(spawn) {
 function shouldProduceDefender(spawn) {
   if (spawn.spawning === null &&
     spawn.room.memory.emergencyMode !== true &&
+    !spawn.room.safeMode &&
     spawn.room.energyCapacityAvailable > 1800 &&
     spawn.room.getHostiles().length &&
     getNumberOfDefenders(spawn) < 1) {
