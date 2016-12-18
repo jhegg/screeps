@@ -74,7 +74,18 @@ Room.prototype.getCreepsNeedingHealing = function() {
 
 Room.prototype.getDroppedResources = function() {
   if (!this._droppedResources) {
-    this._droppedResources = this.find(FIND_DROPPED_RESOURCES);
+    if (this.getHostiles().length) {
+      this._droppedResources = this.find(FIND_DROPPED_RESOURCES, {
+        filter: (resource) => {
+          return resource.pos.x < 45 &&
+          resource.pos.x > 5 &&
+          resource.pos.y < 45 &&
+          resource.pos.y > 5;
+        }
+      });
+    } else {
+      this._droppedResources = this.find(FIND_DROPPED_RESOURCES);
+    }
   }
   return this._droppedResources;
 };
