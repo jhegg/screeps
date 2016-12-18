@@ -96,9 +96,10 @@ function getNumberOfDefenders(spawn) {
 
 function produceDefender(spawn) {
   const body = [
-    TOUGH, TOUGH, TOUGH, // 30
-    ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, ATTACK, // 800
-    MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE // 650
+    TOUGH, MOVE, TOUGH, MOVE, TOUGH, MOVE,
+    ATTACK, MOVE, ATTACK, MOVE, ATTACK, MOVE, ATTACK, MOVE,
+    ATTACK, MOVE, ATTACK, MOVE, ATTACK, MOVE, ATTACK, MOVE,
+    ATTACK, MOVE, ATTACK, MOVE
   ]; // cost: 1480
   if (spawn.canCreateCreep(body) === OK) {
     const spawnedCreep = spawn.createCreep(body,
