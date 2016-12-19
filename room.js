@@ -226,6 +226,7 @@ Room.prototype.hasSourceContainers = function() {
 
 Room.prototype.prioritizePickupsByPosition = function(creepPosition) {
   return _.filter(_.sortBy(_.compact([
+    Game.getObjectById(this.memory.ControllerContainer),
     Game.getObjectById(this.memory.SpawnContainer),
     Game.getObjectById(this.memory.TowerContainer),
     Game.getObjectById(this.memory.Source1Container),
