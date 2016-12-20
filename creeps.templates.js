@@ -42,7 +42,7 @@ const upgraderBody = [
   MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
 ]; // cost: 750
 
-const extraLargeBuilderBody = [
+const megaWorkerBody = [
   WORK, WORK, WORK, WORK, WORK,
   CARRY, CARRY, CARRY, CARRY,
   MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
@@ -149,6 +149,22 @@ var creepsTemplates = {
         maxCreepsOfType: 2},
       { role: builderRole,
         body: builderBody,
+        maxCreepsOfType: 2},
+    ];
+  },
+  megaBodyWithTrucksTemplate: function() {
+    return [
+      { role: harvesterRole,
+        body: largeHarvesterBody,
+        maxCreepsOfType: 2},
+      { role: truckRole,
+        body: mediumTruckBody,
+        maxCreepsOfType: 4},
+      { role: upgraderRole,
+        body: megaWorkerBody,
+        maxCreepsOfType: 2},
+      { role: builderRole,
+        body: megaWorkerBody,
         maxCreepsOfType: 2},
     ];
   },

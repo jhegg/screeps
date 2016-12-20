@@ -32,6 +32,11 @@ var creepsSpawner = {
     const template = creepsTemplates.extraLargeBodyWithTrucksTemplate();
     spawnCreepFromTemplate(spawn, template);
   },
+
+  spawnMegaCreepsWithTrucks: function(spawn) {
+    const template = creepsTemplates.megaBodyWithTrucksTemplate();
+    spawnCreepFromTemplate(spawn, template);
+  },
 };
 
 function spawnCreepFromTemplate(spawn, creepTemplates) {
@@ -43,7 +48,7 @@ function spawnCreepFromTemplate(spawn, creepTemplates) {
     } else if (template.role === 'harvester' &&
       numCreeps.length === 0 &&
       spawn.room.energyAvailable >= 200) {
-        console.log('Emergency harvester spawn! Zero other harvesters present.');
+        console.log(`${spawn.room} Emergency harvester spawn! Zero other harvesters present.`);
         createCreep(spawn, { role: 'harvester', body: [WORK, CARRY, MOVE] });
         break;
     }
@@ -71,7 +76,7 @@ function createCreep(spawn, creepTemplate) {
     undefined,
     { role: creepTemplate.role }
   );
-  console.log('Spawning new ' + creepTemplate.role + ': ' + spawnedCreep);
+  console.log(`${spawn.room} Spawning new ${creepTemplate.role}: ${spawnedCreep}`);
 }
 
 module.exports = creepsSpawner;

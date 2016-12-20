@@ -5,6 +5,7 @@ StructureSpawn.prototype.spawnNewCreeps = function() {
   const mediumEnergyCapacity = 550;
   const largeEnergyCapacity = 1000;
   const extraLargeEnergyCapacity = 1500;
+  const megaEnergyCapacity = 2100;
 
   if (!this.room.memory.emergencyMode &&
     energyCapacity >= largeEnergyCapacity &&
@@ -36,8 +37,10 @@ StructureSpawn.prototype.spawnNewCreeps = function() {
     mediumEnergyCapacitySpawning(this);
   } else if (energyCapacity < extraLargeEnergyCapacity) {
     largeEnergyCapacitySpawning(this);
-  } else {
+  } else if (energyCapacity < megaEnergyCapacity) {
     extraLargeEnergyCapacitySpawning(this);
+  } else {
+    megaEnergyCapacitySpawning(this);
   }
 
   produceNewSpawnBuilder(this);
@@ -72,6 +75,14 @@ function largeEnergyCapacitySpawning(spawn) {
 function extraLargeEnergyCapacitySpawning(spawn) {
   if (spawn.room.hasSourceContainers()) {
     creepsSpawner.spawnExtraLargeCreepsWithTrucks(spawn);
+  } else {
+    creepsSpawner.spawnLargeCreeps(spawn);
+  }
+}
+
+function megaEnergyCapacitySpawning(spawn) {
+  if (spawn.room.hasSourceContainers()) {
+    creepsSpawner.spawnMegaCreepsWithTrucks(spawn);
   } else {
     creepsSpawner.spawnLargeCreeps(spawn);
   }
