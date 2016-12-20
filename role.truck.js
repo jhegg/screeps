@@ -175,6 +175,7 @@ Creep.prototype.pickTruckTargetDestination = function() {
     this.memory.deliveryId = sortedStructures[0].id;
     return sortedStructures[0];
   } else {
+    this.memory.deliveryId = prioritizedStructures[0].id;
     return prioritizedStructures[0];
   }
 };
