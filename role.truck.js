@@ -69,7 +69,7 @@ Creep.prototype.truckPickup = function() {
       // still spawning
       break;
     case ERR_NOT_ENOUGH_RESOURCES:
-      if (!this.memory.pickupWasEmptyCounter) {
+      if (this.memory.pickupWasEmptyCounter === undefined) {
         this.memory.pickupWasEmptyCounter = 1;
       } else {
         this.memory.pickupWasEmptyCounter += 1;
