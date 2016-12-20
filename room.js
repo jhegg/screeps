@@ -253,7 +253,6 @@ Room.prototype.prioritizeStructuresForTrucks = function() {
       spawns,
       towers,
       containers,
-      [this.storage],
     ]);
   }
   return this._prioritizedStructuresForTrucks;

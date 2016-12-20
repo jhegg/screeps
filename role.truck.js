@@ -165,20 +165,20 @@ Creep.prototype.pickTruckTargetDestination = function() {
   const filteredStructures = _.filter(prioritizedStructures, (structure) =>
     structure !== undefined &&
     !_.any(Game.creeps, 'memory.deliveryId', structure.id));
-  const creepPosition = this.pos;
-  const sortedStructures = filteredStructures.sort(function(a, b) {
-    const distanceA = Math.hypot(creepPosition.x - a.pos.x, creepPosition.y - a.pos.y);
-    const distanceB = Math.hypot(creepPosition.x - b.pos.x, creepPosition.y - b.pos.y);
-    return distanceA - distanceB;
-  });
-  if (sortedStructures[0]) {
+  const sortedStructures = sortStructuresByDistance(filteredStructures, this.pos);
+  if (sortedStructures.length) {
     this.memory.deliveryId = sortedStructures[0].id;
     return sortedStructures[0];
-  } else {
-    this.memory.deliveryId = prioritizedStructures[0].id;
-    return prioritizedStructures[0];
+  } else if (this.room.storage) {
+    this.memory.deliveryId = this.room.storage.id;
+    return this.room.storage;
   }
 };
+
+function sortStructuresByDistance(structures, position) {
+  return _.sortBy(structures, (structure) => Math.hypot(
+    position.x - structure.pos.x, position.y - structure.pos.y));
+}
 
 function deliverResourceToTarget(creep, deliveryTarget) {
   const resource = _.findKey(creep.carry, function(resource) {
