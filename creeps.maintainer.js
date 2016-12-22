@@ -8,7 +8,7 @@ var creepsMaintainer = {
   },
   retireOldCreep(creep) {
     creep.say('retiring');
-    console.log(`${this.room} Creep ${creep.name} (${creep.memory.role}) is now retired`);
+    console.log(`${creep.room} Creep ${creep.name} (${creep.memory.role}) is now retired`);
     creep.memory.role = 'retired';
     for (var resourceType in creep.carry) {
       creep.drop(resourceType);
