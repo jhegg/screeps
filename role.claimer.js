@@ -15,8 +15,8 @@ Creep.prototype.claiming = function() {
           const claimResult = this.claimController(roomController);
           switch (claimResult) {
             case OK:
-              console.log(`${this.memory.role} ${this} successfully claimed ${roomController} in ${this.room.name}!`);
-              Game.notify(`${this.memory.role} ${this} successfully claimed ${roomController} in ${this.room.name}!`);
+              console.log(`${this.room} ${this.memory.role} ${this} successfully claimed ${roomController} in ${this.room.name}!`);
+              Game.notify(`${this.room} ${this.memory.role} ${this} successfully claimed ${roomController} in ${this.room.name}!`);
               flag.room.createFlag(flag.pos, `NewSpawnFlag${flag.room.name}`);
               flag.remove();
               break;
@@ -25,15 +25,15 @@ Creep.prototype.claiming = function() {
               this.claimController(roomController);
               break;
             case ERR_FULL:
-              console.log(`${this.memory.role} ${this} unable to claim ${roomController} due to Novice Area limit.`);
+              console.log(`${this.room} ${this.memory.role} ${this} unable to claim ${roomController} due to Novice Area limit.`);
               this.memory.claimFailed = true;
               break;
             case ERR_GCL_NOT_ENOUGH:
-              console.log(`${this.memory.role} ${this} unable to claim ${roomController} due to GCL too low.`);
+              console.log(`${this.room} ${this.memory.role} ${this} unable to claim ${roomController} due to GCL too low.`);
               this.memory.claimFailed = true;
               break;
             default:
-              console.log(`${this.memory.role} ${this} unable to claim ${roomController} due to error: ${claimResult}`);
+              console.log(`${this.room} ${this.memory.role} ${this} unable to claim ${roomController} due to error: ${claimResult}`);
               break;
           }
         } else {

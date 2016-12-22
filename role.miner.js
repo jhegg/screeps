@@ -35,7 +35,7 @@ function harvestFromMineralDeposit(creep) {
       case ERR_BUSY:
         break;
       default:
-        console.log(`${creep} mining harvestResult: ${harvestResult}, from ${targetMineral}`);
+        console.log(`${creep.room} ${creep} mining harvestResult: ${harvestResult}, from ${targetMineral}`);
         break;
     }
   }

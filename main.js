@@ -57,7 +57,6 @@ function assignSourceToCreep(creep) {
     const sources = creep.room.getSourcesMinusBlacklist();
     const desiredSource = sources[Math.floor(Math.random() * sources.length)];
     creep.memory.sourceId = desiredSource.id;
-    console.log('Setting sourceId to ' + desiredSource.id + ' for creep: ' + creep);
   }
 }
 

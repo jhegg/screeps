@@ -2,23 +2,19 @@ StructureTower.prototype.attackHostile = function(hostile) {
   const attackResult = this.attack(hostile);
   switch (attackResult) {
     case OK:
-      console.log('Successful attack on hostile ' + hostile +
-        ' by tower ' + this);
+      console.log(`${this.room} Successful attack on hostile ${hostile} by tower ${this}`);
       break;
     case ERR_NOT_ENOUGH_RESOURCES:
-      console.log('Warning! Tower ' + this + ' does not have enough ' +
-        'resources for attacking');
+      console.log(`${this.room} Warning! Tower ${this} does not have enough resources for attacking`);
       break;
     case ERR_INVALID_TARGET:
-      console.log('Error: Tower ' + this + ' attempted to attack an ' +
-        'invalid target ' + hostile);
+      console.log(`${this.room} Error: Tower ${this} attempted to attack an invalid target ${hostile}`);
       break;
     case ERR_RCL_NOT_ENOUGH:
-      console.log('Error: Room Controller Level insufficient for tower');
+      console.log(`${this.room} Error: Room Controller Level insufficient for tower`);
       break;
     default:
-      console.log('Unknown result ' + attackResult + ' of attack from ' +
-        this);
+      console.log(`${this.room} Unknown result ${attackResult} of attack from ${this}`);
   }
 };
 
@@ -26,21 +22,19 @@ StructureTower.prototype.healCreep = function(creep) {
   const result = this.heal(creep);
   switch (result) {
     case OK:
-      console.log('Successful heal on ' + creep + ' by tower ' + this);
+      console.log(`${this.room} Successful heal on ${creep} by tower ${this}`);
       break;
     case ERR_NOT_ENOUGH_RESOURCES:
-      console.log('Warning! Tower ' + this + ' does not have enough ' +
-        'resources for healing');
+      console.log(`${this.room} Warning! Tower ${this} does not have enough resources for healing`);
       break;
     case ERR_INVALID_TARGET:
-      console.log('Error: Tower ' + this + ' attempted to heal an ' +
-        'invalid target ' + creep);
+      console.log(`${this.room} Error: Tower ${this} attempted to heal an invalid target ${creep}`);
       break;
     case ERR_RCL_NOT_ENOUGH:
-      console.log('Error: Room Controller Level insufficient for tower');
+      console.log(`${this.room} Error: Room Controller Level insufficient for tower`);
       break;
     default:
-      console.log('Unknown result ' + result + ' of heal from ' + this);
+      console.log(`${this.room} Unknown result ${result} of heal from ${this}`);
   }
 };
 
@@ -50,18 +44,16 @@ StructureTower.prototype.repairStructure = function(structureToRepair) {
     case OK:
       break;
     case ERR_NOT_ENOUGH_RESOURCES:
-      console.log('Warning! Tower ' + this + ' does not have enough ' +
-        'resources for repairing');
+      console.log(`${this.room} Warning! ${this} does not have enough resources for repairing`);
       break;
     case ERR_INVALID_TARGET:
-      console.log('Error: Tower ' + this + ' attempted to repair an ' +
-        'invalid target ' + structureToRepair);
+      console.log(`${this.room} Error: ${this} attempted to repair an invalid target ${structureToRepair}`);
       break;
     case ERR_RCL_NOT_ENOUGH:
-      console.log('Error: Room Controller Level insufficient for tower');
+      console.log(`${this.room} Error: Room Controller Level insufficient for tower`);
       break;
     default:
-      console.log('Unknown result ' + result + ' of heal from ' + this);
+      console.log(`${this.room} Unknown result ${result} of heal from ${this}`);
   }
 };
 

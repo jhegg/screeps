@@ -19,19 +19,19 @@ function updateCreepContainerAssignments(creep, structures) {
           Game.getObjectById(sourceContainer.creep) === null &&
           (creep.memory.containerId === undefined ||
            Game.getObjectById(creep.memory.containerId) === null)) {
-        console.log(`Assigning ${creep} to container ${sourceContainer.id} and source ${sourceContainer.sourceId}`);
+        console.log(`${creep.room} Assigning ${creep} to container ${sourceContainer.id} and source ${sourceContainer.sourceId}`);
         creep.memory.containerId = sourceContainer.id;
         creep.memory.sourceId = sourceContainer.sourceId;
         sourceContainer.creep = creep.id;
         if (sourceContainers[sourceContainerIndex].creep === undefined) {
-          console.log(`Error: creep ${creep.id} was not assigned to sourceContainer ${sourceContainerIndex}`);
+          console.log(`${creep.room} Error: creep ${creep.id} was not assigned to sourceContainer ${sourceContainerIndex}`);
         }
       }
 
       if (creep.memory.containerId) {
         const container = Game.getObjectById(creep.memory.containerId);
         if (container !== null && sourceContainer.creep === undefined) {
-          console.log(`Fix: creep ${creep.id} was not originally assigned to sourceContainer ${sourceContainerIndex}, but is now`);
+          console.log(`${creep.room} Fix: creep ${creep.id} was not originally assigned to sourceContainer ${sourceContainerIndex}, but is now`);
           creep.room.memory.sourceContainers[sourceContainerIndex].creep = creep.id;
         }
       }

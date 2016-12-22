@@ -5,12 +5,12 @@ Room.prototype.activateSafeModeDueToHostile = function(hostileCreep) {
     const safeModeResult = this.controller.activateSafeMode();
     switch (safeModeResult) {
       case OK:
-        const message = `Safe mode activated due to ${JSON.stringify(hostileCreep)}`;
+        const message = `${this} Safe mode activated due to ${JSON.stringify(hostileCreep)}`;
         console.log(message);
         Game.notify(message);
         break;
       case ERR_NOT_ENOUGH_RESOURCES:
-        console.log(`Error: no safe modes available!`);
+        console.log(`${this} Error: no safe modes available!`);
         break;
       case ERR_BUSY:
         // another room is in safe mode already, too bad
@@ -19,7 +19,7 @@ Room.prototype.activateSafeModeDueToHostile = function(hostileCreep) {
         // safe mode is on cooldown
         break;
       default:
-        console.log(`Warning: unknown result ${safeModeResult} from
+        console.log(`${this} Warning: unknown result ${safeModeResult} from
           attempt to activate safe mode`);
     }
   }

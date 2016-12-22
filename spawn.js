@@ -10,15 +10,15 @@ StructureSpawn.prototype.spawnNewCreeps = function() {
   if (!this.room.memory.emergencyMode &&
     energyCapacity >= largeEnergyCapacity &&
     _.filter(Game.creeps, (creep) => creep.room === this.room).length <= 5) {
-    console.log(`Creep numbers too low! Engaging emergency mode.`);
-    Game.notify(`Creep numbers too low! Engaging emergency mode.`);
+    console.log(`${this.room} Creep numbers too low! Engaging emergency mode.`);
+    Game.notify(`${this.room} Creep numbers too low! Engaging emergency mode.`);
     this.room.memory.emergencyMode = true;
   }
 
   if (this.room.memory.emergencyMode === true) {
     if (_.filter(Game.creeps, (creep) => creep.room === this.room).length >= 10) {
-      console.log(`Exiting emergency mode.`);
-      Game.notify(`Exiting emergency mode.`);
+      console.log(`${this.room} Exiting emergency mode.`);
+      Game.notify(`${this.room} Exiting emergency mode.`);
       this.room.memory.emergencyMode = undefined;
     } else {
       lowEnergyCapacitySpawning(this);
@@ -118,7 +118,7 @@ function produceDefender(spawn) {
       undefined, {
         role: 'defender'
       });
-    console.log(`Spawning defender ${spawnedCreep} in room ${spawn.room}`);
+    console.log(`${spawn.room} Spawning defender ${spawnedCreep} in room ${spawn.room}`);
   }
 }
 
@@ -141,7 +141,7 @@ function produceNewSpawnBuilder(spawn) {
             role: 'newSpawnBuilder',
             targetFlag: unclaimedFlags[0].name
           });
-        console.log(`Spawning newSpawnBuilder ${spawnedCreep} for flag ${unclaimedFlags[0]}`);
+        console.log(`${spawn.room} Spawning newSpawnBuilder ${spawnedCreep} for flag ${unclaimedFlags[0]}`);
       }
     }
   }
@@ -167,7 +167,7 @@ function produceClaimer(spawn) {
             role: 'claimer',
             claimFlag: unclaimedFlags[0].name
           });
-        console.log(`Spawning claimer ${spawnedCreep} for flag ${unclaimedFlags[0]}`);
+        console.log(`${spawn.room} Spawning claimer ${spawnedCreep} for flag ${unclaimedFlags[0]}`);
       }
     }
   }
@@ -194,7 +194,7 @@ function produceMiner(spawn) {
           undefined, {
             role: 'miner'
           });
-        console.log(`Spawning miner ${spawnedCreep} for ${spawn.room}`);
+        console.log(`${spawn.room} Spawning miner ${spawnedCreep} for ${spawn.room}`);
       }
     }
   }

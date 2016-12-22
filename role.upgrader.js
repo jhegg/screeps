@@ -27,7 +27,7 @@ Creep.prototype.upgrading = function() {
           this.upgradeController(this.room.controller);
           break;
         case ERR_NOT_OWNER:
-          console.log(`Error: upgrader unable to transfer from ${container}
+          console.log(`${this.room} Error: upgrader unable to transfer from ${container}
             due to ownership/rampart`);
           break;
         case ERR_BUSY:
@@ -45,11 +45,11 @@ Creep.prototype.upgrading = function() {
           }
           break;
         case ERR_INVALID_TARGET:
-          console.log(`Error: upgrader ${this} tried to harvest from
+          console.log(`${this.room} Error: upgrader ${this} tried to harvest from
             ${container} which is invalid`);
           break;
         case ERR_FULL:
-          console.log(`Warning: upgrader ${this} was full but tried to harvest
+          console.log(`${this.room} Warning: upgrader ${this} was full but tried to harvest
             anyway`);
           break;
         case ERR_NOT_IN_RANGE:
@@ -57,11 +57,11 @@ Creep.prototype.upgrading = function() {
           this.withdraw(container, RESOURCE_ENERGY);
           break;
         case ERR_INVALID_ARGS:
-          console.log(`Error: upgrader ${this} tried to withdraw from
+          console.log(`${this.room} Error: upgrader ${this} tried to withdraw from
              ${container} but resource amount or type was incorrect`);
           break;
         default:
-          console.log(`Warning: unknown result ${withdrawResult} from upgrader
+          console.log(`${this.room} Warning: unknown result ${withdrawResult} from upgrader
              withdraw`);
       }
       return;

@@ -62,7 +62,7 @@ Creep.prototype.truckPickup = function() {
       this.memory.pickupWasEmptyCounter = undefined;
       break;
     case ERR_NOT_OWNER:
-      console.log(`Error: truck unable to transfer from ${sourceContainer}
+      console.log(`${this.room} Error: truck unable to transfer from ${sourceContainer}
         due to ownership/rampart`);
       break;
     case ERR_BUSY:
@@ -76,11 +76,11 @@ Creep.prototype.truckPickup = function() {
       }
       break;
     case ERR_INVALID_TARGET:
-      console.log(`Error: truck ${this} tried to harvest from
+      console.log(`${this.room} Error: truck ${this} tried to harvest from
         ${sourceContainer} which is invalid`);
       break;
     case ERR_FULL:
-      console.log(`Warning: truck ${this} was full but tried to harvest
+      console.log(`${this.room} Warning: truck ${this} was full but tried to harvest
         anyway`);
       break;
     case ERR_NOT_IN_RANGE:
@@ -88,11 +88,11 @@ Creep.prototype.truckPickup = function() {
       this.withdraw(sourceContainer, RESOURCE_ENERGY);
       break;
     case ERR_INVALID_ARGS:
-      console.log(`Error: truck ${this} tried to withdraw from
+      console.log(`${this.room} Error: truck ${this} tried to withdraw from
          ${sourceContainer} but resource amount or type was incorrect`);
       break;
     default:
-      console.log(`Warning: unknown result ${withdrawResult} from truck
+      console.log(`${this.room} Warning: unknown result ${withdrawResult} from truck
          withdraw`);
   }
 };
@@ -112,7 +112,7 @@ Creep.prototype.truckPickupDroppedResource = function(resource) {
     case ERR_BUSY:
       break;
     default:
-      console.log(`Error: unhandled error ${pickupResult} from ${this.memory.role} ${this} trying to pickup resource ${resource}`);
+      console.log(`${this.room} Error: unhandled error ${pickupResult} from ${this.memory.role} ${this} trying to pickup resource ${resource}`);
       break;
   }
 };
@@ -206,7 +206,7 @@ Creep.prototype.updateDedicatedControllerContainerTruck = function() {
     return creep.memory.dedicatedControllerContainer !== undefined;
   });
   if (!dedicatedTruck || dedicatedTruck.length === 0) {
-    console.log(`New dedicated controller container truck: ${this}`);
+    console.log(`${this.room} New dedicated controller container truck: ${this}`);
     this.memory.dedicatedControllerContainer = true;
   }
 };

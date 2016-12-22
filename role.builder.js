@@ -36,7 +36,7 @@ Creep.prototype.building = function() {
         }
       }
     } else {
-      console.log('Builder '+this+' has no construction site; error?');
+      console.log(`${this.room} Builder ${this} has no construction site; error?`);
     }
   } else {
     if (this.memory.containerId !== undefined) {
@@ -47,7 +47,7 @@ Creep.prototype.building = function() {
           this.memory.pickupWasEmptyCounter = undefined;
           return;
         case ERR_NOT_OWNER:
-          console.log(`Error: builder unable to transfer from ${container}
+          console.log(`${this.room} Error: builder unable to transfer from ${container}
             due to ownership/rampart`);
           break;
         case ERR_BUSY:
@@ -65,11 +65,11 @@ Creep.prototype.building = function() {
           }
           break;
         case ERR_INVALID_TARGET:
-          console.log(`Error: builder ${this} tried to harvest from
+          console.log(`${this.room} Error: builder ${this} tried to harvest from
             ${container} which is invalid`);
           break;
         case ERR_FULL:
-          console.log(`Warning: builder ${this} was full but tried to harvest
+          console.log(`${this.room} Warning: builder ${this} was full but tried to harvest
             anyway`);
           break;
         case ERR_NOT_IN_RANGE:
@@ -78,11 +78,11 @@ Creep.prototype.building = function() {
           this.withdraw(container, RESOURCE_ENERGY);
           return;
         case ERR_INVALID_ARGS:
-          console.log(`Error: builder ${this} tried to withdraw from
+          console.log(`${this.room} Error: builder ${this} tried to withdraw from
              ${container} but resource amount or type was incorrect`);
           break;
         default:
-          console.log(`Warning: unknown result ${withdrawResult} from builder
+          console.log(`${this.room} Warning: unknown result ${withdrawResult} from builder
              withdraw`);
       }
       return;
