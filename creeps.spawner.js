@@ -29,12 +29,12 @@ var creepsSpawner = {
   },
 
   spawnExtraLargeCreepsWithTrucks: function(spawn) {
-    const template = creepsTemplates.extraLargeBodyWithTrucksTemplate();
+    const template = creepsTemplates.extraLargeBodyWithTrucksTemplate(spawn);
     spawnCreepFromTemplate(spawn, template);
   },
 
   spawnMegaCreepsWithTrucks: function(spawn) {
-    const template = creepsTemplates.megaBodyWithTrucksTemplate();
+    const template = creepsTemplates.megaBodyWithTrucksTemplate(spawn);
     spawnCreepFromTemplate(spawn, template);
   },
 };

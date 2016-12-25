@@ -136,7 +136,7 @@ var creepsTemplates = {
         maxCreepsOfType: 2},
     ];
   },
-  extraLargeBodyWithTrucksTemplate: function() {
+  extraLargeBodyWithTrucksTemplate: function(spawn) {
     return [
       { role: harvesterRole,
         body: largeHarvesterBody,
@@ -149,10 +149,10 @@ var creepsTemplates = {
         maxCreepsOfType: 2},
       { role: builderRole,
         body: builderBody,
-        maxCreepsOfType: 2},
+        maxCreepsOfType: getDesiredBuilderNumber(spawn.room)},
     ];
   },
-  megaBodyWithTrucksTemplate: function() {
+  megaBodyWithTrucksTemplate: function(spawn) {
     return [
       { role: harvesterRole,
         body: largeHarvesterBody,
@@ -165,9 +165,19 @@ var creepsTemplates = {
         maxCreepsOfType: 2},
       { role: builderRole,
         body: megaWorkerBody,
-        maxCreepsOfType: 2},
+        maxCreepsOfType: getDesiredBuilderNumber(spawn.room)},
     ];
   },
 };
+
+function getDesiredBuilderNumber(room) {
+  if (room.getConstructionSites() > 20) {
+    return 2;
+  } else if (room.getConstructionSites() > 0) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
 
 module.exports = creepsTemplates;
