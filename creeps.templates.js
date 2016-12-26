@@ -48,6 +48,12 @@ const megaWorkerBody = [
   MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
 ]; // cost: 1150
 
+const megaUpgraderBody = [
+  WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK, WORK,
+  CARRY, CARRY,
+  MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
+]; // cost: 1350
+
 var creepsTemplates = {
   startingBodyTemplate: function() {
     return [
@@ -161,7 +167,7 @@ var creepsTemplates = {
         body: mediumTruckBody,
         maxCreepsOfType: 4},
       { role: upgraderRole,
-        body: megaWorkerBody,
+        body: megaUpgraderBody,
         maxCreepsOfType: 2},
       { role: builderRole,
         body: megaWorkerBody,
