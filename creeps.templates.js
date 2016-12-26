@@ -42,6 +42,12 @@ const upgraderBody = [
   MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
 ]; // cost: 750
 
+const extraLargeUpgraderBody = [
+  WORK, WORK, WORK, WORK, WORK,
+  CARRY, CARRY,
+  MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
+]; // cost: 900
+
 const megaWorkerBody = [
   WORK, WORK, WORK, WORK, WORK,
   CARRY, CARRY, CARRY, CARRY,
@@ -151,7 +157,7 @@ var creepsTemplates = {
         body: mediumTruckBody,
         maxCreepsOfType: 4},
       { role: upgraderRole,
-        body: upgraderBody,
+        body: extraLargeUpgraderBody,
         maxCreepsOfType: 2},
       { role: builderRole,
         body: builderBody,
