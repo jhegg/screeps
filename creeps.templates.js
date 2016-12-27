@@ -183,9 +183,9 @@ var creepsTemplates = {
 };
 
 function getDesiredBuilderNumber(room) {
-  if (room.getConstructionSites() > 20) {
+  if (room.getConstructionSites().length > 20) {
     return 2;
-  } else if (room.getConstructionSites() > 0) {
+  } else if (room.getConstructionSites().length > 0) {
     return 1;
   } else {
     return 0;
