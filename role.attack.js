@@ -42,7 +42,7 @@ Creep.prototype.recycleIdleDefender = function() {
     } else if (this.memory.hostileLastSeen === undefined) {
       this.memory.hostileLastSeen = Game.time;
       return;
-    } else if ((this.memory.hostileLastSeen + 10) > Game.time) {
+    } else if ((this.memory.hostileLastSeen + 10) < Game.time) {
       const spawns = _.filter(this.room.getSpawns(),
         (spawn) => Math.hypot(this.pos.x - spawn.pos.x,
           this.pos.y - spawn.pos.y));
