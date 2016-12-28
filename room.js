@@ -58,10 +58,9 @@ Room.prototype.getContainersNeedingRepair = function() {
 };
 
 Room.prototype.getCreeps = function() {
-  if (!this._creeps) {
-    this._creeps = this.find(FIND_MY_CREEPS);
-  }
-  return this._creeps;
+  return _.filter(Game.creeps, (creep) =>
+    creep.room.name === this.name
+  );
 };
 
 Room.prototype.getCreepsNeedingHealing = function() {
