@@ -9,14 +9,14 @@ StructureSpawn.prototype.spawnNewCreeps = function() {
 
   if (!this.room.memory.emergencyMode &&
     energyCapacity >= largeEnergyCapacity &&
-    _.filter(Game.creeps, (creep) => creep.room === this.room).length <= 5) {
+    _.filter(Game.creeps, (creep) => creep.room === this.room).length <= 4) {
     console.log(`${this.room} Creep numbers too low! Engaging emergency mode.`);
     Game.notify(`${this.room} Creep numbers too low! Engaging emergency mode.`);
     this.room.memory.emergencyMode = true;
   }
 
   if (this.room.memory.emergencyMode === true) {
-    if (_.filter(Game.creeps, (creep) => creep.room === this.room).length >= 10) {
+    if (_.filter(Game.creeps, (creep) => creep.room === this.room).length >= 8) {
       console.log(`${this.room} Exiting emergency mode.`);
       Game.notify(`${this.room} Exiting emergency mode.`);
       this.room.memory.emergencyMode = undefined;
