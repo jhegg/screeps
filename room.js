@@ -26,13 +26,24 @@ Room.prototype.activateSafeModeDueToHostile = function(hostileCreep) {
 };
 
 Room.prototype.activateSafeModeIfNecessary = function() {
-  for (var hostileCreep of this.getHostiles()) {
-    // if any hostile creep is beyond 5 spaces of 50x50 room edges, activate
-    if (hostileCreep.pos.x > 5 &&
-      hostileCreep.pos.x < 45 &&
-      hostileCreep.pos.y > 5 &&
-      hostileCreep.pos.y < 45) {
-        this.activateSafeModeDueToHostile(hostileCreep);
+  const hostiles = this.getHostiles();
+  if (hostiles.length > 0) {
+    const essentialStructures = _.filter(this.getAllStructures(),
+      (structure) => structure.structureType === STRUCTURE_EXTENSION ||
+      structure.structureType === STRUCTURE_SPAWN ||
+      structure.structureType === STRUCTURE_TOWER);
+    const damagedEssentialStructures = _.filter(essentialStructures,
+      (structure) => structure.hits < structure.hitsMax);
+    if (damagedEssentialStructures.length > 0) {
+      console.log(`${this} Want to activate safe mode due to damaged structures!`);
+      this.activateSafeModeDueToHostile(hostiles[0]);
+    }
+
+    for (var hostile of hostiles) {
+      if (hostile.pos.findInRange(essentialStructures, 4).length > 0) {
+        console.log(`${this} Want to activate safe mode due to hostile in range!`);
+        this.activateSafeModeDueToHostile(hostile);
+      }
     }
   }
 };
