@@ -39,8 +39,11 @@ Room.prototype.activateSafeModeIfNecessary = function() {
       this.activateSafeModeDueToHostile(hostiles[0]);
     }
 
+    const spawnsAndExtensions = _.filter(essentialStructures,
+      (structure) => structure.structureType === STRUCTURE_EXTENSION ||
+      structure.structureType === STRUCTURE_SPAWN);
     for (var hostile of hostiles) {
-      if (hostile.pos.findInRange(essentialStructures, 4).length > 0) {
+      if (hostile.pos.findInRange(spawnsAndExtensions, 4).length > 0) {
         console.log(`${this} Want to activate safe mode due to hostile in range!`);
         this.activateSafeModeDueToHostile(hostile);
       }
