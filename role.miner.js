@@ -10,6 +10,21 @@ Creep.prototype.mining = function() {
   }
 
   if (this.memory.mining) {
+    if (_.every(this.room.getMinerals(), 'mineralAmount', 0) ||
+      this.room.getExtractors().length === 0) {
+      const spawns = _.filter(this.room.getSpawns(),
+        (spawn) => Math.hypot(this.pos.x - spawn.pos.x,
+          this.pos.y - spawn.pos.y));
+      if (spawns.length) {
+        const spawn = spawns[0];
+        if (spawn.recycleCreep(this) === ERR_NOT_IN_RANGE) {
+          this.moveTo(spawn);
+          spawn.recycleCreep(this);
+        }
+      }
+      return;
+    }
+
     harvestFromMineralDeposit(this);
   } else {
     deliverMineralsToStorage(this);
