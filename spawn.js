@@ -160,7 +160,7 @@ function produceClaimer(spawn) {
         creep.memory.claimFlag === flag.name
       ));
     if (unclaimedFlags.length) {
-      const body = [CLAIM, CLAIM, MOVE, MOVE];
+      const body = getClaimerBodyForSpawn(spawn);
       if (spawn.canCreateCreep(body) === OK) {
         const spawnedCreep = spawn.createCreep(body,
           undefined, {
@@ -170,6 +170,14 @@ function produceClaimer(spawn) {
         console.log(`${spawn.room} Spawning claimer ${spawnedCreep} for flag ${unclaimedFlags[0]}`);
       }
     }
+  }
+}
+
+function getClaimerBodyForSpawn(spawn) {
+  if (spawn.room.energyCapacityAvailable < 1300) {
+    return [CLAIM, MOVE];
+  } else {
+    return [CLAIM, CLAIM, MOVE, MOVE];
   }
 }
 
