@@ -26,6 +26,10 @@ Room.prototype.activateSafeModeDueToHostile = function(hostileCreep) {
 };
 
 Room.prototype.activateSafeModeIfNecessary = function() {
+  if (this.controller.my === false) {
+    return;
+  }
+
   const hostiles = this.getHostiles();
   if (hostiles.length > 0) {
     const essentialStructures = _.filter(this.getAllStructures(),
