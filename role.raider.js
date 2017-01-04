@@ -1,5 +1,6 @@
 Creep.prototype.raiding = function() {
-  // this.memory.raidingTargetFlag = RaidingFlag1 (W58S73)
+  this.notifyWhenAttacked(false);
+
   const flag = Game.flags[this.memory.raidingTargetFlag];
   if (flag === undefined) {
     return;
