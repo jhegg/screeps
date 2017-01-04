@@ -3,6 +3,13 @@ Creep.prototype.raiding = function() {
 
   const flag = Game.flags[this.memory.raidingTargetFlag];
   if (flag === undefined) {
+    const remainingFlags = _.filter(Game.flags, (flag) =>
+      flag.name.startsWith('RaidingFlag'));
+    if (remainingFlags.length > 0) {
+      const newFlag = remainingFlags[0].name;
+      console.log(`${this.room} Reassigning raider ${this} to flag ${newFlag}`);
+      this.memory.raidingTargetFlag = newFlag;
+    }
     return;
   }
 

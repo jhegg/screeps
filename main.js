@@ -38,7 +38,12 @@ module.exports.loop = function() {
     if (shouldRetire(creep)) {
       creepsMaintainer.retireOldCreep(creep);
     } else {
-      putCreepToWork(creep);
+      try {
+        putCreepToWork(creep);
+      } catch (e) {
+        console.log(e.stack);
+        Game.notify(e.stack);
+      }
     }
   }
 };
