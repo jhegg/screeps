@@ -227,6 +227,7 @@ function produceRaider(spawn) {
             role: 'raider',
             raidingTargetFlag: unclaimedFlags[0].name
           });
+        spawnedCreep.notifyWhenAttacked(false);
         console.log(`${spawn.room} Spawning raider ${spawnedCreep} for flag ${unclaimedFlags[0]}`);
       }
     }
