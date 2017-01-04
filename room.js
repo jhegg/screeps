@@ -26,7 +26,7 @@ Room.prototype.activateSafeModeDueToHostile = function(hostileCreep) {
 };
 
 Room.prototype.activateSafeModeIfNecessary = function() {
-  if (this.controller.my === false) {
+  if (this.controller.safeMode > 0) {
     return;
   }
 

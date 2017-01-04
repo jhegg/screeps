@@ -26,8 +26,10 @@ module.exports.loop = function() {
 
   for (var roomName in Game.rooms) {
     const room = Game.rooms[roomName];
-    room.activateSafeModeIfNecessary();
-    room.getTowers().forEach((tower) => tower.run());
+    if (room.controller.my === true) {
+      room.activateSafeModeIfNecessary();
+      room.getTowers().forEach((tower) => tower.run());
+    }
   }
 
   for (var name in Game.creeps) {
