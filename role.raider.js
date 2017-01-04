@@ -10,12 +10,22 @@ Creep.prototype.raiding = function() {
     return;
   }
 
+  if (this.room.controller.safeMode > 0) {
+    console.log(`${this.room} flag ${flag} now under safe mode, removing.`);
+    this.memory.raidingTargetFlag = undefined;
+    flag.remove();
+  }
+
   const target = getPrioritizedTarget(this);
   if (target !== undefined) {
     if (this.attack(target) === ERR_NOT_IN_RANGE) {
       this.moveTo(target);
       this.attack(target);
     }
+  } else {
+    console.log(`${this.room} flag ${flag} no longer has targets, removing.`);
+    this.memory.raidingTargetFlag = undefined;
+    flag.remove();
   }
 };
 
