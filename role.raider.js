@@ -25,6 +25,24 @@ Creep.prototype.raiding = function() {
     flag.remove();
   }
 
+  const waypointFlags = _.filter(Game.flags, (waypointFlag) =>
+    waypointFlag.name.startsWith(`WP${flag.name}-`));
+  if (waypointFlags.length > 0) {
+    const nextWaypointFlag = _.sortBy(waypointFlags, 'name')[0];
+    if (this.pos.isEqualTo(nextWaypointFlag)) {
+      console.log(`${this.room} removing ${nextWaypointFlag} since creep moved on it.`);
+      nextWaypointFlag.remove();
+    } else if (this.pos.isNearTo(nextWaypointFlag)) {
+      console.log(`${this.room} using waypoint ${nextWaypointFlag} and near to it!`);
+      this.moveTo(nextWaypointFlag, {ignoreDestructibleStructures: true});
+      return;
+    } else {
+      console.log(`${this.room} using waypoint ${nextWaypointFlag}.`);
+      this.moveTo(nextWaypointFlag);
+      return;
+    }
+  }
+
   const target = getPrioritizedTarget(this);
   if (target !== undefined) {
     if (this.attack(target) === ERR_NOT_IN_RANGE) {
