@@ -216,9 +216,8 @@ function produceRaider(spawn) {
     );
     const unclaimedFlags = _.filter(Game.flags, (flag) =>
       flag.name.startsWith('RaidingFlag') &&
-      !_.any(creepsAssignedToFlags, (creep) =>
-        creep.memory.raidingTargetFlag === flag.name
-      ));
+        _.filter(creepsAssignedToFlags, (creep) =>
+          creep.memory.raidingTargetFlag === flag.name).length < (flag.memory.maxRaiders ? flag.memory.maxRaiders : 1));
     if (unclaimedFlags.length) {
       const body = [MOVE, ATTACK];
       if (spawn.canCreateCreep(body) === OK) {
