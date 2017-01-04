@@ -20,7 +20,7 @@ Creep.prototype.raiding = function() {
   const target = getPrioritizedTarget(this);
   if (target !== undefined) {
     if (this.attack(target) === ERR_NOT_IN_RANGE) {
-      this.moveTo(target);
+      this.moveTo(target, {ignoreDestructibleStructures: true});
       this.attack(target);
     }
   } else {
