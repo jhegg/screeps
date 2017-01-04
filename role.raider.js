@@ -20,6 +20,7 @@ Creep.prototype.raiding = function() {
 
   if (this.room.controller.safeMode > 0) {
     console.log(`${this.room} flag ${flag} now under safe mode, removing.`);
+    Game.notify(`${this.room} flag ${flag} now under safe mode, removing.`);
     this.memory.raidingTargetFlag = undefined;
     flag.remove();
   }
