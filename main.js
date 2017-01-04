@@ -4,6 +4,7 @@ require('role.claimer');
 require('role.harvester');
 require('role.miner');
 require('role.newSpawnBuilder');
+require('role.raider');
 require('role.truck');
 require('role.upgrader');
 require('room');
@@ -94,6 +95,10 @@ function putCreepToWork(creep) {
 
   if (creep.memory.role === 'attack' || creep.memory.role === 'defender') {
     creep.attacking();
+  }
+
+  if (creep.memory.role === 'raider') {
+    creep.raiding();
   }
 
   if (creep.memory.role === 'claimer') {

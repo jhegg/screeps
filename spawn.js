@@ -46,6 +46,7 @@ StructureSpawn.prototype.spawnNewCreeps = function() {
   produceNewSpawnBuilder(this);
   produceClaimer(this);
   produceMiner(this);
+  produceRaider(this);
 };
 
 function lowEnergyCapacitySpawning(spawn) {
@@ -203,6 +204,30 @@ function produceMiner(spawn) {
             role: 'miner'
           });
         console.log(`${spawn.room} Spawning miner ${spawnedCreep} for ${spawn.room}`);
+      }
+    }
+  }
+}
+
+function produceRaider(spawn) {
+  if (spawn.spawning === null && spawn.room.memory.emergencyMode !== true) {
+    const creepsAssignedToFlags = _.filter(Game.creeps, (creep) =>
+      creep.memory.raidingTargetFlag !== undefined
+    );
+    const unclaimedFlags = _.filter(Game.flags, (flag) =>
+      flag.name.startsWith('RaidingFlag') &&
+      !_.any(creepsAssignedToFlags, (creep) =>
+        creep.memory.raidingTargetFlag === flag.name
+      ));
+    if (unclaimedFlags.length) {
+      const body = [MOVE, ATTACK];
+      if (spawn.canCreateCreep(body) === OK) {
+        const spawnedCreep = spawn.createCreep(body,
+          undefined, {
+            role: 'raider',
+            raidingTargetFlag: unclaimedFlags[0].name
+          });
+        console.log(`${spawn.room} Spawning raider ${spawnedCreep} for flag ${unclaimedFlags[0]}`);
       }
     }
   }
