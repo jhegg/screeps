@@ -21,13 +21,14 @@ Creep.prototype.building = function() {
         const distanceB = Math.hypot(creepPosition.x - b.pos.x, creepPosition.y - b.pos.y);
         return distanceA - distanceB;
       });
-      const extensionSites = _.filter(constructionSitesSortedByDistance, (site) =>
-        site.structureType === STRUCTURE_EXTENSION
+      const criticalStructures = _.filter(constructionSitesSortedByDistance, (site) =>
+        site.structureType === STRUCTURE_EXTENSION ||
+        site.structureType === STRUCTURE_SPAWN
       );
-      if (extensionSites.length) {
-        if (this.build(extensionSites[0]) === ERR_NOT_IN_RANGE) {
-          this.moveTo(extensionSites[0]);
-          this.build(extensionSites[0]);
+      if (criticalStructures.length) {
+        if (this.build(criticalStructures[0]) === ERR_NOT_IN_RANGE) {
+          this.moveTo(criticalStructures[0]);
+          this.build(criticalStructures[0]);
         }
       } else {
         if (this.build(constructionSitesSortedByDistance[0]) === ERR_NOT_IN_RANGE) {
