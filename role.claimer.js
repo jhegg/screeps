@@ -1,5 +1,9 @@
 Creep.prototype.claiming = function() {
   const flag = Game.flags[this.memory.claimFlag];
+  if (flag === undefined) {
+    return;
+  }
+
   if (flag !== undefined && flag.pos.roomName === this.room.name) {
     const roomController = this.room.controller;
     if (roomController && roomController.my === false || roomController.my === undefined) {
@@ -17,7 +21,14 @@ Creep.prototype.claiming = function() {
             case OK:
               console.log(`${this.room} ${this.memory.role} ${this} successfully claimed ${roomController} in ${this.room.name}!`);
               Game.notify(`${this.room} ${this.memory.role} ${this} successfully claimed ${roomController} in ${this.room.name}!`);
-              flag.room.createFlag(flag.pos, `NewSpawnFlag${flag.room.name}`);
+              const newFlagName = `NewSpawnFlag${flag.room.name}`;
+              flag.room.createFlag(flag.pos, newFlagName);
+              const waypoints = _.sortBy(_.filter(Game.flags,
+                (waypointFlag) => waypointFlag.name.startsWith(`WP-${flag.name}-`)), 'name');
+              _.each(waypoints, (waypoint, index) => {
+                waypoint.room.createFlag(waypoint.pos, `WP-${newFlagName}-${index+1}`);
+                waypoint.remove();
+              });
               flag.remove();
               break;
             case ERR_NOT_IN_RANGE:
@@ -45,6 +56,6 @@ Creep.prototype.claiming = function() {
       }
     }
   } else {
-    this.moveTo(flag);
+    this.moveByWaypointToFlag(flag);
   }
 };

@@ -12,6 +12,6 @@ Creep.prototype.newSpawnBuilding = function() {
     this.memory.sourceId = undefined;
     this.memory.upgrading = undefined;
   } else {
-    this.moveTo(flag);
+    this.moveByWaypointToFlag(flag);
   }
 };

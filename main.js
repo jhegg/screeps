@@ -7,6 +7,7 @@ require('role.newSpawnBuilder');
 require('role.raider');
 require('role.truck');
 require('role.upgrader');
+require('role.utility');
 require('room');
 require('spawn');
 require('tower');
