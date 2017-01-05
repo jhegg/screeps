@@ -219,15 +219,27 @@ function produceRaider(spawn) {
         _.filter(creepsAssignedToFlags, (creep) =>
           creep.memory.raidingTargetFlag === flag.name).length < (flag.memory.maxRaiders ? flag.memory.maxRaiders : 1));
     if (unclaimedFlags.length) {
-      const body = [MOVE, ATTACK];
+      const targetFlag = unclaimedFlags[0];
+      const body = getRaiderBodyForSpawn(spawn);
       if (spawn.canCreateCreep(body) === OK) {
         const spawnedCreep = spawn.createCreep(body,
           undefined, {
             role: 'raider',
-            raidingTargetFlag: unclaimedFlags[0].name
+            raidingTargetFlag: targetFlag.name
           });
-        console.log(`${spawn.room} Spawning raider ${spawnedCreep} for flag ${unclaimedFlags[0]}`);
+        console.log(`${spawn.room} Spawning raider ${spawnedCreep} for flag ${targetFlag}`);
       }
     }
+  }
+}
+
+function getRaiderBodyForSpawn(spawn) {
+  if (spawn.room.energyCapacityAvailable < 1300) {
+    return [CLAIM, MOVE];
+  } else {
+    return [
+      TOUGH, MOVE, TOUGH, MOVE, TOUGH, MOVE,
+      MOVE, ATTACK
+    ]; // cost: 310
   }
 }
