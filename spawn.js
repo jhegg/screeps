@@ -235,7 +235,7 @@ function produceRaider(spawn) {
 
 function getRaiderBodyForSpawn(spawn) {
   if (spawn.room.energyCapacityAvailable < 1300) {
-    return [CLAIM, MOVE];
+    return [ATTACK, MOVE];
   } else {
     return [
       TOUGH, MOVE, TOUGH, MOVE, TOUGH, MOVE,
