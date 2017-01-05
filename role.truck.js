@@ -134,10 +134,24 @@ Creep.prototype.truckGetPickupContainer = function() {
 };
 
 function getBestPickupContainer(creep) {
+  if (!creep.shouldDeliverToControllerContainer()) {
+    const spawnContainer = Game.getObjectById(creep.room.memory.SpawnContainer);
+    if (!_.any(Game.creeps, 'memory.pickupId', spawnContainer.id)) {
+      const spawnsAndExtensionsNeedingEnergy = _.filter(creep.room.getAllStructures(),
+        (structure) =>
+        (structure.structureType === STRUCTURE_EXTENSION ||
+          structure.structureType === STRUCTURE_SPAWN) &&
+        structure.energy < structure.energyCapacity);
+      if (spawnContainer.store[RESOURCE_ENERGY] > 0 &&
+        spawnsAndExtensionsNeedingEnergy.length > 2) {
+          return spawnContainer;
+        }
+    }
+  }
   const bestSourceContainer = creep.room.sortSourceContainersByEnergy()[0];
   if (creep.room.storage &&
     creep.room.storage.store[RESOURCE_ENERGY] > 1000 &&
-    (!bestSourceContainer || bestSourceContainer.store[RESOURCE_ENERGY] < 800)) {
+    (!bestSourceContainer || bestSourceContainer.store[RESOURCE_ENERGY] < 200)) {
       return creep.room.storage;
   } else {
     return bestSourceContainer;
