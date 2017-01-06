@@ -8,7 +8,6 @@ StructureSpawn.prototype.spawnNewCreeps = function() {
   const megaEnergyCapacity = 2100;
 
   if (!this.room.memory.emergencyMode &&
-    energyCapacity >= largeEnergyCapacity &&
     _.filter(Game.creeps, (creep) => creep.room === this.room).length <= 4) {
     console.log(`${this.room} Creep numbers too low! Engaging emergency mode.`);
     Game.notify(`${this.room} Creep numbers too low! Engaging emergency mode.`);
