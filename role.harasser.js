@@ -64,25 +64,16 @@ Creep.prototype.harassing = function() {
     }
   }
 
-  const enemyCreeps = this.room.find(FIND_HOSTILE_CREEPS);
-  if (enemyCreeps.length > 0) {
-    const target = _.sortBy(enemyCreeps, (enemy) => Math.hypot(
-      this.pos.x - enemy.pos.x, this.pos.y - enemy.pos.y))[0];
+  const target = this.getPrioritizedTarget();
+  if (target !== undefined) {
     if (this.attack(target) === ERR_NOT_IN_RANGE) {
       this.moveTo(target);
       this.attack(target);
     }
-    return;
-  }
-
-  const enemySpawns = this.room.find(FIND_HOSTILE_SPAWNS);
-  if (enemySpawns.length > 0) {
-    const target = _.sortByOrder(enemySpawns, 'hits')[0];
-    if (this.attack(target) === ERR_NOT_IN_RANGE) {
-      this.moveTo(target);
-      this.attack(target);
-    }
-    return;
+  } else {
+    console.log(`${this.room} flag ${flag} no longer has targets, removing.`);
+    this.memory.harasserTargetFlag = undefined;
+    flag.remove();
   }
 };
 
