@@ -136,7 +136,7 @@ Creep.prototype.truckGetPickupContainer = function() {
 function getBestPickupContainer(creep) {
   if (!creep.shouldDeliverToControllerContainer()) {
     const spawnContainer = Game.getObjectById(creep.room.memory.SpawnContainer);
-    if (!_.any(Game.creeps, 'memory.pickupId', spawnContainer.id)) {
+    if (spawnContainer && !_.any(Game.creeps, 'memory.pickupId', spawnContainer.id)) {
       const spawnsAndExtensionsNeedingEnergy = _.filter(creep.room.getAllStructures(),
         (structure) =>
         (structure.structureType === STRUCTURE_EXTENSION ||
