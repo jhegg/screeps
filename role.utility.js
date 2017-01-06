@@ -37,7 +37,7 @@ Creep.prototype.getPrioritizedTarget = function() {
       this.pos.x - enemy.pos.x, this.pos.y - enemy.pos.y))[0];
   }
 
-  const enemyStructures = _.filter(this.room.find(FIND_HOSTILE_STRUCTURES), 
+  const enemyStructures = _.filter(this.room.find(FIND_HOSTILE_STRUCTURES),
     (structure) => structure.structureType !== STRUCTURE_CONTROLLER);
   if (enemyStructures.length > 0) {
     const enemyTowers = _.filter(enemyStructures,

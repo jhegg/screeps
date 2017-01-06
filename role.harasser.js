@@ -48,8 +48,8 @@ Creep.prototype.harassing = function() {
 
   const towersWithEnergy = _.filter(this.room.find(FIND_HOSTILE_STRUCTURES),
     (structure) => structure.structureType === STRUCTURE_TOWER &&
-      structure.energy > 9);
-  if (towersWithEnergy.length > 0) {
+      (structure.energy > 9 && structure.energy < structure.energyCapacity));
+  if (towersWithEnergy.length > 0 && flag.memory.brokenTowers !== true) {
     if (this.hitsMax - this.hits > 700) {
       const exitDirection = getBestExitDirection(this);
       if (exitDirection) {
