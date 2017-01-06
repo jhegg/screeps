@@ -46,6 +46,7 @@ StructureSpawn.prototype.spawnNewCreeps = function() {
   produceClaimer(this);
   produceMiner(this);
   produceRaider(this);
+  produceHarasser(this);
 };
 
 function lowEnergyCapacitySpawning(spawn) {
@@ -240,5 +241,32 @@ function getRaiderBodyForSpawn(spawn) {
       TOUGH, MOVE, TOUGH, MOVE, TOUGH, MOVE,
       MOVE, ATTACK
     ]; // cost: 310
+  }
+}
+
+function produceHarasser(spawn) {
+  if (spawn.spawning === null && spawn.room.memory.emergencyMode !== true) {
+    const creepsAssignedToFlags = _.filter(Game.creeps, (creep) =>
+      creep.memory.harasserTargetFlag !== undefined
+    );
+    const unclaimedFlags = _.filter(Game.flags, (flag) =>
+      flag.name.startsWith('HarasserFlag') &&
+        _.filter(creepsAssignedToFlags, (creep) =>
+          creep.memory.harasserTargetFlag === flag.name).length < (flag.memory.maxHarassers ? flag.memory.maxHarassers : 1));
+    if (unclaimedFlags.length) {
+      const targetFlag = unclaimedFlags[0];
+      const body = [
+        TOUGH, MOVE, TOUGH, MOVE, TOUGH, MOVE, TOUGH, MOVE,
+        HEAL, MOVE, HEAL, MOVE, ATTACK, MOVE, MOVE, HEAL
+      ]; // cost: 1270
+      if (spawn.canCreateCreep(body) === OK) {
+        const spawnedCreep = spawn.createCreep(body,
+          undefined, {
+            role: 'harasser',
+            harasserTargetFlag: targetFlag.name
+          });
+        console.log(`${spawn.room} Spawning harasser ${spawnedCreep} for flag ${targetFlag}`);
+      }
+    }
   }
 }

@@ -1,0 +1,98 @@
+Creep.prototype.harassing = function() {
+  if (this.spawning) {
+    return;
+  }
+  this.notifyWhenAttacked(false);
+
+  const flag = Game.flags[this.memory.harasserTargetFlag];
+  if (flag === undefined) {
+    const remainingFlags = _.filter(Game.flags, (flag) =>
+      flag.name.startsWith('HarasserFlag'));
+    if (remainingFlags.length > 0) {
+      const newFlag = remainingFlags[0].name;
+      console.log(`${this.room} Reassigning harasser ${this} to flag ${newFlag}`);
+      this.memory.harasserTargetFlag = newFlag;
+    }
+    return;
+  }
+
+  console.log(`${this.room} harasser ${this} hits: ${this.hits}/${this.hitsMax}, position: ${this.pos}`);
+
+  if (this.hits < this.hitsMax) {
+    console.log(`${this.room} ${this} healing due to health ${this.hits} < ${this.hitsMax}`);
+    this.heal(this);
+  }
+
+  if (this.memory.healing && this.hits === this.hitsMax) {
+    this.memory.healing = false;
+  }
+
+  if (this.memory.healing) {
+    if (this.memory.exit.count > 0) {
+      console.log(`${this.room} ${this} trying to exit room by moving one more time in direction ${this.memory.exit.direction}`);
+      this.move(this.memory.exit.direction);
+      this.memory.exit.count = 0;
+      return;
+    }
+    console.log(`${this.room} ${this} staying put due to healing mode`);
+    return;
+  }
+
+  if (flag.pos.roomName !== this.room.name) {
+    console.log(`${this.room} ${this} moving to flag ${flag}`);
+    this.moveTo(flag);
+    return;
+  }
+
+  if (this.room.controller.safeMode > 0) {
+    console.log(`${this.room} flag ${flag} now under safe mode, removing.`);
+    Game.notify(`${this.room} flag ${flag} now under safe mode, removing.`);
+    this.memory.harasserTargetFlag = undefined;
+    flag.remove();
+  }
+
+  const towersWithEnergy = _.filter(this.room.find(FIND_HOSTILE_STRUCTURES),
+    (structure) => structure.structureType === STRUCTURE_TOWER &&
+      structure.energy > 9);
+  if (towersWithEnergy.length > 0) {
+    if (this.hitsMax - this.hits > 700) {
+      const exitDirection = getBestExitDirection(this);
+      if (exitDirection) {
+        console.log(`${this.room} ${this} trying to exit room in direction ${exitDirection}`);
+        this.move(exitDirection);
+        this.memory.healing = true;
+        this.memory.exit = {direction: exitDirection, count: 1};
+        return;
+      }
+    } else {
+      console.log(`${this.room} ${this} found towers with energy, not moving`);
+      return;
+    }
+  }
+
+  const enemySpawns = this.room.find(FIND_HOSTILE_SPAWNS);
+  if (enemySpawns.length > 0) {
+    const target = _.sortByOrder(enemySpawns, 'hits')[0];
+    console.log(`${this.room} ${this} moving to and attacking enemy spawn ${target}`);
+    if (this.attack(target) === ERR_NOT_IN_RANGE) {
+      this.moveTo(target);
+      this.attack(target);
+    }
+  }
+};
+
+function getBestExitDirection(creep) {
+  const pos = creep.pos;
+  if (pos.x === 0) {
+    return LEFT;
+  } else if (pos.x === 49) {
+    return RIGHT;
+  } else if (pos.y === 0) {
+    return TOP;
+  } else if (pos.y === 49) {
+    return BOTTOM;
+  } else {
+    console.log(`${creep.room} ${creep} unable to determine exit! Position: ${JSON.stringify(pos)}`);
+    return undefined;
+  }
+}

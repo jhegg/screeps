@@ -1,6 +1,7 @@
 require('role.attack');
 require('role.builder');
 require('role.claimer');
+require('role.harasser');
 require('role.harvester');
 require('role.miner');
 require('role.newSpawnBuilder');
@@ -107,6 +108,10 @@ function putCreepToWork(creep) {
 
   if (creep.memory.role === 'raider') {
     creep.raiding();
+  }
+
+  if (creep.memory.role === 'harasser') {
+    creep.harassing();
   }
 
   if (creep.memory.role === 'claimer') {

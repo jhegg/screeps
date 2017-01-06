@@ -64,11 +64,10 @@ function getPrioritizedTarget(creep) {
 
   const enemyStructures = creep.room.find(FIND_HOSTILE_STRUCTURES);
   if (enemyStructures.length > 0) {
-    const enemyTowersAndExtensions = _.filter(enemyStructures,
-      (structure) => structure.structureType === STRUCTURE_EXTENSION ||
-        structure.structureType === STRUCTURE_TOWER);
-    if (enemyTowersAndExtensions.length > 0) {
-      return _.sortBy(enemyTowersAndExtensions, (structure) => Math.hypot(
+    const enemyTowers = _.filter(enemyStructures,
+      (structure) => structure.structureType === STRUCTURE_TOWER);
+    if (enemyTowers.length > 0) {
+      return _.sortBy(enemyTowers, (structure) => Math.hypot(
         creep.pos.x - structure.pos.x, creep.pos.y - structure.pos.y))[0];
     }
   }
