@@ -16,10 +16,7 @@ Creep.prototype.harassing = function() {
     return;
   }
 
-  console.log(`${this.room} harasser ${this} hits: ${this.hits}/${this.hitsMax}, position: ${this.pos}`);
-
   if (this.hits < this.hitsMax) {
-    console.log(`${this.room} ${this} healing due to health ${this.hits} < ${this.hitsMax}`);
     this.heal(this);
   }
 
@@ -34,12 +31,10 @@ Creep.prototype.harassing = function() {
       this.memory.exit.count = 0;
       return;
     }
-    console.log(`${this.room} ${this} staying put due to healing mode`);
     return;
   }
 
   if (flag.pos.roomName !== this.room.name) {
-    console.log(`${this.room} ${this} moving to flag ${flag}`);
     this.moveTo(flag);
     return;
   }
@@ -65,7 +60,6 @@ Creep.prototype.harassing = function() {
         return;
       }
     } else {
-      console.log(`${this.room} ${this} found towers with energy, not moving`);
       return;
     }
   }
@@ -73,7 +67,16 @@ Creep.prototype.harassing = function() {
   const enemySpawns = this.room.find(FIND_HOSTILE_SPAWNS);
   if (enemySpawns.length > 0) {
     const target = _.sortByOrder(enemySpawns, 'hits')[0];
-    console.log(`${this.room} ${this} moving to and attacking enemy spawn ${target}`);
+    if (this.attack(target) === ERR_NOT_IN_RANGE) {
+      this.moveTo(target);
+      this.attack(target);
+    }
+  }
+
+  const enemyCreeps = this.room.find(FIND_HOSTILE_CREEPS);
+  if (enemyCreeps.length > 0) {
+    const target = _.sortBy(enemyCreeps, (enemy) => Math.hypot(
+      this.pos.x - enemy.pos.x, this.pos.y - enemy.pos.y))[0];
     if (this.attack(target) === ERR_NOT_IN_RANGE) {
       this.moveTo(target);
       this.attack(target);
