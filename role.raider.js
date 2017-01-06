@@ -57,9 +57,21 @@ Creep.prototype.raiding = function() {
 };
 
 function getPrioritizedTarget(creep) {
+  const enemyCreeps = creep.room.find(FIND_HOSTILE_CREEPS);
+  const enemyCreepsWithAttackParts = _.filter(enemyCreeps, (enemyCreep) => _.any(enemyCreep.body, (body) => body.type === ATTACK));
+  if (enemyCreepsWithAttackParts.length > 0) {
+    return _.sortBy(enemyCreepsWithAttackParts, (enemy) => Math.hypot(
+      creep.pos.x - enemy.pos.x, creep.pos.y - enemy.pos.y))[0];
+  }
+
   const enemySpawns = creep.room.find(FIND_HOSTILE_SPAWNS);
   if (enemySpawns.length > 0) {
     return _.sortByOrder(enemySpawns, 'hits')[0];
+  }
+
+  if (enemyCreeps.length > 0) {
+    return _.sortBy(enemyCreeps, (enemy) => Math.hypot(
+      creep.pos.x - enemy.pos.x, creep.pos.y - enemy.pos.y))[0];
   }
 
   const enemyStructures = creep.room.find(FIND_HOSTILE_STRUCTURES);
@@ -69,13 +81,10 @@ function getPrioritizedTarget(creep) {
     if (enemyTowers.length > 0) {
       return _.sortBy(enemyTowers, (structure) => Math.hypot(
         creep.pos.x - structure.pos.x, creep.pos.y - structure.pos.y))[0];
+    } else {
+      return _.sortBy(enemyStructures, (structure) => Math.hypot(
+        creep.pos.x - structure.pos.x, creep.pos.y - structure.pos.y))[0];
     }
-  }
-
-  const enemyCreeps = creep.room.find(FIND_HOSTILE_CREEPS);
-  if (enemyCreeps.length > 0) {
-    return _.sortBy(enemyCreeps, (enemy) => Math.hypot(
-      creep.pos.x - enemy.pos.x, creep.pos.y - enemy.pos.y))[0];
   }
 
   return undefined;

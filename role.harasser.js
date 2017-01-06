@@ -64,15 +64,6 @@ Creep.prototype.harassing = function() {
     }
   }
 
-  const enemySpawns = this.room.find(FIND_HOSTILE_SPAWNS);
-  if (enemySpawns.length > 0) {
-    const target = _.sortByOrder(enemySpawns, 'hits')[0];
-    if (this.attack(target) === ERR_NOT_IN_RANGE) {
-      this.moveTo(target);
-      this.attack(target);
-    }
-  }
-
   const enemyCreeps = this.room.find(FIND_HOSTILE_CREEPS);
   if (enemyCreeps.length > 0) {
     const target = _.sortBy(enemyCreeps, (enemy) => Math.hypot(
@@ -81,6 +72,17 @@ Creep.prototype.harassing = function() {
       this.moveTo(target);
       this.attack(target);
     }
+    return;
+  }
+
+  const enemySpawns = this.room.find(FIND_HOSTILE_SPAWNS);
+  if (enemySpawns.length > 0) {
+    const target = _.sortByOrder(enemySpawns, 'hits')[0];
+    if (this.attack(target) === ERR_NOT_IN_RANGE) {
+      this.moveTo(target);
+      this.attack(target);
+    }
+    return;
   }
 };
 
