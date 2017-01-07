@@ -15,7 +15,7 @@ Creep.prototype.claiming = function() {
         }
         return;
       } else {
-        if (this.memory.claimFailed === undefined) {
+        if (this.memory.claimFailed === undefined && flag.memory.claim === true) {
           const claimResult = this.claimController(roomController);
           switch (claimResult) {
             case OK:
