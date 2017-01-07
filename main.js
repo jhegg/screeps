@@ -6,6 +6,7 @@ require('role.harvester');
 require('role.miner');
 require('role.newSpawnBuilder');
 require('role.raider');
+require('role.remoteHarvester');
 require('role.truck');
 require('role.upgrader');
 require('role.utility');
@@ -76,53 +77,51 @@ function shouldRetire(creep) {
 }
 
 function putCreepToWork(creep) {
-  if (creep.memory.role == 'harvester') {
-    if (creep.room.getEnergyStorageStructures().length) {
-      creep.harvesting();
-    } else if (creep.room.getConstructionSites().length) {
-      creep.building();
-    } else {
+  switch(creep.memory.role) {
+    case 'attack':
+      creep.attacking();
+      break;
+    case 'builder':
+      if (creep.room.getConstructionSites().length) {
+        creep.building();
+      } else {
+        creep.upgrading();
+      }
+      break;
+    case 'claimer':
+      creep.claiming();
+      break;
+    case 'defender':
+      creep.attacking();
+      break;
+    case 'harasser':
+      creep.harassing();
+      break;
+    case 'harvester':
+      if (creep.room.getEnergyStorageStructures().length) {
+        creep.harvesting();
+      } else if (creep.room.getConstructionSites().length) {
+        creep.building();
+      } else {
+        creep.upgrading();
+      }
+      break;
+    case 'miner':
+      creep.mining();
+      break;
+    case 'newSpawnBuilder':
+      creep.newSpawnBuilding();
+      break;
+    case 'raider':
+      creep.raiding();
+      break;
+    case 'truck':
+      creep.trucking();
+      break;
+    case 'upgrader':
       creep.upgrading();
-    }
-  }
-
-  if (creep.memory.role == 'truck') {
-    creep.trucking();
-  }
-
-  if (creep.memory.role == 'upgrader') {
-    creep.upgrading();
-  }
-
-  if (creep.memory.role == 'builder') {
-    if (creep.room.getConstructionSites().length) {
-      creep.building();
-    } else {
-      creep.upgrading();
-    }
-  }
-
-  if (creep.memory.role === 'attack' || creep.memory.role === 'defender') {
-    creep.attacking();
-  }
-
-  if (creep.memory.role === 'raider') {
-    creep.raiding();
-  }
-
-  if (creep.memory.role === 'harasser') {
-    creep.harassing();
-  }
-
-  if (creep.memory.role === 'claimer') {
-    creep.claiming();
-  }
-
-  if (creep.memory.role === 'newSpawnBuilder') {
-    creep.newSpawnBuilding();
-  }
-
-  if (creep.memory.role === 'miner') {
-    creep.mining();
+      break;
+    default:
+      // creep has no role or unknown role
   }
 }
