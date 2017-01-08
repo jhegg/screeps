@@ -47,6 +47,9 @@ StructureSpawn.prototype.spawnNewCreeps = function() {
   produceMiner(this);
   produceRaider(this);
   produceHarasser(this);
+  produceRemoteHarvesters(this);
+  produceRemoteReservers(this);
+  produceRemoteTrucks(this);
 };
 
 function lowEnergyCapacitySpawning(spawn) {
@@ -270,5 +273,107 @@ function produceHarasser(spawn) {
         console.log(`${spawn.room} Spawning harasser ${spawnedCreep} for flag ${targetFlag}`);
       }
     }
+  }
+}
+
+function produceRemoteHarvesters(spawn) {
+  if (spawn.spawning === null && spawn.room.memory.emergencyMode !== true) {
+    const creepsAssignedToFlags = _.filter(Game.creeps, (creep) =>
+      creep.memory.remoteHarvesterFlag !== undefined &&
+      creep.memory.role === 'remoteHarvester'
+    );
+    const unclaimedFlags = _.filter(Game.flags, (flag) =>
+      flag.name.startsWith('RemoteHarvesting') &&
+      flag.memory.sourceIds !== undefined &&
+      _.filter(creepsAssignedToFlags, (creep) =>
+        creep.memory.remoteHarvesterFlag === flag.name).length < (_.keys(flag.memory.sourceIds).length));
+    if (unclaimedFlags.length) {
+      const targetFlag = unclaimedFlags[0];
+      const body = [
+        WORK, WORK, WORK, WORK, WORK,
+        MOVE, MOVE, MOVE, MOVE
+      ]; // cost: 700
+      if (spawn.canCreateCreep(body) === OK) {
+        const spawnedCreep = spawn.createCreep(body,
+          undefined, {
+            role: 'remoteHarvester',
+            remoteHarvesterFlag: targetFlag.name
+          });
+        console.log(`${spawn.room} Spawning remoteHarvester ${spawnedCreep} for flag ${targetFlag}`);
+      }
+    }
+  }
+}
+
+function produceRemoteReservers(spawn) {
+  if (spawn.spawning === null && spawn.room.memory.emergencyMode !== true) {
+    const creepsAssignedToFlags = _.filter(Game.creeps, (creep) =>
+      creep.memory.remoteHarvesterFlag !== undefined &&
+      creep.memory.role === 'remoteReserver'
+    );
+    const unclaimedFlags = _.filter(Game.flags, (flag) =>
+      flag.name.startsWith('RemoteHarvesting') &&
+      !_.any(creepsAssignedToFlags, (creep) =>
+        creep.memory.remoteHarvesterFlag === flag.name));
+    if (unclaimedFlags.length) {
+      const targetFlag = unclaimedFlags[0];
+      const body = [CLAIM, MOVE];
+      if (spawn.canCreateCreep(body) === OK) {
+        const spawnedCreep = spawn.createCreep(body,
+          undefined, {
+            role: 'remoteReserver',
+            remoteHarvesterFlag: targetFlag.name
+          });
+        console.log(`${spawn.room} Spawning remoteReserver ${spawnedCreep} for flag ${targetFlag}`);
+      }
+    }
+  }
+}
+
+function produceRemoteTrucks(spawn) {
+  if (spawn.spawning === null && spawn.room.memory.emergencyMode !== true) {
+    const creepsAssignedToFlags = _.filter(Game.creeps, (creep) =>
+      creep.memory.remoteHarvesterFlag !== undefined &&
+      creep.memory.role === 'remoteTrucking'
+    );
+    const unclaimedFlags = _.filter(Game.flags, (flag) =>
+      flag.name.startsWith('RemoteHarvesting') &&
+      flag.memory.sourceIds !== undefined &&
+      _.filter(creepsAssignedToFlags, (creep) =>
+        creep.memory.remoteHarvesterFlag === flag.name).length < (_.keys(flag.memory.sourceIds).length));
+    if (unclaimedFlags.length) {
+      const targetFlag = unclaimedFlags[0];
+      const body = getBodyForRemoteTruck(spawn);
+      if (spawn.canCreateCreep(body) === OK) {
+        const spawnedCreep = spawn.createCreep(body,
+          undefined, {
+            role: 'remoteTrucking',
+            remoteHarvesterFlag: targetFlag.name
+          });
+        console.log(`${spawn.room} Spawning remoteTrucking ${spawnedCreep} for flag ${targetFlag}`);
+      }
+    }
+  }
+}
+
+function getBodyForRemoteTruck(spawn) {
+  if (spawn.room.energyCapacityAvailable < 600) {
+    return [
+      WORK,
+      CARRY, CARRY,
+      MOVE, MOVE, MOVE
+    ]; // cost: 350
+  } else if (spawn.room.energyCapacityAvailable < 1000) {
+    return [
+      WORK,
+      CARRY, CARRY, CARRY, CARRY,
+      MOVE, MOVE, MOVE, MOVE, MOVE
+    ]; // cost: 550
+  } else {
+    return [
+      WORK,
+      CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+      MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
+    ]; // cost: 950
   }
 }

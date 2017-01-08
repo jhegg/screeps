@@ -126,7 +126,7 @@ var creepsTemplates = {
         maxCreepsOfType: 6},
       { role: upgraderRole,
         body: upgraderBody,
-        maxCreepsOfType: 2},
+        maxCreepsOfType: getDesiredUpgraderNumber(spawn.room)},
       { role: builderRole,
         body: builderBody,
         maxCreepsOfType: 2},
@@ -142,7 +142,7 @@ var creepsTemplates = {
         maxCreepsOfType: 4},
       { role: upgraderRole,
         body: upgraderBody,
-        maxCreepsOfType: 2},
+        maxCreepsOfType: getDesiredUpgraderNumber(spawn.room)},
       { role: builderRole,
         body: builderBody,
         maxCreepsOfType: 2},
@@ -158,7 +158,7 @@ var creepsTemplates = {
         maxCreepsOfType: 4},
       { role: upgraderRole,
         body: extraLargeUpgraderBody,
-        maxCreepsOfType: 1},
+        maxCreepsOfType: getDesiredUpgraderNumber(spawn.room)},
       { role: builderRole,
         body: builderBody,
         maxCreepsOfType: getDesiredBuilderNumber(spawn.room)},
@@ -174,13 +174,21 @@ var creepsTemplates = {
         maxCreepsOfType: 4},
       { role: upgraderRole,
         body: megaUpgraderBody,
-        maxCreepsOfType: 1},
+        maxCreepsOfType: getDesiredUpgraderNumber(spawn.room)},
       { role: builderRole,
         body: megaWorkerBody,
         maxCreepsOfType: getDesiredBuilderNumber(spawn.room)},
     ];
   },
 };
+
+function getDesiredUpgraderNumber(room) {
+  if (room.storage.store[RESOURCE_ENERGY] > 100000) {
+    return 3;
+  } else {
+    return 2;
+  }
+}
 
 function getDesiredBuilderNumber(room) {
   if (room.getConstructionSites().length > 20) {

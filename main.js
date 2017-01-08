@@ -115,6 +115,15 @@ function putCreepToWork(creep) {
     case 'raider':
       creep.raiding();
       break;
+    case 'remoteHarvester':
+      creep.remoteHarvesting();
+      break;
+    case 'remoteReserver':
+      creep.remoteReserving();
+      break;
+    case 'remoteTrucking':
+      creep.remoteTrucking();
+      break;
     case 'truck':
       creep.trucking();
       break;
