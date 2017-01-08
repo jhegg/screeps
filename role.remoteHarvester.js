@@ -98,7 +98,6 @@ Creep.prototype.remoteTrucking = function() {
     // TODO: maybe have the harvester update its room position when it's harvesting on the flag memory?
 
     if (this.memory.remotePickupId === undefined) {
-      console.log(`DEBUG: ${this.room} Remote truck ${this} needs remotePickupId`);
       const droppedResources = this.room.getDroppedResources();
       if (droppedResources.length) {
         const availableResources = _.filter(droppedResources, (resource) =>
@@ -108,11 +107,9 @@ Creep.prototype.remoteTrucking = function() {
         if (closestAvailableResources.length) {
           this.memory.remotePickupId = closestAvailableResources[0].id;
         } else {
-          console.log(`DEBUG: ${this.room} Remote truck ${this} can't find closest available dropped resources from availableResources: ${availableResources}`);
           return;
         }
       } else {
-        console.log(`DEBUG: ${this.room} Remote truck ${this} can't find available dropped resources`);
         return;
       }
     }
