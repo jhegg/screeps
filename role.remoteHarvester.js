@@ -18,8 +18,7 @@ Creep.prototype.remoteReserving = function() {
     roomController.my === false ||
     roomController.my === undefined) {
       if (this.reserveController(roomController) === ERR_NOT_IN_RANGE) {
-        // TODO: store pathfinding on flag memory?
-        this.moveTo(roomController);
+        this.moveTo(roomController, {maxRooms: 1});
         this.reserveController(roomController);
       }
   }
@@ -46,14 +45,7 @@ Creep.prototype.remoteHarvesting = function() {
     const desiredSourceIds = _.filter(sourceIds, (sourceIds) =>
       !_.any(Game.creeps, 'memory.harvestSourceId', sourceIds.id));
     if (desiredSourceIds.length) {
-      console.log(`DEBUG: ${this.room} Remote harvester ${this} desiredSourceIds = ${JSON.stringify(desiredSourceIds)}`);
       this.memory.harvestSourceId = desiredSourceIds[0].id;
-      console.log(`DEBUG: ${this.room} Remote harvester ${this} setting harvestSourceId=${this.memory.harvestSourceId}`);
-      const source = Game.getObjectById(this.memory.harvestSourceId);
-      const path = this.pos.findPathTo(source, {ignoreCreeps: true, maxRooms: 1, serialize: true});
-      this.memory.path = path;
-      desiredSourceIds[0].path = path;
-      console.log(`DEBUG: ${this.room} Remote harvester ${this} setting path=${this.memory.path}`);
     } else {
       console.log(`ERROR: ${this.room} Remote harvester ${this} could not determine available sourceId`);
       return;
@@ -65,23 +57,15 @@ Creep.prototype.remoteHarvesting = function() {
     console.log(`ERROR: ${this.room} Remote harvester ${this} has undefined memory.harvestSourceId`);
     return;
   }
-  //console.log(`DEBUG: ${this.room} Remote harvester ${this} found source ${source} from memory`);
-
-  // const path = this.memory.path;
-  // if (path === undefined || !path) {
-  //   console.log(`ERROR: ${this.room} Remote harvester ${this} has undefined memory.path`);
-  //   const path2 = this.pos.findPathTo(source); // TODO: this returns non-empty, but adding serialize returns empty?!?
-  //   console.log(`DEBUG: ${this.room} Remote harvester ${this} could possibly need path: ${path2}, to source: ${source}`);
-  //   console.log(`DEBUG: ${this.room} Remote harvester ${this} path2 stuff: ${path2}`);
-  //   return;
-  // }
 
   if (this.harvest(source) === ERR_NOT_IN_RANGE) {
-    // console.log(`DEBUG: ${this.room} Remote harvester ${this} using path ${path}`);
-    // const moveResult = this.moveByPath(path);
-    // console.log(`DEBUG: ${this.room} Remote harvester ${this} moveByPath result: ${moveResult}`);
-    this.moveTo(source);
+    const moveResult = this.moveTo(source, {maxRooms: 1});
     this.harvest(source);
+  }
+
+  const raidingFlagName = `RaidingFlag${this.room.name}`;
+  if (this.room.getHostiles().length && Game.flags[raidingFlagName] === undefined) {
+    this.pos.createFlag(raidingFlagName);
   }
 };
 
@@ -109,7 +93,7 @@ Creep.prototype.remoteTrucking = function() {
       return;
     }
 
-    // TODO: need to figure out how to assign a truck to a harvester, instead of dropped resource
+    // TODO: maybe need to figure out how to assign a truck to a harvester, instead of dropped resource
     // TODO: oh, figure out the room position of the dropped resources
     // TODO: maybe have the harvester update its room position when it's harvesting on the flag memory?
 
@@ -135,28 +119,29 @@ Creep.prototype.remoteTrucking = function() {
 
     var resourceToPickup = Game.getObjectById(this.memory.remotePickupId);
     if (resourceToPickup === null) {
-      console.log(`ERROR: ${this.room} Remote truck ${this} has invalid remotePickupId: ${this.memory.remotePickupId}`);
+      console.log(`ERROR: ${this.room} Remote truck ${this} has invalid remotePickupId: ${this.memory.remotePickupId}, resetting...`);
+      this.memory.remotePickupId = undefined;
 
-      // TODO: remove this hack
-      const droppedResources = this.room.getDroppedResources();
-      const availableResources = _.filter(droppedResources, (resource) =>
-        !_.any(Game.creeps, 'memory.remotePickupId', resource.id));
-      const closestAvailableResources = _.sortBy(availableResources, (resource) =>
-        Math.hypot(this.pos.x - resource.pos.x, this.pos.y - resource.pos.y));
-      if (closestAvailableResources.length) {
-        this.memory.remotePickupId = closestAvailableResources[0].id;
-        resourceToPickup = this.memory.remotePickupId;
-      } else {
-        console.log(`DEBUG: ${this.room} Remote truck ${this} can't find closest available dropped resources from availableResources: ${availableResources}`);
-        return;
-      }
+      // // TODO: remove this hack
+      // const droppedResources = this.room.getDroppedResources();
+      // const availableResources = _.filter(droppedResources, (resource) =>
+      //   !_.any(Game.creeps, 'memory.remotePickupId', resource.id));
+      // const closestAvailableResources = _.sortBy(availableResources, (resource) =>
+      //   Math.hypot(this.pos.x - resource.pos.x, this.pos.y - resource.pos.y));
+      // if (closestAvailableResources.length) {
+      //   this.memory.remotePickupId = closestAvailableResources[0].id;
+      //   resourceToPickup = this.memory.remotePickupId;
+      // } else {
+      //   console.log(`DEBUG: ${this.room} Remote truck ${this} can't find closest available dropped resources from availableResources: ${availableResources}`);
+      //   return;
+      // }
     }
 
     if (this.pickup(resourceToPickup) === ERR_NOT_IN_RANGE) {
       const moveResult = this.moveTo(resourceToPickup, {ignoreCreeps: true, maxRooms: 1});
       if (moveResult === ERR_NO_PATH) {
-        console.log(`DEBUG: ${this.room} Remote truck ${this} moveResult=${moveResult} towards ${resourceToPickup}`);
-        this.moveTo(resourceToPickup, {ignoreCreeps: true, maxRooms: 1});
+        console.log(`Error: ${this.room} Remote truck ${this} moveResult=ERR_NO_PATH towards ${resourceToPickup}`);
+        return;
       }
       this.pickup(resourceToPickup);
     }
@@ -180,51 +165,7 @@ Creep.prototype.remoteTrucking = function() {
       }
     }
 
-    if (flag.pos.roomName !== this.room.name) {
-      const deliveryTarget = Game.getObjectById(this.memory.deliveryTarget);
-      if (deliveryTarget === null) {
-        console.log(`ERROR: ${this.room} Remote truck ${this} has invalid deliveryTarget: ${this.memory.deliveryTarget}`);
-        return;
-      }
-
-      const resourceToTransfer = _.keys(this.carry)[0];
-      if (this.transfer(deliveryTarget, resourceToTransfer) === ERR_NOT_IN_RANGE) {
-        this.moveTo(deliveryTarget);
-        this.transfer(deliveryTarget, resourceToTransfer);
-      }
-      return;
-    } else {
-      const deliveryTarget = Game.getObjectById(this.memory.deliveryTarget);
-      if (this.memory.deliveryTargetPath === undefined) {
-        console.log(`DEBUG: ${this.room} Remote truck ${this} establishing path to deliveryTarget ${deliveryTarget}`);
-        const path = this.pos.findPathTo(deliveryTarget, {ignoreCreeps: true, serialize: true});
-        this.memory.deliveryTargetPath = path;
-      }
-
-      const roadsAtPosition = _.filter(this.pos.lookFor(LOOK_STRUCTURES), 'structureType', STRUCTURE_ROAD);
-      if (roadsAtPosition.length) {
-        const road = roadsAtPosition[0];
-        if (road.hits < road.hitsMax) {
-          //console.log(`DEBUG: ${this.room} Remote truck ${this} repairing road at ${this.pos}`);
-          this.repair(road);
-        }
-        // console.log(`DEBUG: ${this.room} Remote truck ${this} moving by path at ${this.pos}`);
-        // this.moveByPath(this.memory.deliveryTargetPath);
-        this.moveTo(deliveryTarget, {ignoreCreeps: true});
-      } else {
-        const constructionSitesAtPosition = this.pos.lookFor(LOOK_CONSTRUCTION_SITES);
-        if (constructionSitesAtPosition.length) {
-          //console.log(`DEBUG: ${this.room} Remote truck ${this} building road at ${this.pos}`);
-          const constructionSite = constructionSitesAtPosition[0];
-          this.build(constructionSite);
-          return;
-        } else {
-          console.log(`DEBUG: ${this.room} Remote truck ${this} placing road construction site at ${this.pos}`);
-          this.pos.createConstructionSite(STRUCTURE_ROAD);
-          return;
-        }
-      }
-    }
+    this.moveTruckWhileBuildingRoads();
   }
 };
 
@@ -239,6 +180,46 @@ Creep.prototype.updateFlagMemoryWithSourceIds = function(flag) {
       flag.memory.sourceIds = _.map(sources, (source) => {
         return {'id': source.id};
       });
+    }
+  }
+};
+
+Creep.prototype.moveTruckWhileBuildingRoads = function() {
+  const deliveryTarget = Game.getObjectById(this.memory.deliveryTarget);
+  if (deliveryTarget === null) {
+    console.log(`ERROR: ${this.room} Remote truck ${this} has invalid deliveryTarget: ${this.memory.deliveryTarget}`);
+    return;
+  }
+
+  const roadsAtPosition = _.filter(this.pos.lookFor(LOOK_STRUCTURES), 'structureType', STRUCTURE_ROAD);
+  if (roadsAtPosition.length) {
+    const road = roadsAtPosition[0];
+    if (road.hits < road.hitsMax) {
+      this.repair(road);
+    }
+
+    if (deliveryTarget.pos.roomName === this.room.name) {
+      const resourceToTransfer = _.keys(this.carry)[0];
+      if (this.transfer(deliveryTarget, resourceToTransfer) === ERR_NOT_IN_RANGE) {
+        this.moveTo(deliveryTarget);
+        this.transfer(deliveryTarget, resourceToTransfer);
+      }
+      return;
+    } else {
+      this.moveTo(deliveryTarget, {ignoreCreeps: true});
+    }
+  } else {
+    const constructionSitesAtPosition = this.pos.lookFor(LOOK_CONSTRUCTION_SITES);
+    if (constructionSitesAtPosition.length) {
+      const constructionSite = constructionSitesAtPosition[0];
+      this.build(constructionSite);
+      return;
+    } else {
+      const createResult = this.pos.createConstructionSite(STRUCTURE_ROAD);
+      if (createResult === ERR_INVALID_TARGET) {
+        this.moveTo(deliveryTarget);
+      }
+      return;
     }
   }
 };
