@@ -133,7 +133,8 @@ Creep.prototype.remoteTrucking = function() {
         structure.structureType === STRUCTURE_STORAGE);
       if (storageUnits.length) {
         const storageSortedByDistance = _.sortBy(storageUnits, (storage) =>
-          Game.map.getRoomLinearDistance(this.room.name, storage.room.name));
+          _.keys(Game.map.findRoute(this.room.name, storage.room.name)).length
+        );
         if (storageSortedByDistance.length) {
           console.log(`DEBUG: ${this.room} Remote truck selected storage:  ${storageSortedByDistance[0]} id: ${storageSortedByDistance[0].id}`);
           this.memory.deliveryTarget = storageSortedByDistance[0].id;
