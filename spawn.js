@@ -317,7 +317,7 @@ function produceRemoteReservers(spawn) {
         creep.memory.remoteHarvesterFlag === flag.name));
     if (unclaimedFlags.length) {
       const targetFlag = unclaimedFlags[0];
-      const body = [CLAIM, MOVE];
+      const body = [CLAIM, CLAIM, MOVE, MOVE];
       if (spawn.canCreateCreep(body) === OK) {
         const spawnedCreep = spawn.createCreep(body,
           undefined, {
