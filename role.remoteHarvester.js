@@ -116,22 +116,7 @@ Creep.prototype.remoteTrucking = function() {
 
     var resourceToPickup = Game.getObjectById(this.memory.remotePickupId);
     if (resourceToPickup === null) {
-      console.log(`ERROR: ${this.room} Remote truck ${this} has invalid remotePickupId: ${this.memory.remotePickupId}, resetting...`);
       this.memory.remotePickupId = undefined;
-
-      // // TODO: remove this hack
-      // const droppedResources = this.room.getDroppedResources();
-      // const availableResources = _.filter(droppedResources, (resource) =>
-      //   !_.any(Game.creeps, 'memory.remotePickupId', resource.id));
-      // const closestAvailableResources = _.sortBy(availableResources, (resource) =>
-      //   Math.hypot(this.pos.x - resource.pos.x, this.pos.y - resource.pos.y));
-      // if (closestAvailableResources.length) {
-      //   this.memory.remotePickupId = closestAvailableResources[0].id;
-      //   resourceToPickup = this.memory.remotePickupId;
-      // } else {
-      //   console.log(`DEBUG: ${this.room} Remote truck ${this} can't find closest available dropped resources from availableResources: ${availableResources}`);
-      //   return;
-      // }
     }
 
     if (this.pickup(resourceToPickup) === ERR_NOT_IN_RANGE) {
