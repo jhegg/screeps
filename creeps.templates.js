@@ -119,7 +119,7 @@ var creepsTemplates = {
         maxCreepsOfType: 2},
     ];
   },
-  largeBodyTemplate: function() {
+  largeBodyTemplate: function(spawn) {
     return [
       { role: harvesterRole,
         body: nonContainerHarvesterBody,
@@ -132,7 +132,7 @@ var creepsTemplates = {
         maxCreepsOfType: 2},
     ];
   },
-  largeBodyWithTrucksTemplate: function() {
+  largeBodyWithTrucksTemplate: function(spawn) {
     return [
       { role: harvesterRole,
         body: largeHarvesterBody,

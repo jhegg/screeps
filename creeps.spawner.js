@@ -20,11 +20,11 @@ var creepsSpawner = {
   },
 
   spawnLargeCreeps: function(spawn) {
-    const template = creepsTemplates.largeBodyTemplate();
+    const template = creepsTemplates.largeBodyTemplate(spawn);
     spawnCreepFromTemplate(spawn, template);
   },
   spawnLargeCreepsWithTrucks: function(spawn) {
-    const template = creepsTemplates.largeBodyWithTrucksTemplate();
+    const template = creepsTemplates.largeBodyWithTrucksTemplate(spawn);
     spawnCreepFromTemplate(spawn, template);
   },
 
