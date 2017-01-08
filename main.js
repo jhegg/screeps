@@ -77,6 +77,9 @@ function shouldRetire(creep) {
 }
 
 function putCreepToWork(creep) {
+  if (creep.spawning) {
+    return;
+  }
   switch(creep.memory.role) {
     case 'attack':
       creep.attacking();
