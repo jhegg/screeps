@@ -120,7 +120,19 @@ Creep.prototype.remoteTrucking = function() {
     }
 
     if (this.pickup(resourceToPickup) === ERR_NOT_IN_RANGE) {
-      const moveResult = this.moveTo(resourceToPickup, {ignoreCreeps: true, maxRooms: 1});
+      const avoidHarvesters = _.collect(
+        _.filter(this.room.getCreeps(), (creep) => creep.memory.role === 'remoteHarvester'),
+        (creep) => creep.pos);
+      const moveResult = this.moveTo(resourceToPickup,
+        {
+          ignoreCreeps: true,
+          costCallback: function(roomName, costMatrix) {
+            _.each(avoidHarvesters, (position) => {
+              costMatrix.set(position.x, position.y, 255);
+            });
+          },
+          maxRooms: 1
+        });
       if (moveResult === ERR_NO_PATH) {
         console.log(`Error: ${this.room} Remote truck ${this} moveResult=ERR_NO_PATH towards ${resourceToPickup}`);
         return;
@@ -189,7 +201,19 @@ Creep.prototype.moveTruckWhileBuildingRoads = function() {
       }
       return;
     } else {
-      this.moveTo(deliveryTarget, {ignoreCreeps: true});
+      const avoidHarvesters = _.collect(
+        _.filter(this.room.getCreeps(), (creep) => creep.memory.role === 'remoteHarvester'),
+        (creep) => creep.pos);
+      this.moveTo(deliveryTarget,
+        {
+          ignoreCreeps: true,
+          costCallback: function(roomName, costMatrix) {
+            _.each(avoidHarvesters, (position) => {
+              costMatrix.set(position.x, position.y, 255);
+            });
+          },
+          maxRooms: 1
+        });
     }
   } else {
     const constructionSitesAtPosition = this.pos.lookFor(LOOK_CONSTRUCTION_SITES);
