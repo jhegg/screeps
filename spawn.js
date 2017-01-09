@@ -369,11 +369,17 @@ function getBodyForRemoteTruck(spawn) {
       CARRY, CARRY, CARRY, CARRY,
       MOVE, MOVE, MOVE, MOVE, MOVE
     ]; // cost: 550
-  } else {
+  } else if (spawn.room.energyCapacityAvailable < 1500) {
     return [
       WORK,
       CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
       MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
     ]; // cost: 950
+  } else {
+    return [
+      WORK,
+      CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+      MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
+    ]; // cost: 1350
   }
 }

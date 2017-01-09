@@ -120,15 +120,12 @@ Creep.prototype.remoteTrucking = function() {
     }
 
     if (this.pickup(resourceToPickup) === ERR_NOT_IN_RANGE) {
-      const avoidHarvesters = _.collect(
-        _.filter(this.room.getCreeps(), (creep) => creep.memory.role === 'remoteHarvester'),
-        (creep) => creep.pos);
       const moveResult = this.moveTo(resourceToPickup,
         {
           ignoreCreeps: true,
           costCallback: function(roomName, costMatrix) {
-            _.each(avoidHarvesters, (position) => {
-              costMatrix.set(position.x, position.y, 255);
+            _.each(flag.memory.avoid, function(position) {
+              costMatrix.set(position.x, position.y, 15);
             });
           },
           maxRooms: 1
@@ -160,7 +157,7 @@ Creep.prototype.remoteTrucking = function() {
       }
     }
 
-    this.moveTruckWhileBuildingRoads();
+    this.moveTruckWhileBuildingRoads(flag);
   }
 };
 
@@ -179,7 +176,7 @@ Creep.prototype.updateFlagMemoryWithSourceIds = function(flag) {
   }
 };
 
-Creep.prototype.moveTruckWhileBuildingRoads = function() {
+Creep.prototype.moveTruckWhileBuildingRoads = function(flag) {
   const deliveryTarget = Game.getObjectById(this.memory.deliveryTarget);
   if (deliveryTarget === null) {
     console.log(`ERROR: ${this.room} Remote truck ${this} has invalid deliveryTarget: ${this.memory.deliveryTarget}`);
@@ -201,15 +198,12 @@ Creep.prototype.moveTruckWhileBuildingRoads = function() {
       }
       return;
     } else {
-      const avoidHarvesters = _.collect(
-        _.filter(this.room.getCreeps(), (creep) => creep.memory.role === 'remoteHarvester'),
-        (creep) => creep.pos);
       this.moveTo(deliveryTarget,
         {
           ignoreCreeps: true,
           costCallback: function(roomName, costMatrix) {
-            _.each(avoidHarvesters, (position) => {
-              costMatrix.set(position.x, position.y, 255);
+            _.each(flag.memory.avoid, function(position) {
+              costMatrix.set(position.x, position.y, 15);
             });
           },
           maxRooms: 1
