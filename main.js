@@ -29,7 +29,7 @@ module.exports.loop = function() {
 
   for (var roomName in Game.rooms) {
     const room = Game.rooms[roomName];
-    if (room.controller.my === true) {
+    if (room.controller && room.controller.my === true) {
       room.activateSafeModeIfNecessary();
       room.getTowers().forEach((tower) => tower.run());
     }
