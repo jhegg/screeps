@@ -284,6 +284,7 @@ function produceRemoteHarvesters(spawn) {
     );
     const unclaimedFlags = _.filter(Game.flags, (flag) =>
       flag.name.startsWith('RemoteHarvesting') &&
+      flag.memory.spawnRoom === spawn.room.name &&
       flag.memory.sourceIds !== undefined &&
       _.filter(creepsAssignedToFlags, (creep) =>
         creep.memory.remoteHarvesterFlag === flag.name).length < (_.keys(flag.memory.sourceIds).length));
@@ -313,9 +314,11 @@ function produceRemoteReservers(spawn) {
     );
     const unclaimedFlags = _.filter(Game.flags, (flag) =>
       flag.name.startsWith('RemoteHarvesting') &&
+      flag.memory.spawnRoom === spawn.room.name &&
       !_.any(creepsAssignedToFlags, (creep) =>
         creep.memory.remoteHarvesterFlag === flag.name));
     if (unclaimedFlags.length) {
+      // TODO: only spawn if within 1 room by Map.findRoute
       const targetFlag = unclaimedFlags[0];
       const body = [CLAIM, CLAIM, MOVE, MOVE];
       if (spawn.canCreateCreep(body) === OK) {
@@ -338,10 +341,12 @@ function produceRemoteTrucks(spawn) {
     );
     const unclaimedFlags = _.filter(Game.flags, (flag) =>
       flag.name.startsWith('RemoteHarvesting') &&
+      flag.memory.spawnRoom === spawn.room.name &&
       flag.memory.sourceIds !== undefined &&
       _.filter(creepsAssignedToFlags, (creep) =>
         creep.memory.remoteHarvesterFlag === flag.name).length < (_.keys(flag.memory.sourceIds).length));
     if (unclaimedFlags.length) {
+      // TODO: only spawn if within 1 room by Map.findRoute
       const targetFlag = unclaimedFlags[0];
       const body = getBodyForRemoteTruck(spawn);
       if (spawn.canCreateCreep(body) === OK) {

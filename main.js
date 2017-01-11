@@ -19,6 +19,7 @@ var creepsMaintainer = require('creeps.maintainer');
 module.exports.loop = function() {
   creepsMaintainer.cleanOldCreepMemory();
   cleanOldSpawnFlags();
+  updateRemoteHarvestingFlagMemory();
 
   for (var spawnName in Game.spawns) {
     const spawn = Game.spawns[spawnName];
@@ -63,6 +64,19 @@ function cleanOldSpawnFlags() {
       flag.remove();
     }
   }
+}
+
+function updateRemoteHarvestingFlagMemory() {
+  _.each(Game.flags, (flag) => {
+    if (flag.name.startsWith('RemoteHarvesting') && flag.memory.spawnRoom === undefined) {
+      const spawnsSortedByDistance = _.sortBy(Game.spawns, (spawn) =>
+        _.keys(Game.map.findRoute(flag.room.name, spawn.room.name)).length
+      );
+      if (spawnsSortedByDistance.length) {
+        flag.memory.spawnRoom = spawnsSortedByDistance[0].room.name;
+      }
+    }
+  });
 }
 
 function assignSourceToCreep(creep) {
