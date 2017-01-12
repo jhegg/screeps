@@ -142,10 +142,14 @@ function getBestPickupContainer(creep) {
         (structure.structureType === STRUCTURE_EXTENSION ||
           structure.structureType === STRUCTURE_SPAWN) &&
         structure.energy < structure.energyCapacity);
-      if (spawnContainer.store[RESOURCE_ENERGY] > 0 &&
+      if (spawnContainer.store[RESOURCE_ENERGY] > 200 &&
         spawnsAndExtensionsNeedingEnergy.length > 2) {
           return spawnContainer;
-        }
+      } else if (creep.room.storage &&
+        creep.room.storage.store[RESOURCE_ENERGY] > 200 &&
+        spawnsAndExtensionsNeedingEnergy.length > 2) {
+        return creep.room.storage;
+      }
     }
   }
   const bestSourceContainer = creep.room.sortSourceContainersByEnergy()[0];
@@ -175,14 +179,13 @@ Creep.prototype.getTruckDeliveryTarget = function() {
 };
 
 Creep.prototype.pickTruckTargetDestination = function() {
-  const prioritizedStructures = this.room.prioritizeStructuresForTrucks();
+  const prioritizedStructures = this.room.prioritizeStructuresForTruck(this);
   const filteredStructures = _.filter(prioritizedStructures, (structure) =>
     structure !== undefined &&
     !_.any(Game.creeps, 'memory.deliveryId', structure.id));
-  const sortedStructures = sortStructuresByDistance(filteredStructures, this.pos);
-  if (sortedStructures.length) {
-    this.memory.deliveryId = sortedStructures[0].id;
-    return sortedStructures[0];
+  if (filteredStructures.length) {
+    this.memory.deliveryId = filteredStructures[0].id;
+    return filteredStructures[0];
   } else if (this.room.storage) {
     this.memory.deliveryId = this.room.storage.id;
     return this.room.storage;

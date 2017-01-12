@@ -254,25 +254,27 @@ Room.prototype.prioritizePickupsByPosition = function(creepPosition) {
   ), (structure) => structure.store[RESOURCE_ENERGY] > 250);
 };
 
-Room.prototype.prioritizeStructuresForTrucks = function() {
-  if (!this._prioritizedStructuresForTrucks) {
-    // prioritize Extension -> Spawn -> Tower -> non-source Container
-    const structures = this.getEnergyStorageStructures();
-    const extensions = filterStructuresByTypeAndEnergy(structures,
-      STRUCTURE_EXTENSION);
-    const spawns = filterStructuresByTypeAndEnergy(structures,
-      STRUCTURE_SPAWN);
-    const towers = filterStructuresByTypeAndEnergy(structures,
-      STRUCTURE_TOWER);
-    const containers = filterContainersByStorage(this, structures);
-    this._prioritizedStructuresForTrucks = _.flatten([
-      extensions,
-      spawns,
-      towers,
-      containers,
-    ]);
-  }
-  return this._prioritizedStructuresForTrucks;
+Room.prototype.prioritizeStructuresForTruck = function(creep) {
+  // prioritize Extension -> Spawn -> Tower -> non-source Container
+  const structures = this.getEnergyStorageStructures();
+  const extensions = sortStructuresByDistanceToCreep(
+    filterStructuresByTypeAndEnergy(structures, STRUCTURE_EXTENSION),
+    creep);
+  const spawns = sortStructuresByDistanceToCreep(
+    filterStructuresByTypeAndEnergy(structures, STRUCTURE_SPAWN),
+    creep);
+  const towers = sortStructuresByDistanceToCreep(
+    filterStructuresByTypeAndEnergy(structures, STRUCTURE_TOWER),
+    creep);
+  const containers = sortStructuresByDistanceToCreep(
+    filterContainersByStorage(this, structures),
+    creep);
+  return _.flatten([
+    extensions,
+    spawns,
+    towers,
+    containers,
+  ]);
 };
 
 function filterStructuresByTypeAndEnergy(structures, structureType) {
@@ -280,6 +282,12 @@ function filterStructuresByTypeAndEnergy(structures, structureType) {
     return structure.structureType === structureType &&
       structure.energy < structure.energyCapacity;
   });
+}
+
+function sortStructuresByDistanceToCreep(structures, creep) {
+  return _.sortBy(structures, (structure) =>
+    Math.hypot(creep.pos.x - structure.pos.x,
+      creep.pos.y - structure.pos.y));
 }
 
 function filterContainersByStorage(room, structures) {
