@@ -68,7 +68,9 @@ function cleanOldSpawnFlags() {
 
 function updateRemoteHarvestingFlagMemory() {
   _.each(Game.flags, (flag) => {
-    if (flag.name.startsWith('RemoteHarvesting') && flag.memory.spawnRoom === undefined) {
+    if (flag.name.startsWith('RemoteHarvesting') &&
+      flag.memory.spawnRoom === undefined &&
+      flag.room !== undefined) {
       const spawnsSortedByDistance = _.sortBy(Game.spawns, (spawn) =>
         _.keys(Game.map.findRoute(flag.room.name, spawn.room.name)).length
       );
