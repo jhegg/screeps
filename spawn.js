@@ -134,6 +134,7 @@ function produceDefender(spawn) {
 function produceNewSpawnBuilder(spawn) {
   if (Game.gcl.level > 1 &&
     spawn.spawning === null &&
+    spawn.memory.spawning !== true &&
     spawn.room.memory.emergencyMode !== true) {
     const creepsAssignedToFlags = _.filter(Game.creeps, (creep) =>
       creep.memory.targetFlag !== undefined
@@ -160,6 +161,7 @@ function produceNewSpawnBuilder(spawn) {
 function produceClaimer(spawn) {
   if (Game.gcl.level > 1 &&
     spawn.spawning === null &&
+    spawn.memory.spawning !== true &&
     spawn.room.memory.emergencyMode !== true) {
     const creepsAssignedToFlags = _.filter(Game.creeps, (creep) =>
       creep.memory.claimFlag !== undefined
@@ -199,6 +201,7 @@ function produceMiner(spawn) {
     spawn.room.getExtractors().length > 0 &&
     spawn.room.storage !== undefined &&
     spawn.spawning === null &&
+    spawn.memory.spawning !== true &&
     spawn.room.memory.emergencyMode !== true &&
     !_.any(spawn.room.getMinerals(), 'mineralAmount', 0)) {
     const miners = _.filter(spawn.room.getCreeps(), (creep) =>
@@ -223,7 +226,9 @@ function produceMiner(spawn) {
 }
 
 function produceRaider(spawn) {
-  if (spawn.spawning === null && spawn.room.memory.emergencyMode !== true) {
+  if (spawn.spawning === null &&
+    spawn.memory.spawning !== true &&
+    spawn.room.memory.emergencyMode !== true) {
     const creepsAssignedToFlags = _.filter(Game.creeps, (creep) =>
       creep.memory.raidingTargetFlag !== undefined
     );
@@ -259,7 +264,9 @@ function getRaiderBodyForSpawn(spawn) {
 }
 
 function produceHarasser(spawn) {
-  if (spawn.spawning === null && spawn.room.memory.emergencyMode !== true) {
+  if (spawn.spawning === null &&
+    spawn.memory.spawning !== true &&
+    spawn.room.memory.emergencyMode !== true) {
     const creepsAssignedToFlags = _.filter(Game.creeps, (creep) =>
       creep.memory.harasserTargetFlag !== undefined
     );
@@ -287,7 +294,9 @@ function produceHarasser(spawn) {
 }
 
 function produceRemoteHarvesters(spawn) {
-  if (spawn.spawning === null && spawn.room.memory.emergencyMode !== true) {
+  if (spawn.spawning === null &&
+    spawn.memory.spawning !== true &&
+    spawn.room.memory.emergencyMode !== true) {
     const creepsAssignedToFlags = _.filter(Game.creeps, (creep) =>
       creep.memory.remoteHarvesterFlag !== undefined &&
       creep.memory.role === 'remoteHarvester'
@@ -318,7 +327,9 @@ function produceRemoteHarvesters(spawn) {
 }
 
 function produceRemoteReservers(spawn) {
-  if (spawn.spawning === null && spawn.room.memory.emergencyMode !== true) {
+  if (spawn.spawning === null &&
+    spawn.memory.spawning !== true &&
+    spawn.room.memory.emergencyMode !== true) {
     const creepsAssignedToFlags = _.filter(Game.creeps, (creep) =>
       creep.memory.remoteHarvesterFlag !== undefined &&
       creep.memory.role === 'remoteReserver'
@@ -346,7 +357,9 @@ function produceRemoteReservers(spawn) {
 }
 
 function produceRemoteTrucks(spawn) {
-  if (spawn.spawning === null && spawn.room.memory.emergencyMode !== true) {
+  if (spawn.spawning === null &&
+    spawn.memory.spawning !== true &&
+    spawn.room.memory.emergencyMode !== true) {
     const creepsAssignedToFlags = _.filter(Game.creeps, (creep) =>
       creep.memory.remoteHarvesterFlag !== undefined &&
       creep.memory.role === 'remoteTrucking'
