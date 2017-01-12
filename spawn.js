@@ -7,6 +7,10 @@ StructureSpawn.prototype.spawnNewCreeps = function() {
   const extraLargeEnergyCapacity = 1500;
   const megaEnergyCapacity = 2100;
 
+  if (this.spawning === null) {
+    this.memory.spawning = false;
+  }
+
   if (!this.room.memory.emergencyMode &&
     _.filter(Game.creeps, (creep) => creep.room === this.room).length <= 4) {
     console.log(`${this.room} Creep numbers too low! Engaging emergency mode.`);
@@ -123,6 +127,7 @@ function produceDefender(spawn) {
         role: 'defender'
       });
     console.log(`${spawn.room} Spawning defender ${spawnedCreep} in room ${spawn.room}`);
+    spawn.memory.spawning = true;
   }
 }
 
@@ -146,6 +151,7 @@ function produceNewSpawnBuilder(spawn) {
             targetFlag: unclaimedFlags[0].name
           });
         console.log(`${spawn.room} Spawning newSpawnBuilder ${spawnedCreep} for flag ${unclaimedFlags[0]}`);
+        spawn.memory.spawning = true;
       }
     }
   }
@@ -173,6 +179,7 @@ function produceClaimer(spawn) {
             claimFlag: flag.name
           });
         console.log(`${spawn.room} Spawning claimer ${spawnedCreep} for flag ${flag}`);
+        spawn.memory.spawning = true;
       }
     }
   }
@@ -209,6 +216,7 @@ function produceMiner(spawn) {
             role: 'miner'
           });
         console.log(`${spawn.room} Spawning miner ${spawnedCreep} for ${spawn.room}`);
+        spawn.memory.spawning = true;
       }
     }
   }
@@ -233,6 +241,7 @@ function produceRaider(spawn) {
             raidingTargetFlag: targetFlag.name
           });
         console.log(`${spawn.room} Spawning raider ${spawnedCreep} for flag ${targetFlag}`);
+        spawn.memory.spawning = true;
       }
     }
   }
@@ -271,6 +280,7 @@ function produceHarasser(spawn) {
             harasserTargetFlag: targetFlag.name
           });
         console.log(`${spawn.room} Spawning harasser ${spawnedCreep} for flag ${targetFlag}`);
+        spawn.memory.spawning = true;
       }
     }
   }
@@ -301,6 +311,7 @@ function produceRemoteHarvesters(spawn) {
             remoteHarvesterFlag: targetFlag.name
           });
         console.log(`${spawn.room} Spawning remoteHarvester ${spawnedCreep} for flag ${targetFlag}`);
+        spawn.memory.spawning = true;
       }
     }
   }
@@ -328,6 +339,7 @@ function produceRemoteReservers(spawn) {
             remoteHarvesterFlag: targetFlag.name
           });
         console.log(`${spawn.room} Spawning remoteReserver ${spawnedCreep} for flag ${targetFlag}`);
+        spawn.memory.spawning = true;
       }
     }
   }
@@ -356,6 +368,7 @@ function produceRemoteTrucks(spawn) {
             remoteHarvesterFlag: targetFlag.name
           });
         console.log(`${spawn.room} Spawning remoteTrucking ${spawnedCreep} for flag ${targetFlag}`);
+        spawn.memory.spawning = true;
       }
     }
   }

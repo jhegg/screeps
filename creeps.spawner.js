@@ -77,6 +77,7 @@ function createCreep(spawn, creepTemplate) {
     { role: creepTemplate.role }
   );
   console.log(`${spawn.room} Spawning new ${creepTemplate.role}: ${spawnedCreep}`);
+  spawn.memory.spawning = true;
 }
 
 module.exports = creepsSpawner;
