@@ -125,6 +125,7 @@ Creep.prototype.truckPickupDroppedResource = function(resource) {
 Creep.prototype.truckGetPickupContainer = function() {
   const container = Game.getObjectById(this.memory.pickupId);
   if (container &&
+    !(container instanceof Resource) &&
     (this.memory.pickupWasEmptyCounter === undefined ||
     this.memory.pickupWasEmptyCounter < 25)) {
     return container;
