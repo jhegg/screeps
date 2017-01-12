@@ -47,9 +47,9 @@ StructureSpawn.prototype.spawnNewCreeps = function() {
   produceMiner(this);
   produceRaider(this);
   produceHarasser(this);
+  produceRemoteTrucks(this);
   produceRemoteHarvesters(this);
   produceRemoteReservers(this);
-  produceRemoteTrucks(this);
 };
 
 function lowEnergyCapacitySpawning(spawn) {
