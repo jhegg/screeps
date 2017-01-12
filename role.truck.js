@@ -66,6 +66,7 @@ Creep.prototype.truckPickup = function() {
     case ERR_NOT_OWNER:
       console.log(`${this.room} Error: truck unable to transfer from ${sourceContainer}
         due to ownership/rampart`);
+      this.memory.pickupId = undefined;
       break;
     case ERR_BUSY:
       // still spawning
@@ -80,6 +81,7 @@ Creep.prototype.truckPickup = function() {
     case ERR_INVALID_TARGET:
       console.log(`${this.room} Error: truck ${this} tried to harvest from
         ${sourceContainer} which is invalid`);
+      this.memory.pickupId = undefined;
       break;
     case ERR_FULL:
       console.log(`${this.room} Warning: truck ${this} was full but tried to harvest
@@ -92,6 +94,7 @@ Creep.prototype.truckPickup = function() {
     case ERR_INVALID_ARGS:
       console.log(`${this.room} Error: truck ${this} tried to withdraw from
          ${sourceContainer} but resource amount or type was incorrect`);
+      this.memory.pickupId = undefined;
       break;
     default:
       console.log(`${this.room} Warning: unknown result ${withdrawResult} from truck
