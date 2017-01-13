@@ -305,6 +305,9 @@ function produceRemoteHarvesters(spawn) {
       flag.name.startsWith('RemoteHarvesting') &&
       flag.memory.spawnRoom === spawn.room.name &&
       flag.memory.sourceIds !== undefined &&
+      !_.any(Game.flags, (raidingFlag) =>
+        raidingFlag.name.startsWith('RaidingFlag') &&
+        raidingFlag.pos.roomName === flag.pos.roomName) &&
       _.filter(creepsAssignedToFlags, (creep) =>
         creep.memory.remoteHarvesterFlag === flag.name).length < (_.keys(flag.memory.sourceIds).length));
     if (unclaimedFlags.length) {
@@ -337,6 +340,9 @@ function produceRemoteReservers(spawn) {
     const unclaimedFlags = _.filter(Game.flags, (flag) =>
       flag.name.startsWith('RemoteHarvesting') &&
       flag.memory.spawnRoom === spawn.room.name &&
+      !_.any(Game.flags, (raidingFlag) =>
+        raidingFlag.name.startsWith('RaidingFlag') &&
+        raidingFlag.pos.roomName === flag.pos.roomName) &&
       !_.any(creepsAssignedToFlags, (creep) =>
         creep.memory.remoteHarvesterFlag === flag.name));
     if (unclaimedFlags.length) {
@@ -368,10 +374,12 @@ function produceRemoteTrucks(spawn) {
       flag.name.startsWith('RemoteHarvesting') &&
       flag.memory.spawnRoom === spawn.room.name &&
       flag.memory.sourceIds !== undefined &&
+      !_.any(Game.flags, (raidingFlag) =>
+        raidingFlag.name.startsWith('RaidingFlag') &&
+        raidingFlag.pos.roomName === flag.pos.roomName) &&
       _.filter(creepsAssignedToFlags, (creep) =>
         creep.memory.remoteHarvesterFlag === flag.name).length < (_.keys(flag.memory.sourceIds).length));
     if (unclaimedFlags.length) {
-      // TODO: only spawn if within 1 room by Map.findRoute
       const targetFlag = unclaimedFlags[0];
       const body = getBodyForRemoteTruck(spawn);
       if (spawn.canCreateCreep(body) === OK) {
