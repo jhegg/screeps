@@ -151,10 +151,6 @@ function getBestPickupContainer(creep) {
       if (spawnContainer.store[RESOURCE_ENERGY] > 200 &&
         spawnsAndExtensionsNeedingEnergy.length > 2) {
           return spawnContainer;
-      } else if (creep.room.storage &&
-        creep.room.storage.store[RESOURCE_ENERGY] > 200 &&
-        spawnsAndExtensionsNeedingEnergy.length > 2) {
-        return creep.room.storage;
       }
     }
   }
