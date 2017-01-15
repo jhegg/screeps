@@ -19,6 +19,7 @@ var creepsMaintainer = require('creeps.maintainer');
 module.exports.loop = function() {
   creepsMaintainer.cleanOldCreepMemory();
   cleanOldSpawnFlags();
+  cleanOldFlagMemory();
   updateRemoteHarvestingFlagMemory();
 
   for (var spawnName in Game.spawns) {
@@ -62,6 +63,14 @@ function cleanOldSpawnFlags() {
     if (flag.room.getSpawns().length) {
       console.log(`Clearing ${flag} in room ${flag.room} due to spawn.`);
       flag.remove();
+    }
+  }
+}
+
+function cleanOldFlagMemory() {
+  for (var name in Memory.flags) {
+    if (!Game.flags[name]) {
+      delete Memory.flags[name];
     }
   }
 }
