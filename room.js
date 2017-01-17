@@ -306,7 +306,8 @@ Room.prototype.sortSourceContainersByEnergy = function() {
   if (!this._sourceContainersSortedByEnergy) {
     const structures = this.getSourceContainers();
     const containersWithEnergy = _.filter(structures, function(structure) {
-      return structure.structureType === STRUCTURE_CONTAINER &&
+      return structure !== null && 
+      structure.structureType === STRUCTURE_CONTAINER &&
         structure.store[RESOURCE_ENERGY] > 0;
     });
     this._sourceContainersSortedByEnergy =  _.sortByOrder(containersWithEnergy,
