@@ -45,6 +45,12 @@ Creep.prototype.trucking = function() {
 };
 
 Creep.prototype.truckPickup = function() {
+  const pickupObject = Game.getObjectById(this.memory.pickupId);
+  if (pickupObject !== null && pickupObject instanceof Resource) {
+    this.truckPickupDroppedResource(pickupObject);
+    return;
+  }
+
   const droppedResources = this.room.getDroppedResources();
   if (droppedResources.length &&
     !_.any(Game.creeps, 'memory.pickupId', droppedResources[0].id)) {
