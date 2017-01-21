@@ -26,7 +26,7 @@ Creep.prototype.claiming = function() {
               const waypoints = _.sortBy(_.filter(Game.flags,
                 (waypointFlag) => waypointFlag.name.startsWith(`WP-${flag.name}-`)), 'name');
               _.each(waypoints, (waypoint, index) => {
-                waypoint.room.createFlag(waypoint.pos, `WP-${newFlagName}-${index+1}`);
+                waypoint.pos.createFlag(`WP-${newFlagName}-${index+1}`);
                 waypoint.remove();
               });
               flag.remove();
