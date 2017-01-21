@@ -14,7 +14,7 @@ Creep.prototype.raiding = function() {
   }
 
   if (flag.pos.roomName !== this.room.name) {
-    this.moveTo(flag);
+    this.moveByWaypointToFlag(flag);
     return;
   }
 
