@@ -228,7 +228,8 @@ function produceMiner(spawn) {
 function produceRaider(spawn) {
   if (spawn.spawning === null &&
     spawn.memory.spawning !== true &&
-    spawn.room.memory.emergencyMode !== true) {
+    spawn.room.memory.emergencyMode !== true &&
+    spawn.room.controller.level > 2) {
     const creepsAssignedToFlags = _.filter(Game.creeps, (creep) =>
       creep.memory.raidingTargetFlag !== undefined
     );
@@ -270,8 +271,7 @@ function getRaiderBodyAndMemoryForSpawn(spawn, targetFlag) {
           ATTACK, ATTACK, ATTACK
         ] // cost: 1440
       };
-  }
-  if (spawn.room.energyCapacityAvailable > 2100) {
+  } else if (spawn.room.energyCapacityAvailable > 2100) {
     return {
       memory: {
         role: 'raider',
