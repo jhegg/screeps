@@ -253,13 +253,19 @@ function produceRaider(spawn) {
 }
 
 function getRaiderBodyForSpawn(spawn) {
-  if (spawn.room.energyCapacityAvailable < 1300) {
-    return [ATTACK, MOVE];
-  } else {
+  if (spawn.room.energyCapacityAvailable > 2100) {
+    return [
+      TOUGH, TOUGH, MOVE, MOVE,
+      RANGED_ATTACK, MOVE, MOVE, RANGED_ATTACK,
+      MOVE, HEAL, MOVE, HEAL
+    ]; // cost: 1120
+  } else if (spawn.room.energyCapacityAvailable >= 1300) {
     return [
       TOUGH, MOVE, TOUGH, MOVE, TOUGH, MOVE,
       MOVE, ATTACK
     ]; // cost: 310
+  } else {
+    return [ATTACK, MOVE];
   }
 }
 

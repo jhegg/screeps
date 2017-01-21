@@ -45,6 +45,15 @@ Creep.prototype.raiding = function() {
 
   const target = this.getPrioritizedTarget();
   if (target !== undefined) {
+    if (_.any(this.body, (body) => body.type === HEAL)) {
+      this.heal(this);
+      if (this.rangedAttack(target) === ERR_NOT_IN_RANGE) {
+        this.moveTo(target);
+        this.rangedAttack(target);
+      }
+      return;
+    }
+
     if (this.attack(target) === ERR_NOT_IN_RANGE) {
       this.moveTo(target);
       this.attack(target);
