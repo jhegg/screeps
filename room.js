@@ -55,6 +55,11 @@ Room.prototype.activateSafeModeIfNecessary = function() {
   }
 };
 
+Room.prototype.areTowersSufficientOnEnergy = function() {
+  return _.all(this.getTowers(),
+    (tower) => (tower.energy > 0.75 * tower.energyCapacity));
+};
+
 Room.prototype.getAllStructures = function() {
   if (!this._allStructures) {
     this._allStructures = this.find(FIND_STRUCTURES);
@@ -306,7 +311,7 @@ Room.prototype.sortSourceContainersByEnergy = function() {
   if (!this._sourceContainersSortedByEnergy) {
     const structures = this.getSourceContainers();
     const containersWithEnergy = _.filter(structures, function(structure) {
-      return structure !== null && 
+      return structure !== null &&
       structure.structureType === STRUCTURE_CONTAINER &&
         structure.store[RESOURCE_ENERGY] > 0;
     });

@@ -187,9 +187,11 @@ var creepsTemplates = {
 };
 
 function getDesiredUpgraderNumber(room) {
-  if (room.storage.store[RESOURCE_ENERGY] > 200000) {
+  if (room.storage.store[RESOURCE_ENERGY] > 200000 &&
+    room.areTowersSufficientOnEnergy()) {
     return 3;
-  } else if (room.storage.store[RESOURCE_ENERGY] > 100000) {
+  } else if (room.storage.store[RESOURCE_ENERGY] > 100000 &&
+    room.areTowersSufficientOnEnergy()) {
     return 2;
   } else {
     return 1;
