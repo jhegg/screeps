@@ -43,7 +43,7 @@ Creep.prototype.raiding = function() {
       return;
     } else {
       console.log(`${this.room} using waypoint ${nextWaypointFlag}.`);
-      this.moveTo(nextWaypointFlag);
+      this.moveTo(nextWaypointFlag, {ignoreDestructibleStructures: true});
       return;
     }
   }

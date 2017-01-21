@@ -312,7 +312,7 @@ Room.prototype.shouldEnterEmergencyMode = function() {
     (creep) => creep.memory.role === 'harvester').length;
   const numTrucks = _.filter(this.getCreeps(),
     (creep) => creep.memory.role === 'truck').length;
-  if (numHarvesters === 0 && numTrucks <= 1) {
+  if ((numHarvesters === 0 && numTrucks <= 1) || numTrucks < 1) {
     return true;
   } else {
     return false;
