@@ -175,7 +175,7 @@ var creepsTemplates = {
         maxCreepsOfType: 2},
       { role: truckRole,
         body: largeTruckBody,
-        maxCreepsOfType: 3},
+        maxCreepsOfType: 4},
       { role: upgraderRole,
         body: megaUpgraderBody,
         maxCreepsOfType: getDesiredUpgraderNumber(spawn.room)},

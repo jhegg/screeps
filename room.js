@@ -307,6 +307,32 @@ function filterContainersByStorage(room, structures) {
   }, ['asc']);
 }
 
+Room.prototype.shouldEnterEmergencyMode = function() {
+  const numHarvesters = _.filter(this.getCreeps(),
+    (creep) => creep.memory.role === 'harvester').length;
+  const numTrucks = _.filter(this.getCreeps(),
+    (creep) => creep.memory.role === 'truck').length;
+  if (numHarvesters === 0 && numTrucks <= 1) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+Room.prototype.shouldExitEmergencyMode = function() {
+  const numHarvesters = _.filter(this.getCreeps(),
+    (creep) => creep.memory.role === 'harvester').length;
+  const numTrucks = _.filter(this.getCreeps(),
+    (creep) => creep.memory.role === 'truck').length;
+  const numUpgraders = _.filter(this.getCreeps(),
+    (creep) => creep.memory.role === 'upgrader').length;
+  if (numHarvesters > 0 && numTrucks > 2 && numUpgraders > 0) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 Room.prototype.sortSourceContainersByEnergy = function() {
   if (!this._sourceContainersSortedByEnergy) {
     const structures = this.getSourceContainers();
