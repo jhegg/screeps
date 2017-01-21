@@ -41,6 +41,10 @@ const upgraderBody = [
   CARRY, CARRY, CARRY,
   MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
 ]; // cost: 750
+const largeTruckBody = [
+  CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY,
+  MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE
+]; // cost 1000
 
 const extraLargeUpgraderBody = [
   WORK, WORK, WORK, WORK, WORK,
@@ -170,8 +174,8 @@ var creepsTemplates = {
         body: largeHarvesterBody,
         maxCreepsOfType: 2},
       { role: truckRole,
-        body: mediumTruckBody,
-        maxCreepsOfType: 4},
+        body: largeTruckBody,
+        maxCreepsOfType: 3},
       { role: upgraderRole,
         body: megaUpgraderBody,
         maxCreepsOfType: getDesiredUpgraderNumber(spawn.room)},
