@@ -1,6 +1,11 @@
 Creep.prototype.raiding = function() {
   this.notifyWhenAttacked(false);
 
+  if (this.room.getHostiles().length > 0) {
+    this.raiderAttacking();
+    return;
+  }
+
   const flag = Game.flags[this.memory.raidingTargetFlag];
   if (flag === undefined) {
     const remainingFlags = _.filter(Game.flags, (flag) =>
@@ -43,6 +48,14 @@ Creep.prototype.raiding = function() {
     }
   }
 
+  if (this.raiderAttacking() === -1) {
+    console.log(`${this.room} flag ${flag} no longer has targets, removing.`);
+    this.memory.raidingTargetFlag = undefined;
+    flag.remove();
+  }
+};
+
+Creep.prototype.raiderAttacking = function() {
   const target = this.getPrioritizedTarget();
   if (target !== undefined) {
     if (_.any(this.body, (body) => body.type === HEAL)) {
@@ -51,16 +64,15 @@ Creep.prototype.raiding = function() {
         this.moveTo(target);
         this.rangedAttack(target);
       }
-      return;
+      return 0;
     }
 
     if (this.attack(target) === ERR_NOT_IN_RANGE) {
       this.moveTo(target);
       this.attack(target);
     }
+    return 0;
   } else {
-    console.log(`${this.room} flag ${flag} no longer has targets, removing.`);
-    this.memory.raidingTargetFlag = undefined;
-    flag.remove();
+    return -1;
   }
 };

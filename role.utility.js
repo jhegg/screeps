@@ -21,7 +21,7 @@ Creep.prototype.moveByWaypointToFlag = function(flag) {
 
 Creep.prototype.getPrioritizedTarget = function() {
   const enemyCreeps = this.room.find(FIND_HOSTILE_CREEPS);
-  const enemyCreepsWithAttackParts = _.filter(enemyCreeps, (enemyCreep) => _.any(enemyCreep.body, (body) => body.type === ATTACK));
+  const enemyCreepsWithAttackParts = _.filter(enemyCreeps, (enemyCreep) => _.any(enemyCreep.body, (body) => body.type === ATTACK || body.type === RANGED_ATTACK));
   if (enemyCreepsWithAttackParts.length > 0) {
     return _.sortBy(enemyCreepsWithAttackParts, (enemy) => Math.hypot(
       this.pos.x - enemy.pos.x, this.pos.y - enemy.pos.y))[0];
