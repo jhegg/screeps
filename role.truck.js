@@ -154,7 +154,7 @@ function getBestPickupContainer(creep) {
         (structure.structureType === STRUCTURE_EXTENSION ||
           structure.structureType === STRUCTURE_SPAWN) &&
         structure.energy < structure.energyCapacity);
-      if (spawnContainer.store[RESOURCE_ENERGY] > 200 &&
+      if (spawnContainer.store[RESOURCE_ENERGY] > creep.carryCapacity &&
         spawnsAndExtensionsNeedingEnergy.length > 2) {
           return spawnContainer;
       }
@@ -163,7 +163,7 @@ function getBestPickupContainer(creep) {
   const bestSourceContainer = creep.room.sortSourceContainersByEnergy()[0];
   if (creep.room.storage &&
     creep.room.storage.store[RESOURCE_ENERGY] > 1000 &&
-    (!bestSourceContainer || bestSourceContainer.store[RESOURCE_ENERGY] < 200)) {
+    (!bestSourceContainer || bestSourceContainer.store[RESOURCE_ENERGY] < creep.carryCapacity)) {
       return creep.room.storage;
   } else {
     return bestSourceContainer;
