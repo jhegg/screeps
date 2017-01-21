@@ -25,15 +25,25 @@ module.exports.loop = function() {
   for (var spawnName in Game.spawns) {
     const spawn = Game.spawns[spawnName];
     if (spawn.spawning === null) {
-      spawn.spawnNewCreeps(spawn);
+      try {
+        spawn.spawnNewCreeps(spawn);
+      } catch (e) {
+        console.log(e.stack);
+        Game.notify(e.stack);
+      }
     }
   }
 
   for (var roomName in Game.rooms) {
     const room = Game.rooms[roomName];
     if (room.controller && room.controller.my === true) {
-      room.activateSafeModeIfNecessary();
-      room.getTowers().forEach((tower) => tower.run());
+      try {
+        room.activateSafeModeIfNecessary();
+        room.getTowers().forEach((tower) => tower.run());
+      } catch (e) {
+        console.log(e.stack);
+        Game.notify(e.stack);
+      }
     }
   }
 
