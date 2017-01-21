@@ -238,13 +238,11 @@ function produceRaider(spawn) {
           creep.memory.raidingTargetFlag === flag.name).length < (flag.memory.maxRaiders ? flag.memory.maxRaiders : 1));
     if (unclaimedFlags.length) {
       const targetFlag = unclaimedFlags[0];
-      const body = getRaiderBodyForSpawn(spawn);
-      if (spawn.canCreateCreep(body) === OK) {
-        const spawnedCreep = spawn.createCreep(body,
-          undefined, {
-            role: 'raider',
-            raidingTargetFlag: targetFlag.name
-          });
+      const bodyAndMemory = getRaiderBodyAndMemoryForSpawn(spawn, targetFlag);
+      if (spawn.canCreateCreep(bodyAndMemory.body) === OK) {
+        const spawnedCreep = spawn.createCreep(bodyAndMemory.body,
+          undefined,
+          bodyAndMemory.memory);
         console.log(`${spawn.room} Spawning raider ${spawnedCreep} for flag ${targetFlag}`);
         spawn.memory.spawning = true;
       }
@@ -252,20 +250,58 @@ function produceRaider(spawn) {
   }
 }
 
-function getRaiderBodyForSpawn(spawn) {
+function getRaiderBodyAndMemoryForSpawn(spawn, targetFlag) {
+  if (_.get(targetFlag, 'memory.siege', false) &&
+    _.filter(Game.creeps, (creep) =>
+      creep.memory.raidingTargetFlag === targetFlag.name &&
+      creep.memory.siegeWeapon === true).length === 0 &&
+    spawn.room.energyCapacityAvailable > 2200) {
+      return {
+        memory: {
+          role: 'raider',
+          raidingTargetFlag: targetFlag.name,
+          siegeWeapon: true
+        },
+        body: [
+          TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH, TOUGH,
+          MOVE, MOVE, MOVE, MOVE,
+          ATTACK, MOVE, ATTACK, MOVE, ATTACK, MOVE, ATTACK, MOVE,
+          ATTACK, MOVE, ATTACK, MOVE, ATTACK, MOVE,
+          ATTACK, ATTACK, ATTACK
+        ] // cost: 1440
+      };
+  }
   if (spawn.room.energyCapacityAvailable > 2100) {
-    return [
-      TOUGH, TOUGH, MOVE, MOVE,
-      RANGED_ATTACK, MOVE, MOVE, RANGED_ATTACK,
-      MOVE, HEAL, MOVE, HEAL
-    ]; // cost: 1120
+    return {
+      memory: {
+        role: 'raider',
+        raidingTargetFlag: targetFlag.name
+      },
+      body: [
+        TOUGH, TOUGH, MOVE, MOVE,
+        RANGED_ATTACK, MOVE, MOVE, RANGED_ATTACK,
+        MOVE, HEAL, MOVE, HEAL
+      ] // cost: 1120
+    };
   } else if (spawn.room.energyCapacityAvailable >= 1300) {
-    return [
-      TOUGH, MOVE, TOUGH, MOVE, TOUGH, MOVE,
-      MOVE, ATTACK
-    ]; // cost: 310
+    return {
+      memory: {
+        role: 'raider',
+        raidingTargetFlag: targetFlag.name
+      },
+      body: [
+        TOUGH, MOVE, TOUGH, MOVE, TOUGH, MOVE,
+        MOVE, ATTACK
+      ] // cost: 310
+    };
   } else {
-    return [ATTACK, MOVE];
+    return {
+      memory: {
+        role: 'raider',
+        raidingTargetFlag: targetFlag.name
+      },
+      body: [ATTACK, MOVE]
+    };
   }
 }
 
