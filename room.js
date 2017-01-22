@@ -326,7 +326,7 @@ Room.prototype.shouldExitEmergencyMode = function() {
     (creep) => creep.memory.role === 'truck').length;
   const numUpgraders = _.filter(this.getCreeps(),
     (creep) => creep.memory.role === 'upgrader').length;
-  if (numHarvesters > 0 && numTrucks > 2 && numUpgraders > 0) {
+  if (numHarvesters > 0 && numTrucks > 1 && numUpgraders > 0) {
     return true;
   } else {
     return false;
