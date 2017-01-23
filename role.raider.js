@@ -1,7 +1,7 @@
 Creep.prototype.raiding = function() {
   this.notifyWhenAttacked(false);
 
-  if (this.room.getHostiles().length > 0 && !this.room.controller.safeMode) {
+  if (this.room.getHostiles().length > 0 && this.room.controller && !this.room.controller.safeMode) {
     this.raiderAttacking();
     return;
   }

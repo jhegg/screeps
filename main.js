@@ -20,7 +20,7 @@ module.exports.loop = function() {
   creepsMaintainer.cleanOldCreepMemory();
   cleanOldSpawnFlags();
   cleanOldFlagMemory();
-  updateRemoteHarvestingFlagMemory();
+  updateRemoteHarvestingAndRaidingFlagMemory();
 
   for (var spawnName in Game.spawns) {
     const spawn = Game.spawns[spawnName];
@@ -85,9 +85,9 @@ function cleanOldFlagMemory() {
   }
 }
 
-function updateRemoteHarvestingFlagMemory() {
+function updateRemoteHarvestingAndRaidingFlagMemory() {
   _.each(Game.flags, (flag) => {
-    if (flag.name.startsWith('RemoteHarvesting') &&
+    if ((flag.name.startsWith('RemoteHarvesting') || flag.name.startsWith('RaidingFlag')) &&
       flag.memory.spawnRoom === undefined) {
       const spawnsSortedByDistance = _.sortBy(Game.spawns, (spawn) =>
         _.keys(Game.map.findRoute(flag.pos.roomName, spawn.room.name)).length

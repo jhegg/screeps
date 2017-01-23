@@ -236,7 +236,8 @@ function produceRaider(spawn) {
     const unclaimedFlags = _.filter(Game.flags, (flag) =>
       flag.name.startsWith('RaidingFlag') &&
         _.filter(creepsAssignedToFlags, (creep) =>
-          creep.memory.raidingTargetFlag === flag.name).length < (flag.memory.maxRaiders ? flag.memory.maxRaiders : 1));
+          creep.memory.raidingTargetFlag === flag.name).length < (flag.memory.maxRaiders ? flag.memory.maxRaiders : 1) &&
+        flag.memory.spawnRoom === spawn.room.name);
     if (unclaimedFlags.length) {
       const targetFlag = unclaimedFlags[0];
       const bodyAndMemory = getRaiderBodyAndMemoryForSpawn(spawn, targetFlag);
